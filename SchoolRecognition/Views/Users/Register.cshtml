@@ -1,0 +1,121 @@
+﻿@model SchoolRecognition.Models.RegisterViewModel
+
+
+@{
+    ViewData["Title"] = "User Register Page";
+}
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+<div class="register-box">
+
+    <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body">
+            <div class="register-logo">
+                <img src="~/images/bgLogo.png" height="60" width="60" /> <a asp-controller="Home" asp-action="Index"><b>School</b> Recognition System</a>
+            </div>
+            <p class="login-box-msg">Register a new user</p>
+
+            <form asp-action="Register" method="post">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="input-group mb-3">
+                    <input type="text" asp-for="Surname" class="form-control" placeholder="Surname">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+
+
+                <div class="input-group mb-3">
+                    <input type="text" asp-for="OtherName" class="form-control" placeholder="Other Names">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="OtherName" class="text-danger"></span>
+                </div>
+
+
+                <div class="input-group mb-3">
+                    <input type="text" asp-for="PhoneNo" class="form-control" placeholder="Phone Number">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-phone"></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                </div>
+
+                <hr />
+
+                <div class="input-group mb-3">
+                    <input type="email" asp-for="Email" class="form-control" placeholder="Email">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" asp-for="Password" class="form-control" placeholder="Password">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-12">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+                            <label for="agreeTerms">
+                                I agree to the <a href="#">terms and conditions</a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <button type="submit" class="btn btn-secondary btn-flat"><span class="fas fa-save"></span> Submit</button>
+
+                <!-- /.col -->
+
+            </form>
+
+
+            <hr />
+
+            <p class="mb-1">
+                <a asp-controller="Home" asp-action="Index">I already have a user account</a>
+            </p>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+<!-- /.login-box -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
