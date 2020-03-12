@@ -6,14 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SchoolRecognition.Controllers
 {
-    public class UsersController : Controller
+    public class AdminController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
-
-        
-        
     }
 }

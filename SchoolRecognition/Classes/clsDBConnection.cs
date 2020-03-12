@@ -12,6 +12,10 @@ namespace SchoolRecognition.Classes
     {
         private readonly IConfiguration _configuration;
 
+        public clsDBConnection()
+        {
+
+        }
         public clsDBConnection(IConfiguration configuration)
         {
             _configuration = configuration;

@@ -15,10 +15,14 @@
     <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
+
             <div class="register-logo">
-                <img src="~/images/bgLogo.png" height="60" width="60" /> <a asp-controller="Home" asp-action="Index"><b>School</b> Recognition System</a>
+                <a asp-controller="Home" asp-action="Index">
+                    <img src="~/images/bgLogo.png" height="60" width="60" />
+                    <span class="text-primary">School Recognition System</span>
+                </a>
             </div>
-            <p class="login-box-msg">Register a new user</p>
+            <p class="login-box-msg">Register User</p>
 
             <form asp-action="Register" method="post">
 

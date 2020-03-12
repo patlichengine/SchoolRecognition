@@ -16,11 +16,14 @@
     <div class="card">
         <div class="card-body login-card-body">
             <div class="login-logo">
-                <img src="~/images/bgLogo.png" height="60" width="60" /> <a asp-controller="Home" asp-action="Index"><b>School</b> Recognition System</a>
+                <a asp-controller="Home" asp-action="Index">
+                    <img src="~/images/bgLogo.png" height="60" width="60" /> 
+                    <span class="text-primary">School Recognition System</span>
+                </a>
             </div>
-            <p class="login-box-msg">Sign in to start your session</p>
+            <p class="login-box-msg">Sign in</p>
 
-            <form asp-action="Login" method="post">
+            <form asp-controller="Account" asp-action="Login" method="post">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -43,8 +46,12 @@
                     </div>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-                <div class="row">
-                    <div class="col-8">
+
+
+
+                <div class="d-flex justify-content-around">
+                    <div>
+                        <!-- Remember me -->
                         <div class="icheck-primary">
                             <input type="checkbox" id="remember">
                             <label for="remember">
@@ -52,23 +59,32 @@
                             </label>
                         </div>
                     </div>
+                    <div>
+                        <!-- Forgot password -->
+                        <a asp-controller="Account" asp-action="forgotpassword">Forgot Password?</a>
+                    </div>
                 </div>
+
+                <hr />
                 <!-- /.col -->
                 <button type="submit" class="btn btn-secondary btn-flat">Sign In</button>
 
                 <!-- /.col -->
+                <!-- Register -->
+                <p class="mt-5">
+                    Don't have an account?
+                    <a asp-controller="Account" asp-action="Register">Register</a>
+                </p>
+
+
+
+
 
             </form>
 
 
-            <hr />
+           
 
-            <p class="mb-1">
-                <a asp-controller="Users" asp-action="forgotpassword">I forgot my password</a>
-            </p>
-            <p class="mb-0">
-                <a asp-controller="Users" asp-action="Register" class="text-center">Register a new user</a>
-            </p>
         </div>
         <!-- /.login-card-body -->
     </div>

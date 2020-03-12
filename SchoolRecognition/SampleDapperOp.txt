@@ -1,0 +1,198 @@
+﻿
+using Dapper;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using waecatdapps.ApiClasses;
+using waecatdapps.Models;
+
+namespace waecatdapps.AppClasses
+{
+    public class clsTertiary
+    {
+        public clsTertiary() { }
+
+        //procTertiaryDetailsGet
+        public static List<vwTertiaryListing> Get(Guid id)
+        {
+            var result = new List<vwTertiaryListing>();
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                result = _db.Query<vwTertiaryListing>("dbo.procTertiaryDetailsGet", new { ID = id }, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return result;
+        }
+
+        //TertiaryDetailsGetByAppID
+        public static List<vwTertiaryListing> Get(Guid applicantID, Guid degreeTypeID, Guid CertAssetID)
+        {
+            var result = new List<vwTertiaryListing>();
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                result = _db.Query<vwTertiaryListing>("dbo.procTertiaryDetailsGetByAppIDDegreeIDCertID", 
+                    new { ApplicantID = applicantID, DegreeTypeID = degreeTypeID, CertificateAssetID = CertAssetID }, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return result;
+        }
+        public static List<vwTertiaryListing> List(Guid applicantID)
+        {
+            var result = new List<vwTertiaryListing>();
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                result = _db.Query<vwTertiaryListing>("dbo.procTertiaryDetailsGetByAppID", new { ApplicantID = applicantID }, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return result;
+        }
+
+        public static List<vwTertiaryListing> List(List<Guid> list)
+        {
+            var result = new List<vwTertiaryListing>();
+            var result2 = new List<vwTertiaryListing>();
+            foreach (var item in list)
+            {
+                using (IDbConnection _db = clsDBConnect.OpenConnection())
+                {
+                    result2 = _db.Query<vwTertiaryListing>("dbo.procTertiaryDetailsGetByAppID", new { ApplicantID = item }, commandType: CommandType.StoredProcedure).ToList();
+                }
+
+                foreach (var item2 in result2)
+                {
+                    result.Add(item2);
+                }
+            }
+           
+            return result;
+        }
+
+        public static int DeleteTertiaryDetails(UpdateTertiaryViewModel obj)
+        {
+            var result = 0;
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                result = _db.Query<int>("dbo.procTertiaryDetailsDelete", new { ID= obj.ID }, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            return result;
+
+        }
+
+        public static int DeleteTertiarySettings(Guid id)
+        {
+            var result = 0;
+            string strQuery = "Delete From dbo.TertiaryPrereqs where ID = @ID";
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                result = _db.Execute(strQuery, new { ID = id }, commandType: CommandType.Text);
+            }
+            return result;
+
+        }
+
+        public static List<tplAvailableCourses> GetAvailableCourses()
+        {
+            string strQuery = "Select * from dbo.vwAvailableCourses";
+            var result = new List<tplAvailableCourses>();
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                result = _db.Query<tplAvailableCourses>(strQuery, commandType: CommandType.Text).ToList();
+            }
+            return result;
+        }
+
+        public static List<vwTertiaryPreReqListing> GetPreReqList(Guid clientID)
+        {
+            string strQuery = "Select * from dbo.vwTertiaryPreReqListing where ClientID=@ClientID";
+            var result = new List<vwTertiaryPreReqListing>();
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                result = _db.Query<vwTertiaryPreReqListing>(strQuery, new { ClientID = clientID }, commandType: CommandType.Text).ToList();
+            }
+            return result;
+        }
+
+        public static List<vwTertiaryPreReqListing> GetPreReqList(Guid jobID, Guid jobPreReqID)
+        {
+            string strQuery = "Select * from dbo.vwTertiaryPreReqListing where JobID=@JobID and JobPreReqID = @JobPreReqID order by CourseDescription";
+            var result = new List<vwTertiaryPreReqListing>();
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                result = _db.Query<vwTertiaryPreReqListing>(strQuery, new { JobID = jobID, JobPreReqID = jobPreReqID }, commandType: CommandType.Text).ToList();
+            }
+            return result;
+        }
+
+        public static int SaveTertiarySettings(TertiaryPreReqViewModel obj)
+        {
+            var result = 0;
+            using (IDbConnection _db = clsDBConnect.OpenConnection())
+            {
+                string courseList = "";
+                long indexNo = 0;
+                if (obj.Courses.Length > 8000)
+                {
+                    string[] strArr = obj.Courses.Split('|');
+                    foreach (var strCourse in strArr)
+                    {
+                        if(strCourse.Trim().Length > 0)
+                            result = _db.Execute("dbo.procTertiaryPrereqsAdd", new
+                            {
+                                JobID = obj.JobID,
+                                JobPreReqID = obj.JobPreReqID,
+                                CourseDescription = strCourse,
+                                Delimiter = "|",
+                                ClientID = obj.ClientID
+                            }, commandType: CommandType.StoredProcedure);
+                    }
+                    
+                }
+                else
+                {
+                    result = _db.Execute("dbo.procTertiaryPrereqsAdd", new
+                    {
+                        JobID = obj.JobID,
+                        JobPreReqID = obj.JobPreReqID,
+                        CourseDescription = obj.Courses,
+                        Delimiter = "|",
+                        ClientID = obj.ClientID
+                    }, commandType: CommandType.StoredProcedure);
+                }
+            }
+            return result;
+
+        }
+
+        public static int UpdateTertiaryDetails(UpdateTertiaryViewModel obj)
+        {
+            
+            int result =0;
+            try
+            {
+                using (IDbConnection _db = clsDBConnect.OpenConnection())
+                {
+                    result = _db.Execute("dbo.procTertiaryDetailsUpdate", new
+                    {
+                        ID = obj.ID,
+                        ApplicantID = obj.ApplicantID,
+                        InstitutionID = obj.InstitutionID,
+                        DegreeID = obj.DegreeID,
+                        CourseID = obj.CourseID,
+                        ClassOfDegreeID = obj.ClassOfDegreeID,
+                        YearFrom = obj.YearFrom,
+                        YearTo = obj.YearTo
+                    }, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw ex;
+            }
+            return result;
+
+        }
+
+        
+    }
+}

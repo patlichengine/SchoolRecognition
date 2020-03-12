@@ -161,4 +161,4 @@ C:\WebProjects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runti
 C:\WebProjects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.Identity.Client.dll
 C:\WebProjects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Dapper.dll
 C:\WebProjects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
-C:\WebProjects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Users\Register.cshtml.g.cs
+C:\WebProjects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Account\Register.cshtml.g.cs
