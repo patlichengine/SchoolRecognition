@@ -8,7 +8,7 @@ namespace SchoolRecognition.Controllers
 {
     public class AdminController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Dashboard()
         {
             return View();
         }

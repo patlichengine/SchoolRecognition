@@ -6,16 +6,13 @@
     <title>@ViewData["Title"] - SchoolRecognition</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/lib/fontawesome-free/css/all.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- icheck bootstrap -->
     <link rel="stylesheet" href="~/lib/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="~/css/waeclte.min.css">
-    <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-    @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />*@
+
+    @RenderSection("styles", required: false)
+    <link href="~/css/custom.css" rel="stylesheet" />
 </head>
 <body class="hold-transition login-page">
     <header>
@@ -46,8 +43,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - SchoolRecognition - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container text-white-50">
+            &copy; @DateTime.Now.Year - SchoolRecognition - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 

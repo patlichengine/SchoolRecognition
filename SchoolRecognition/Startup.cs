@@ -28,7 +28,8 @@ namespace SchoolRecognition
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddRazorRuntimeCompilation();
 
         }
 

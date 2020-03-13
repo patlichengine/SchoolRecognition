@@ -29,14 +29,14 @@ namespace SchoolRecognition.Models
         public virtual DbSet<Titles> Titles { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Server=LAPTOP-IFRMU6GH\\MSSQLSERVER19;Database=SchoolRecognition;User Id=sa;Password=sa@123;");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=NORMAL-PC\\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,7 +44,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Code).HasMaxLength(3);
 
@@ -62,7 +62,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasMaxLength(50);
 
@@ -77,7 +77,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.DateActive).HasColumnType("date");
 
@@ -98,15 +98,15 @@ namespace SchoolRecognition.Models
 
             modelBuilder.Entity<Pins>(entity =>
             {
+                entity.ToTable("PINs");
+
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.DateCreated).HasColumnType("date");
 
                 entity.Property(e => e.RecognitionTypeId).HasColumnName("RecognitionTypeID");
-
-                entity.Property(e => e.SerialPin).HasMaxLength(25);
 
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.Pins)
@@ -123,7 +123,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Code).HasMaxLength(10);
 
@@ -134,7 +134,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(3)
@@ -147,7 +147,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
@@ -156,7 +156,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Code).HasMaxLength(2);
 
@@ -167,7 +167,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Amount).HasColumnType("decimal(18, 0)");
 
@@ -199,7 +199,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Address).HasMaxLength(50);
 
@@ -239,7 +239,7 @@ namespace SchoolRecognition.Models
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Code).HasMaxLength(3);
 
@@ -259,7 +259,7 @@ namespace SchoolRecognition.Models
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.EmailAddress).HasMaxLength(50);
 
@@ -267,15 +267,11 @@ namespace SchoolRecognition.Models
                     .HasColumnName("LPNO")
                     .HasMaxLength(30);
 
-                entity.Property(e => e.Othernames).HasMaxLength(50);
-
                 entity.Property(e => e.PhoneNo).HasMaxLength(20);
 
                 entity.Property(e => e.RankId).HasColumnName("RankID");
 
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
-
-                entity.Property(e => e.Surname).HasMaxLength(50);
 
                 entity.HasOne(d => d.Rank)
                     .WithMany(p => p.Users)
