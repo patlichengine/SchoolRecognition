@@ -8647,29 +8647,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\NORMAL\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Users\\15N\\.nuget\\packages\\": {},
     "C:\\Microsoft\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\NORMAL\\Documents\\Visual Studio 2019\\Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+      "projectUniqueName": "C:\\Users\\15N\\Desktop\\WAEC Program\\repo\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
       "projectName": "SchoolRecognition",
-      "projectPath": "C:\\Users\\NORMAL\\Documents\\Visual Studio 2019\\Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
-      "packagesPath": "C:\\Users\\NORMAL\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\NORMAL\\Documents\\Visual Studio 2019\\Projects\\SchoolRecognition\\SchoolRecognition\\obj\\",
+      "projectPath": "C:\\Users\\15N\\Desktop\\WAEC Program\\repo\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+      "packagesPath": "C:\\Users\\15N\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\15N\\Desktop\\WAEC Program\\repo\\SchoolRecognition\\SchoolRecognition\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
         "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\NORMAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\15N\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8742,7 +8739,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.102\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
       }
     }
   }
