@@ -187,5 +187,32 @@ namespace SchoolRecognition.Classes
 
             });
         }
+
+
+        //Please use the method below as an example on how to write
+        // the above methods in synchronous mode
+        //public List<Pins> Get()
+        //{
+        //    try
+        //    {
+        //        using (IDbConnection _db = new clsDBConnection().OpenConnection())
+        //        {
+        //            var result = new List<Pins>();
+
+        //            string strQuery = "Select * from dbo.Pins;";
+
+        //            var _result = _db.Query<Pins>(strQuery);
+
+        //            result = _result.ToList();
+
+        //            return result;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw ex;
+        //    }
+        //}
     }
 }
