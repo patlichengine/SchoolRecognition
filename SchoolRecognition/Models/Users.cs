@@ -13,14 +13,14 @@ namespace SchoolRecognition.Models
 
         public Guid Id { get; set; }
         public string Surname { get; set; }
-        public string Othernames { get; set; }
+        public string Others { get; set; }
         public byte[] Password { get; set; }
         public Guid? RankId { get; set; }
         public Guid? RoleId { get; set; }
         public string EmailAddress { get; set; }
         public string PhoneNo { get; set; }
         public string Lpno { get; set; }
-        public byte[] Signature { get; set; }
+        public string Signature { get; set; }
         public bool IsActive { get; set; }
         public bool IsVerified { get; set; }
 
