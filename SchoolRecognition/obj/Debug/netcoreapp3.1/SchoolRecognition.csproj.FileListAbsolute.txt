@@ -595,3 +595,6 @@ C:\Users\NORMAL\Documents\Visual Studio 2019\Projects\SchoolRecognition\SchoolRe
 C:\Users\NORMAL\Documents\Visual Studio 2019\Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.dll
 C:\Users\NORMAL\Documents\Visual Studio 2019\Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.pdb
 C:\Users\NORMAL\Documents\Visual Studio 2019\Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
+C:\Users\NORMAL\Documents\Visual Studio 2019\Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Pins\Index.cshtml.g.cs
+C:\Users\NORMAL\Documents\Visual Studio 2019\Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Pins\GeneratePins.cshtml.g.cs
+C:\Users\NORMAL\Documents\Visual Studio 2019\Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Pins\Details.cshtml.g.cs

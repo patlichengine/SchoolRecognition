@@ -1,0 +1,104 @@
+﻿@model SchoolRecognition.Models.Pins
+@{
+    ViewData["Title"] = "Generate Pins";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section styles{
+
+    <link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
+    <link href="~/lib/select2/select2-bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/select2/select2.css" rel="stylesheet" />
+
+
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Pins" asp-action="Index">Manage Pins</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Generate School Recognition Pins</h3>
+                </div>
+                <div class="card-body">
+
+
+                    <form asp-action="Register" method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="RecognitionTypeId">Recognition Type</label>
+                            <select asp-for="RecognitionTypeId" class="form-control">
+                                <option value="">-- Select Recognition Type ---</option>
+                                <option value="volvo">General</option>
+                                <option value="saab">Subject</option>
+                            </select>
+                            <span asp-validation-for="RecognitionTypeId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Number of Pins</label>
+                            <input type="number" min="1" max="20" class="form-control" placeholder="Enter Number of Pins To Generate">
+                        </div>
+
+
+                        <!-- /.col -->
+                        <button type="submit" class="btn btn-primary btn-lg"><span class="fas fa-save"></span> Submit</button>
+                        <button type="reset" class="btn btn-secondary btn-lg"><span class="fas fa-refresh"></span> Reset</button>
+
+                        <!-- /.col -->
+
+                    </form>
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/lib/select2/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('select.form-control').select2();
+            //$('.select2me').select2();
+        });
+    </script>
+
+}
+
+

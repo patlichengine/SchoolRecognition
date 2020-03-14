@@ -11,6 +11,10 @@ namespace SchoolRecognition.Classes
 {
     public class clsPins : IPins
     {
+
+        private const string WAECCODEPREFIX = "WC";
+        //private const string CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
         public Task<List<Pins>> Get()
         {
             return Task.Run(async () =>
@@ -29,6 +33,124 @@ namespace SchoolRecognition.Classes
                         result = _result.ToList();
 
                         return result;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            });
+        }
+        Task<string> GenerateSerialPin(Guid recognitionTypeID)
+        {
+            return Task.Run(async () =>
+            {
+
+                try
+                {
+
+                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    {
+                        //
+                        string strGeneratedSerialPin = null;
+                        //The strings below will combine with the TotalNumberOfPins to give the final generated pin
+                        string strRecogntionTypeCode = null;
+                        string strAlphanumericSecurityCode = null;
+                        //
+                        int intTotalNumberOfPins = 0;
+
+
+                        if (recognitionTypeID != Guid.Empty)
+                        {
+                            string strQueryRecognitionTypes = "Select * from dbo.RecognitionTypes WHERE ID = @_id;";
+                            string strQueryPinSerialPins = "Select SerialPin from dbo.Pins;";
+
+                            //Get List of RecognitionTypes
+                            var _recognitionType = await _db.QueryFirstOrDefaultAsync<RecognitionTypes>(strQueryRecognitionTypes, new { _id = recognitionTypeID });
+                            //Get List of Pins Currently
+                            var _pinSerialPins = await _db.QueryFirstOrDefaultAsync<string>(strQueryPinSerialPins, new { _id = recognitionTypeID });
+
+                            if (_recognitionType != null)
+                            {
+                                //Resolve RecognitionTypes Code
+                                strRecogntionTypeCode = _recognitionType.Code;
+                                //Resolve Current Total Number of Pins in DB
+                                intTotalNumberOfPins = _pinSerialPins.ToList().Count;
+                                //Generate Random 3 character Alphanumeric suffix
+                                var guid = Guid.NewGuid();
+                                strAlphanumericSecurityCode = guid.ToString().Substring(0, 3);
+                                //Combine components of the GeneratedSerialPin
+                                strGeneratedSerialPin = String.Format("{0}{1}{2,5:00000}{3}", 
+                                    WAECCODEPREFIX, strRecogntionTypeCode, intTotalNumberOfPins, strAlphanumericSecurityCode);
+                                
+                            }
+                        }
+
+                        return strGeneratedSerialPin;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            });
+        }
+        Task<List<string>> GenerateSerialPins(Guid recognitionTypeID, int numberOfPins)
+        {
+            return Task.Run(async () =>
+            {
+
+                try
+                {
+
+                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    {
+                        //
+                        List<string> strGeneratedSerialPins = new List<string>();
+                        //The strings below will combine with the TotalNumberOfPins to give the final generated pin
+                        string strRecogntionTypeCode = null;
+                        string strAlphanumericSecurityCode = null;
+                        //
+                        int intTotalNumberOfPins = 0;
+
+
+                        if (recognitionTypeID != Guid.Empty)
+                        {
+                            string strQueryRecognitionTypes = "Select * from dbo.RecognitionTypes WHERE ID = @_id;";
+                            string strQueryPinSerialPins = "Select SerialPin from dbo.Pins;";
+
+                            //Get List of RecognitionTypes
+                            var _recognitionType = await _db.QueryFirstOrDefaultAsync<RecognitionTypes>(strQueryRecognitionTypes, new { _id = recognitionTypeID });
+                            //Get List of Pins Currently
+                            var _pinSerialPins = await _db.QueryFirstOrDefaultAsync<string>(strQueryPinSerialPins, new { _id = recognitionTypeID });
+
+                            if (_recognitionType != null)
+                            {
+                                for (int i = 0; i < numberOfPins; i++)
+                                {
+                                    //Resolve RecognitionTypes Code
+                                    strRecogntionTypeCode = _recognitionType.Code;
+                                    //Resolve Current Total Number of Pins in DB
+                                    intTotalNumberOfPins = _pinSerialPins.ToList().Count;
+                                    //Generate Random 3 character Alphanumeric suffix
+                                    var guid = Guid.NewGuid();
+                                    strAlphanumericSecurityCode = guid.ToString().Substring(0, 3);
+                                    //Combine components of the GeneratedSerialPin
+                                    string _strGeneratedSerialPin = String.Format("{0}{1}{2,5:00000}{3}",
+                                        WAECCODEPREFIX, strRecogntionTypeCode, intTotalNumberOfPins, strAlphanumericSecurityCode);
+
+                                    //Add to list of strings
+                                    strGeneratedSerialPins.Add(_strGeneratedSerialPin);
+                                }
+
+                            }
+                        }
+
+                        return strGeneratedSerialPins;
                     }
                 }
                 catch (Exception ex)
@@ -88,6 +210,11 @@ namespace SchoolRecognition.Classes
                         {
                             _obj.Id = Guid.NewGuid();
                             _obj.DateCreated = DateTime.Now;
+                            //Generate a Custom SerialPin
+                            if (_obj.RecognitionTypeId != Guid.Empty)
+                            {
+                                _obj.SerialPin = await GenerateSerialPin(_obj.RecognitionTypeId.Value);
+                            }
 
                             var _result = await _db.ExecuteAsync(strQuery, new 
                             { 
@@ -104,6 +231,78 @@ namespace SchoolRecognition.Classes
                         }
 
                         return returnId;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            });
+        }
+        public Task<bool> CreateSeveralPins(Pins _obj, int numberOfPinsToGenerate)
+        {
+
+            return Task.Run(async () =>
+            {
+
+                try
+                {
+                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    {
+
+                        List<string> strGeneratedSerialPins = new List<string>();
+                        List<Pins> listObjPins = new List<Pins>();
+
+                        string strQuery = "INSERT INTO dbo.Pins (ID,RecognitionTypeID,SerialPin,IsActive,IsInUse,CreatedBy,DateCreated)" +
+                        " VALUES (@ID,@RecognitionTypeID,@SerialPin,@IsActive,@IsInUse,@CreatedBy,@DateCreated);";
+
+                        Guid? returnId = Guid.Empty;
+                        if (_obj != null)
+                        {
+                            //Generate a List of Custom SerialPin
+                            if (_obj.RecognitionType != null && _obj.RecognitionTypeId != Guid.Empty)
+                            {
+                                strGeneratedSerialPins = await GenerateSerialPins(_obj.RecognitionTypeId.Value, numberOfPinsToGenerate);
+                            }
+
+                            //Assign Custom SerialPins to Pin objects
+                            for (int i = 0; i < numberOfPinsToGenerate; i++)
+                            {
+                                //Get string at position "i" in the string array
+                                string strGeneratedSerialPin = strGeneratedSerialPins[i];
+
+                                Pins pinObj = new Pins()
+                                {
+                                    Id = Guid.NewGuid(),
+                                    DateCreated = DateTime.Now,
+                                    //
+                                    SerialPin = strGeneratedSerialPin,
+                                    IsActive = _obj.IsActive,
+                                    IsInUse = _obj.IsInUse,
+                                    CreatedBy = _obj.CreatedBy,
+                                };
+                            }
+
+                            var _result = await _db.ExecuteAsync(strQuery, 
+                                from pinObject in listObjPins
+                                        select new                                                                           
+                                        {
+                                            ID = pinObject.Id,
+                                            RecognitionID = pinObject.RecognitionTypeId,
+                                            SerialPin = pinObject.SerialPin,
+                                            IsActive = pinObject.IsActive,
+                                            IsInUse = pinObject.IsInUse,
+                                            CreatedBy = pinObject.CreatedBy,
+                                            DateCreated = pinObject.DateCreated
+                                        }, commandType: CommandType.StoredProcedure);
+
+                            return true;
+
+                        }
+
+                        return false;
                     }
                 }
                 catch (Exception ex)
