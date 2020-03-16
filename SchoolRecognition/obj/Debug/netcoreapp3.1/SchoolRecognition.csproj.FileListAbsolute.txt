@@ -1475,3 +1475,8 @@ C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognit
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Offices\Details.cshtml.g.cs
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Offices\Edit.cshtml.g.cs
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Offices\Index.cshtml.g.cs
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\States\Create.cshtml.g.cs
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\States\Delete.cshtml.g.cs
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\States\Details.cshtml.g.cs
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\States\Edit.cshtml.g.cs
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\States\Index.cshtml.g.cs
