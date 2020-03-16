@@ -1,4 +1,4 @@
-﻿@model SchoolRecognition.Models.Pins
+﻿@model SchoolRecognition.Models.PinsCreateViewModel
 @{
     ViewData["Title"] = "Generate Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -62,8 +62,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Number of Pins</label>
-                            <input type="number" min="1" max="20" class="form-control" placeholder="Enter Number of Pins To Generate">
+                            <label asp-for="NoOfPinToGenerate">Number of Pins</label>
+                            <input type="number" min="1" max="20" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate">
                         </div>
 
 
