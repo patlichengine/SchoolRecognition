@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,6 +9,31 @@ namespace SchoolRecognition.Models
 {
     public class ViewModels
     {
+    }
+
+    public class SchoolPaymentViewModel
+    {
+        public Guid ID { get; set; }
+        [Display(Name = "Pin(pinid to be hidden)")]
+        public Guid PinID { get; set; }
+        [Display(Name = "School(schoolid to be hidden)")]
+        public Guid SchoolID { get; set; }
+        public decimal Amount { get; set; }
+        [Display(Name = "Receipt Number")]
+        public string ReceiptNo { get; set; }
+        [Display(Name = "Scanned Receipt")]
+        public IFormFile ReceiptImage { get; set; }
+        public string DateCreated { get; set; }
+        [Display(Name = "Created by(createdbyid to be hidden)")]
+        public Guid CreatedBy { get; set; }
+       
+    }
+
+    public class RecognitionTypeModel
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
     }
 
     public class ForgotViewModel

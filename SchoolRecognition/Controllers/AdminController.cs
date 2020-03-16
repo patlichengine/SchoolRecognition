@@ -12,5 +12,7 @@ namespace SchoolRecognition.Controllers
         {
             return View();
         }
+
+
     }
 }
