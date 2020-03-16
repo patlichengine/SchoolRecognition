@@ -1,26 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\15N\\Desktop\\WAEC Program\\repo\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {}
+    "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {}
   },
   "projects": {
-    "C:\\Users\\15N\\Desktop\\WAEC Program\\repo\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {
+    "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\15N\\Desktop\\WAEC Program\\repo\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+        "projectUniqueName": "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
         "projectName": "SchoolRecognition",
-        "projectPath": "C:\\Users\\15N\\Desktop\\WAEC Program\\repo\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
-        "packagesPath": "C:\\Users\\15N\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\15N\\Desktop\\WAEC Program\\repo\\SchoolRecognition\\SchoolRecognition\\obj\\",
+        "projectPath": "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+        "packagesPath": "C:\\Users\\waec\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\15N\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\waec\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -92,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.102\\RuntimeIdentifierGraph.json"
         }
       }
     }
