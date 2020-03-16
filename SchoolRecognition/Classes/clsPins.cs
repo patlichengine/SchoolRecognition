@@ -302,7 +302,7 @@ namespace SchoolRecognition.Classes
                                             IsInUse = pinObject.IsInUse,
                                             CreatedBy = pinObject.CreatedBy,
                                             DateCreated = pinObject.DateCreated
-                                        }, commandType: CommandType.StoredProcedure);
+                                        });
 
                             return true;
 
@@ -351,7 +351,7 @@ namespace SchoolRecognition.Classes
                                 IsInUse = _obj.IsInUse,
                                 //CreatedBy = _obj.CreatedBy,
                                 //DateCreated = _obj.DateCreated
-                            }, commandType: CommandType.StoredProcedure);
+                            });
 
                         }
 
