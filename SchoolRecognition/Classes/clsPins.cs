@@ -65,12 +65,12 @@ namespace SchoolRecognition.Classes
                         if (recognitionTypeID != Guid.Empty)
                         {
                             string strQueryRecognitionTypes = "Select * from dbo.RecognitionTypes WHERE ID = @_id;";
-                            string strQueryPinSerialPins = "Select SerialPin from dbo.Pins;";
+                            string strQueryPinSerialPins = "Select SerialPin from dbo.Pins WHERE RecognitionTypeId = @_recognitionTypeId;";
 
                             //Get List of RecognitionTypes
                             var _recognitionType = await _db.QueryFirstOrDefaultAsync<RecognitionTypes>(strQueryRecognitionTypes, new { _id = recognitionTypeID });
-                            //Get List of Pins Currently
-                            var _pinSerialPins = await _db.QueryFirstOrDefaultAsync<string>(strQueryPinSerialPins, new { _id = recognitionTypeID });
+                            //Get List of Pins of the given RecognitionType currently in the DB
+                            var _pinSerialPins = await _db.QueryFirstOrDefaultAsync<string>(strQueryPinSerialPins, new { _recognitionTypeId = recognitionTypeID });
 
                             if (_recognitionType != null)
                             {
@@ -78,6 +78,8 @@ namespace SchoolRecognition.Classes
                                 strRecogntionTypeCode = _recognitionType.Code;
                                 //Resolve Current Total Number of Pins in DB
                                 intTotalNumberOfPins = _pinSerialPins.ToList().Count;
+                                //Increment TotalNumber of PINs
+                                intTotalNumberOfPins++;
                                 //Generate Random 3 character Alphanumeric suffix
                                 var guid = Guid.NewGuid();
                                 strAlphanumericSecurityCode = guid.ToString().Substring(0, 3);
@@ -121,21 +123,25 @@ namespace SchoolRecognition.Classes
                         if (recognitionTypeID != Guid.Empty)
                         {
                             string strQueryRecognitionTypes = "Select * from dbo.RecognitionTypes WHERE ID = @_id;";
-                            string strQueryPinSerialPins = "Select SerialPin from dbo.Pins;";
+                            string strQueryPinSerialPins = "Select SerialPin from dbo.Pins WHERE RecognitionTypeId = @_recognitionTypeId;";
 
                             //Get List of RecognitionTypes
                             var _recognitionType = await _db.QueryFirstOrDefaultAsync<RecognitionTypes>(strQueryRecognitionTypes, new { _id = recognitionTypeID });
-                            //Get List of Pins Currently
-                            var _pinSerialPins = await _db.QueryFirstOrDefaultAsync<string>(strQueryPinSerialPins, new { _id = recognitionTypeID });
+                            //Get List of Pins of the given RecognitionType currently in the DB
+                            var _pinSerialPins = await _db.QueryFirstOrDefaultAsync<string>(strQueryPinSerialPins, new { _recognitionTypeId = recognitionTypeID });
 
                             if (_recognitionType != null)
                             {
+
+                                //Resolve RecognitionTypes Code
+                                strRecogntionTypeCode = _recognitionType.Code;
+                                //Resolve Current Total Number of Pins in DB
+                                intTotalNumberOfPins = _pinSerialPins.ToList().Count;
+
                                 for (int i = 0; i < numberOfPins; i++)
                                 {
-                                    //Resolve RecognitionTypes Code
-                                    strRecogntionTypeCode = _recognitionType.Code;
-                                    //Resolve Current Total Number of Pins in DB
-                                    intTotalNumberOfPins = _pinSerialPins.ToList().Count;
+                                    //Increment TotalNumber of PINs
+                                    intTotalNumberOfPins++;
                                     //Generate Random 3 character Alphanumeric suffix
                                     var guid = Guid.NewGuid();
                                     strAlphanumericSecurityCode = guid.ToString().Substring(0, 3);
