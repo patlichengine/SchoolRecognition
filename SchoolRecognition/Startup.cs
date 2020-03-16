@@ -9,7 +9,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SchoolRecognition.Context;
+using SchoolRecognition.Helpers;
 using SchoolRecognition.Models;
+using SchoolRecognition.Repository;
+using SchoolRecognition.Services;
+using SchoolRecognition.Data;
 
 namespace SchoolRecognition
 {
@@ -25,12 +30,31 @@ namespace SchoolRecognition
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
-            services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
+            //custom Henry Connection
+            //services.AddDbContext<SchoolRecognitionContext>(options =>
+            //  options.UseSqlServer(
+            //      Configuration.GetConnectionString("DefaultConnection")));
+
+            //custom project Connection String
+            //var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
+            //services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
+
+
+
 
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
+            //Scoping my  services  
+            _ = services.AddTransient<SchoolCategoriesRepo, Services.SchoolCategoriesService>();
+            //services.AddTransient<>
 
+
+
+            //Register dapper in scope  
+            services.AddScoped<IDapperHelper, DapperHelper>();
+
+            services.AddDbContext<SchoolRecognitionAppContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SchoolRecognitionAppContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. myDapperConnection

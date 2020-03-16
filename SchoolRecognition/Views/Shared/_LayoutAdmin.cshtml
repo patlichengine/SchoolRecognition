@@ -3,13 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@ViewData["Title"] - SchoolRecognition</title>
+    <title>@ViewData["Title"] - School Recognition</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/lib/fontawesome-free/css/all.min.css">
     <!-- icheck bootstrap -->
     <link rel="stylesheet" href="~/lib/icheck-bootstrap/icheck-bootstrap.min.css">
+
     <!-- Theme style -->
-    <link rel="stylesheet" href="~/css/waeclte.min.css">
+    <link rel="stylesheet" href="~/css/waeclte.css">
+
+    <!-- DataTables-->
+    <link rel="stylesheet" href="~/lib/jquery-dataTables/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/lib/jquery-dataTables/buttons.dataTables.min.css" />
+
+
 
     @RenderSection("styles", required: false)
     <link href="~/css/custom.css" rel="stylesheet" />
@@ -30,7 +37,7 @@
         </div>
         <!-- /.content-wrapper -->
 
-        <footer class="main-footer mt-5">
+        <footer class="main-footer">
             <strong>Copyright © @DateTime.Today.Year <a href="#">West African Examinations Council</a>.</strong> All Rights
             Reserved.
         </footer>
@@ -41,8 +48,34 @@
     <!-- jQuery -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables-->
+    <script src="~/lib/jquery-dataTables/jquery.dataTables.min.js"></script>
+
+    <script src="~/lib/jquery-dataTables/dataTables.buttons.min.js"></script>
+
+    <script src="~/lib/jquery-dataTables/jszip.min.js"></script>
+    <script src="~/lib/jquery-dataTables/pdfmake.min.js"></script>
+    <script src="~/lib/jquery-dataTables/vfs_fonts.js"></script>
+    <script src="~/lib/jquery-dataTables/buttons.html5.min.js"></script>
+
+ 
     <!-- AdminLTE App -->
     <script src="~/js/waeclte.min.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $('#schoolCategory').DataTable(
+                {
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copyHtml5',
+                        'excelHtml5',
+                        'csvHtml5',
+                        'pdfHtml5'
+                    ]
+                }
+            );
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 
 </body>

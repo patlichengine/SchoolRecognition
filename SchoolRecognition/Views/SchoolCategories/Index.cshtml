@@ -1,0 +1,64 @@
+﻿@model IEnumerable<SchoolRecognition.Models.SchoolCategories>
+
+@{
+    ViewData["Title"] = "List of Availabe School Categories";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <p class="text-primary breadcrumb-item active">
+
+                    @ViewData["Title"]
+
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <a class="btn btn-primary float-sm-right" asp-action="Categories" asp-controller="SchoolCategories">
+                    Add Category
+                </a>
+            </div>
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<section class="content ml-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Code)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Code)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+</section>

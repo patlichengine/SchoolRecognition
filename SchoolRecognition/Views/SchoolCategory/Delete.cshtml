@@ -1,0 +1,58 @@
+﻿@model SchoolRecognition.Models.SchoolCategories
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header ml-5">
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <p class="text-primary breadcrumb-item active">
+
+                    @ViewData["Title"]
+
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <a class="btn btn-primary float-sm-right" asp-action="Index" asp-controller="SchoolCategory">
+                    Return Home
+                </a>
+            </div>
+
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+<section class="content-wrapper">
+    <div>
+        <h4>SchoolCategories</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Code)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Code)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            <a asp-action="Index">Back to List</a>
+        </form>
+    </div>
+
+</section>
+
+

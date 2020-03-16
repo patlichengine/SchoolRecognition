@@ -1,0 +1,63 @@
+﻿@model SchoolRecognition.Models.SchoolCategories
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+ 
+        <div class="card">
+            <div class="card-header">
+                <div class="container">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <p class="text-primary breadcrumb-item active">
+
+                                @ViewData["Title"]
+
+                            </p>
+                        </div>
+                        <div class="col-sm-6">
+                            <a class="btn btn-primary float-sm-right" asp-action="Index" asp-controller="SchoolCategory">
+                                View Categories
+                            </a>
+                        </div>
+
+                    </div>
+                </div><!-- /.container-fluid -->
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Create School Categories</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Code" class="control-label"></label>
+                                <input asp-for="Code" class="form-control" />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div>
+                    <a asp-action="Index">Back to List</a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
