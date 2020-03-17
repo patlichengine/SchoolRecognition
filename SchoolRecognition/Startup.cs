@@ -56,7 +56,7 @@ namespace SchoolRecognition
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Account}/{action=MakeSchoolPayment}/{id?}");
+                    pattern: "{controller=Payment}/{action=AddSchoolPayment}/{id?}");
             });
         }
     }

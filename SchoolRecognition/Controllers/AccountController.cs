@@ -15,20 +15,7 @@ namespace SchoolRecognition.Controllers
             return View();
         }
 
-        public IActionResult MakeSchoolPayment()
-        {
-           
-            return View();
-        }
-        [HttpPost]
-        public IActionResult MakeSchoolPayment(SchoolPaymentViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                new clsAccount().CreatePayment(model);
-            }
-            return View();
-        }
+        
         public IActionResult Register()
         {
             return View();

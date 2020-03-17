@@ -14,25 +14,15 @@ namespace SchoolRecognition.Classes
     {
         public void CreateUser(RegisterViewModel _obj)
         {
-            using(var con = new clsDBConnection().OpenConnection())
-            {
-                     // var  result = con.Query<SchoolPaymentViewModel>("dbo.procTertiaryDetailsGet", new { ID = id }, commandType: CommandType.StoredProcedure).ToList();
+            //using(var con = new clsDBConnection().OpenConnection())
+            //{
+            //         // var  result = con.Query<SchoolPaymentViewModel>("dbo.procTertiaryDetailsGet", new { ID = id }, commandType: CommandType.StoredProcedure).ToList();
                     
                                    
-            }
+            //}
         }
 
        
-        public SchoolPaymentViewModel CreatePayment(SchoolPaymentViewModel _model)
-        {
-            SchoolPaymentViewModel result = new SchoolPaymentViewModel();
-            using (var con = new clsDBConnection().OpenConnection())
-            {
-                 result = con.Query<SchoolPaymentViewModel>("dbo.AddSchoolPayment", new { PinID=_model.PinID,SchoolID=_model.SchoolID,Amount=_model.Amount,ReceiptNo=_model.ReceiptNo,ReceiptImage=_model.ReceiptImage }, commandType: CommandType.StoredProcedure).FirstOrDefault();
-
-
-            }
-            return result;
-        }
+      
     }
 }
