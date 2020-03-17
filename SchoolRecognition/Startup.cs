@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SchoolRecognition.Classes;
 using SchoolRecognition.Models;
+using SchoolRecognition.Repository;
 
 namespace SchoolRecognition
 {
@@ -27,6 +29,11 @@ namespace SchoolRecognition
         {
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
+
+            var connectionString = new ConnectionString(Configuration.GetConnectionString("SchoolRecognitionConnection"));
+            services.AddSingleton(connectionString);
+
+            services.AddTransient<IAccount, clsAccount>(provider => new clsAccount(connectionString));
 
             services.AddControllersWithViews();
 

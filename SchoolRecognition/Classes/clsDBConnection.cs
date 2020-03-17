@@ -10,27 +10,28 @@ namespace SchoolRecognition.Classes
 {
     public class clsDBConnection
     {
-        private readonly IConfiguration _configuration;
+        private readonly ConnectionString _connectionString;
 
         public clsDBConnection()
         {
 
         }
-        public clsDBConnection(IConfiguration configuration)
+        public clsDBConnection(ConnectionString connectionString)
         {
-            _configuration = configuration;
+            _connectionString = connectionString;
         }
         
         //To Handle connection related activities
         public IDbConnection OpenConnection()
         {
-            string constr = _configuration.GetConnectionString("myDapperConnection").ToString();
+            string constr = _connectionString.Value;
             return new SqlConnection(constr);
         }
 
         public SqlConnection DbConnection()
         {
-            string constr = _configuration.GetConnectionString("myDapperConnection").ToString();
+            string constr = _connectionString.Value;
+            //string constr = _configuration.GetConnectionString("myDapperConnection").ToString();
             return new SqlConnection(constr);
         }
     }
