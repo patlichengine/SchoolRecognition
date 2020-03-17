@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolRecognition.Classes;
 using SchoolRecognition.Models;
+using SchoolRecognition.Repository;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,6 +14,11 @@ namespace SchoolRecognition.Controllers
 {
     public class PaymentController : Controller
     {
+        IPayment _paymentRepo;
+        public PaymentController(IPayment paymentRepo)
+        {
+            _paymentRepo = paymentRepo;
+        }
         // GET: /<controller>/
         public IActionResult Index()
         {
@@ -25,9 +31,10 @@ namespace SchoolRecognition.Controllers
     //    new SelectListItem { Value = "2", Text = "SUBJECT RECOGNITION" },
     //    new SelectListItem { Value = "3", Text = "DE-RECOGNITION"  },
     //};
-        public IActionResult AddSchoolPayment()
+        public async Task<IActionResult> AddSchoolPayment()
         {
-           // ViewBag.RecognitionTypeID = new SelectList(clsContent.GetAllRecognitionType(), "ID", "Name");
+            var recTypes = await _paymentRepo.GetAllRecognitionType();
+            ViewBag.RecognitionTypeID = new SelectList(recTypes, "ID", "Name");
 
             return View();
         }
@@ -36,7 +43,7 @@ namespace SchoolRecognition.Controllers
         {
             if (ModelState.IsValid)
             {
-                new clsContent().AddSchoolPayment(model);
+                _paymentRepo.AddSchoolPayment(model);
             }
             return View();
         }

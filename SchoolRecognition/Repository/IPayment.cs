@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.Repository
 {
-    interface IPayment
+    public interface IPayment
     {
         public SchoolPaymentViewModel AddSchoolPayment(SchoolPaymentViewModel model);
+
+        public Task<List<RecognitionTypes>> GetAllRecognitionType();
+
         //public void UpdateSchoolPayment(Guid id);
         //public void DeleteSchoolPayment(Guid id);
         //public SchoolPaymentViewModel GetSchoolPayments();
