@@ -18,15 +18,17 @@ namespace SchoolRecognition.Controllers
         // GET: /<controller>/
 
 
-        private readonly Services.SchoolCategoriesService schoolCategoriess;
-        private readonly SchoolCategoriesRepo _schoolCategories;
+        private readonly SchoolCategoriesRepo schoolCategoriess;
+
+        
+
         [Obsolete]
         private readonly IHostingEnvironment _hostingEnvironment;
 
         [Obsolete]
-        public SchoolCategoriesController(SchoolCategoriesRepo schoolCategories, IHostingEnvironment hostingEnvironment, Services.SchoolCategoriesService schoolCategory)
+        public SchoolCategoriesController( IHostingEnvironment hostingEnvironment, SchoolCategoriesRepo schoolCategory)
         {
-            _schoolCategories = schoolCategories;
+            
             _hostingEnvironment = hostingEnvironment;
             schoolCategoriess = schoolCategory;
 
@@ -34,23 +36,41 @@ namespace SchoolRecognition.Controllers
         }
 
         
-        public  IEnumerable<SchoolCategories> Index()
+        public async Task<IActionResult> Index()
         {
-            return _schoolCategories.ListAll();
+            var result = await schoolCategoriess.ListAll();
+            return View(result);
         }
         public IActionResult Categories()
         {
             return View();
         }
 
-        public IActionResult Categories(Models.SchoolCategories schoolCategorie)
+        public async Task<IActionResult> Create(SchoolCategories school)
         {
-            _schoolCategories.Create(schoolCategorie);
-            return View();
+            var result = (await schoolCategoriess.Create(school));
+            return View(result);
         }
-        public IActionResult Edit()
+        public async Task<IActionResult> Edit(SchoolCategories school)
         {
-            return View();
+            var result = await schoolCategoriess.Update(school);
+            return View(result);
         }
+
+
+        // GET: SchoolCategory/Details/5
+              public async Task<IActionResult> Details(Guid schoolCategoriesId)
+        {
+            var result = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
+
+            return View(result);
+        }
+
+        public async Task<IActionResult> Delete(Guid schoolCategoriesId)
+        {
+            var result = await schoolCategoriess.Delete(schoolCategoriesId);
+            return View(result);
+        }
+
     }
 }

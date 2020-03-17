@@ -9,10 +9,10 @@ namespace SchoolRecognition.Repository
     public interface SchoolCategoriesRepo
     {
 
-        bool Delete(Guid schoolCategoriesId);
-        SchoolCategories GetBySchoolCategoriesId(Guid schoolCategoriesId);
-        bool Update(SchoolCategories schoolCategories);
-        bool Create(SchoolCategories schoolCategories);
-        public IList<SchoolCategories> ListAll();
+        Task<int> Delete(Guid schoolCategoriesId);
+        Task<SchoolCategories> GetBySchoolCategoriesId(Guid schoolCategoriesId);
+        Task<int> Update(SchoolCategories schoolCategories);
+       public Task<int?> Create(SchoolCategories schoolCategories);
+        public Task<List<SchoolCategories>> ListAll();
     }
 }

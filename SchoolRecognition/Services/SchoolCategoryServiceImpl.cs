@@ -16,27 +16,27 @@ namespace SchoolRecognition.Services
 
         }
 
-        public bool Create(SchoolCategories schoolCategories)
+        public Task<int?> Create(SchoolCategories schoolCategories)
         {
             return _schoolCategoriesService.Create(schoolCategories);
         }
 
-        public SchoolCategories GetBySchoolCategoriesId(Guid schoolCategoriesId)
+        public Task<SchoolCategories> GetBySchoolCategoriesId(Guid schoolCategoriesId)
         {
             return _schoolCategoriesService.GetBySchoolCategoriesId(schoolCategoriesId);
         }
 
-        public IList<SchoolCategories> ListAll()
+        public Task<List<SchoolCategories>> ListAll()
         {
             return _schoolCategoriesService.ListAll();
         }
 
-        public bool Update(SchoolCategories schoolCategories)
+        public Task<int> Update(SchoolCategories schoolCategories)
         {
             return _schoolCategoriesService.Update(schoolCategories);
         }
 
-        public bool Delete(Guid schoolCategoriesId)
+        public Task<int> Delete(Guid schoolCategoriesId)
         {
             return _schoolCategoriesService.Delete(schoolCategoriesId);
         }

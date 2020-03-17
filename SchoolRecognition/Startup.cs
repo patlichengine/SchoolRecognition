@@ -31,9 +31,9 @@ namespace SchoolRecognition
         public void ConfigureServices(IServiceCollection services)
         {
             //custom Henry Connection
-            //services.AddDbContext<SchoolRecognitionContext>(options =>
-            //  options.UseSqlServer(
-            //      Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<SchoolRecognitionContext>(options =>
+              options.UseSqlServer(
+                  Configuration.GetConnectionString("DefaultConnection")));
 
             //custom project Connection String
             //var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
@@ -45,7 +45,7 @@ namespace SchoolRecognition
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
             //Scoping my  services  
-            _ = services.AddTransient<SchoolCategoriesRepo, Services.SchoolCategoriesService>();
+            _ = services.AddTransient<SchoolCategoriesRepo, SchoolCategoriesService>();
             //services.AddTransient<>
 
 
@@ -53,8 +53,9 @@ namespace SchoolRecognition
             //Register dapper in scope  
             services.AddScoped<IDapperHelper, DapperHelper>();
 
-            services.AddDbContext<SchoolRecognitionAppContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("SchoolRecognitionAppContext")));
+            //My Scaffold App
+            //services.AddDbContext<SchoolRecognitionAppContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("SchoolRecognitionAppContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. myDapperConnection
