@@ -15,7 +15,7 @@ using SchoolRecognition.Models;
 using SchoolRecognition.Repository;
 using SchoolRecognition.Services;
 using SchoolRecognition.Data;
-
+using SchoolRecognition.Classes;
 namespace SchoolRecognition
 {
     public class Startup
@@ -30,10 +30,19 @@ namespace SchoolRecognition
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
+            services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
+
+            var connectionString = new ConnectionString(Configuration.GetConnectionString("SchoolRecognitionConnection"));
+            
+              
+
+            services.AddSingleton(connectionString);
             //custom Henry Connection
-            services.AddDbContext<SchoolRecognitionContext>(options =>
-              options.UseSqlServer(
-                  Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<SchoolRecognitionContext>(options =>
+            //  options.UseSqlServer(
+            //      Configuration.GetConnectionString("SchoolRecognitionConnection")));
 
             //custom project Connection String
             //var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
@@ -45,7 +54,7 @@ namespace SchoolRecognition
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
             //Scoping my  services  
-            _ = services.AddTransient<SchoolCategoriesRepo, SchoolCategoriesService>();
+            _ = services.AddTransient<SchoolCategoriesRepo, SchoolCategoriesService>(provider => new SchoolCategoriesService(connectionString));
             //services.AddTransient<>
 
 

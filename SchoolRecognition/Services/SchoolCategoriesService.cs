@@ -12,65 +12,71 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.Services
 {
-    public class SchoolCategoriesService : SchoolRecognitionContext, SchoolCategoriesRepo
+    public class SchoolCategoriesService :  SchoolCategoriesRepo
     {
-        
-        public Task<int?> Create(SchoolCategories schoolCategories)
+        private const string Sql = "stpCreateSchoolCategory";
+        private ConnectionString _connectionString;
+
+        public SchoolCategoriesService(ConnectionString connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
+        public async Task<int> Create(SchoolCategories schoolCategories)
         {
 
-            return Task.Run(async () =>
-            {
+           
                 //declare return var 
-                int? queryResult = 0;
+                int queryResult = 0;
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
-                        //Create a sql parater objects
-                        SqlParameter[] commandParameters = new SqlParameter[]
-                        {
-                            new SqlParameter("@ID", schoolCategories.Id),
-                            new SqlParameter("@Name", schoolCategories.Name),
-                            new SqlParameter("@ICodeD", schoolCategories.Code),
-                        };
 
                         //Execute the query command
-                        queryResult = await _db.ExecuteAsync("procCreateSchoolCategory", commandParameters, commandType: CommandType.StoredProcedure);
+                        queryResult = await _db.ExecuteAsync(Sql,
+                            new
+                            {
+                                categoryName = schoolCategories.Name,
+                                categoryCode = schoolCategories.Code
+                            },
+                            
+                            
+                            commandType: CommandType.StoredProcedure);
                     }
                         
 
-                    //SqlMapper.Execute(con, "Create", param: commandParameters, commandType: CommandType.StoredProcedure);
+                    
 
-                    return queryResult;
+                   
                 }
                 catch (Exception ex)
                 {
                     throw ex;
                 }
-            }
-            );
+            return queryResult;
+        
             
         }
 
      
 
-        public Task<int> Delete(Guid schoolCategoriesId)
+        public async Task<int> Delete(Guid schoolCategoriesId)
         {
-            return Task.Run(async () =>
-            {
+            
 
                 try
                 {
                     int result = 0;
 
-                    using (IDbConnection myConnection = new clsDBConnection().OpenConnection())
+                    using (IDbConnection myConnection = new SqlConnection(_connectionString.Value))
                     {
 
-                        string queryAction = "DELETE FROM dbo.SchoolCategory WHERE ID = @ID";
+                        //string queryAction = "DELETE FROM dbo.SchoolCategory WHERE ID = @ID";
 
                         if (schoolCategoriesId != Guid.Empty)
                         {
-                            var _result = await myConnection.ExecuteAsync(queryAction, commandType: CommandType.Text);
+                            var _result = await myConnection.ExecuteAsync("stpSchoolCategory", commandType: CommandType.Text);
 
                             result = _result;
                         }
@@ -83,110 +89,105 @@ namespace SchoolRecognition.Services
                     throw ex;
                 }
 
-
-
-            }
-            );            
+          
         }
 
-        public Task<SchoolCategories> GetBySchoolCategoriesId(Guid schoolCategoriesId)
+        public async Task<SchoolCategories> GetBySchoolCategoriesId(Guid schoolCategoriesId)
         {
-
-            return Task.Run(async () =>
+                SchoolCategories categories = new SchoolCategories();
+            
             {
+               
                
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
                        
-                                SchoolCategories result = null;
+                                
 
                                 if (schoolCategoriesId != Guid.Empty)
                                 {
 
-                                    string strQuery = "Select * from procSelectSchoolCategory WHERE ID = @_id;";
+                                    //string strQuery = "Select * from procSelectSchoolCategory WHERE ID = @_id;";
 
-                                    var _result = await _db.QueryFirstOrDefaultAsync<SchoolCategories>(strQuery, new { _id = schoolCategoriesId });
+                                    var _result = await _db.QueryFirstOrDefaultAsync<SchoolCategories>("stpSelectSchoolCategoryByID",  new { _id = schoolCategoriesId });
 
-                                    result = _result;
+                            categories = _result;
                                 }
 
-                                return result;
+                                
                     
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    Console.WriteLine(ex.Message);
                 }
+                return categories;
             }
-            );
+            
 
         }
 
         
-        public Task<int> Update(Models.SchoolCategories schoolCategories)
+        public async Task<int> Update(SchoolCategories schoolCategories)
         {
-            return Task.Run(async () =>
-            {
+            
                 //declare return var 
                 int queryResult = 0;
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
-                    {
-                        //Create a sql parater objects
-                        SqlParameter[] commandParameters = new SqlParameter[]
-                        {
-                            new SqlParameter("@ID", schoolCategories.Id),
-                            new SqlParameter("@Name", schoolCategories.Name),
-                            new SqlParameter("@ICodeD", schoolCategories.Code),
-                        };
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
+                {
+                    //Create a sql parater objects
 
-                        //Execute the query command
-                        queryResult = await _db.ExecuteAsync("procUpdateSchoolCategory", commandParameters, commandType: CommandType.StoredProcedure);
+                    queryResult = await _db.ExecuteAsync("stpUpdateSchoolCategory",
+                        new
+                        {
+                            categoryName = schoolCategories.Name,
+                            categoryCode = schoolCategories.Code
+                        },
+
+                     commandType: CommandType.StoredProcedure);
                     }
 
 
                     //SqlMapper.Execute(con, "Create", param: commandParameters, commandType: CommandType.StoredProcedure);
 
-                    return queryResult;
+                    
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
-                }
+                Console.WriteLine(ex.Message);
             }
-            );
+            return queryResult;
         }
 
-      public Task<List<SchoolCategories>> ListAll()
+      public async Task<List<SchoolCategories>> ListAll()
         {
-            return Task.Run(async () =>
-            {
+            List<SchoolCategories> result = new List<SchoolCategories>();
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
-                    {
-                        var result = new List<SchoolCategories>();
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
+                {
+                       
 
-                        string strQuery = "Select * from dbo.SchoolCategories;";
-
-                        var _result = await _db.QueryAsync<SchoolCategories>(strQuery);
+                        var _result = await _db.QueryAsync<SchoolCategories>("stpSelectAllSchoolCategories", commandType: CommandType.StoredProcedure
+                            
+                            
+                            );
 
                         result = _result.ToList();
 
-                        return result;
+                       
                     }
                 }
                 catch(Exception ex)
                 {
-                    throw ex;
+                Console.WriteLine(ex.Message);
                 }
-            }
-
-            );
+            return result;
         }
     }
 }

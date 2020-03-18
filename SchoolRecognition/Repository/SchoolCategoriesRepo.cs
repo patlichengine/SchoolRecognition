@@ -12,7 +12,7 @@ namespace SchoolRecognition.Repository
         Task<int> Delete(Guid schoolCategoriesId);
         Task<SchoolCategories> GetBySchoolCategoriesId(Guid schoolCategoriesId);
         Task<int> Update(SchoolCategories schoolCategories);
-       public Task<int?> Create(SchoolCategories schoolCategories);
-        public Task<List<SchoolCategories>> ListAll();
+        Task<int> Create(SchoolCategories schoolCategories);
+         Task<List<SchoolCategories>> ListAll();
     }
 }

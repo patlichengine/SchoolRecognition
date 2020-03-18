@@ -16,10 +16,10 @@ namespace SchoolRecognition.Services
 
         }
 
-        public Task<int?> Create(SchoolCategories schoolCategories)
-        {
-            return _schoolCategoriesService.Create(schoolCategories);
-        }
+        //public Task<int> Create(SchoolCategories schoolCategories)
+        //{
+        //    return _schoolCategoriesService.Create(schoolCategories);
+        //}
 
         public Task<SchoolCategories> GetBySchoolCategoriesId(Guid schoolCategoriesId)
         {
@@ -39,6 +39,11 @@ namespace SchoolRecognition.Services
         public Task<int> Delete(Guid schoolCategoriesId)
         {
             return _schoolCategoriesService.Delete(schoolCategoriesId);
+        }
+
+        public Task<int> Create(SchoolCategories schoolCategories)
+        {
+            return _schoolCategoriesService.Create(schoolCategories);
         }
     }
 

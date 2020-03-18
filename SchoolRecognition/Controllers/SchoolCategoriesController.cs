@@ -18,7 +18,7 @@ namespace SchoolRecognition.Controllers
         // GET: /<controller>/
 
 
-        private readonly SchoolCategoriesRepo schoolCategoriess;
+        private SchoolCategoriesRepo schoolCategoriess;
 
         
 
@@ -46,20 +46,32 @@ namespace SchoolRecognition.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Create(SchoolCategories school)
+        [HttpPost]
+        public async Task<IActionResult> Categories(SchoolCategories model)
         {
-            var result = (await schoolCategoriess.Create(school));
-            return View(result);
+            if (ModelState.IsValid)
+            {
+                 await schoolCategoriess.Create(model);
+                return RedirectToAction("Categories", "SchoolCategories");
+            }
+            return View(model);
         }
+        public IActionResult Edit()
+        {
+            
+            return View();
+        }
+
+        [HttpPut]
         public async Task<IActionResult> Edit(SchoolCategories school)
         {
             var result = await schoolCategoriess.Update(school);
-            return View(result);
+            return RedirectToAction("Edit", "SchoolCategories");
         }
 
 
         // GET: SchoolCategory/Details/5
-              public async Task<IActionResult> Details(Guid schoolCategoriesId)
+        public async Task<IActionResult> Details(Guid schoolCategoriesId)
         {
             var result = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
 
