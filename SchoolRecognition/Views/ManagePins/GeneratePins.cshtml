@@ -48,6 +48,8 @@
 
                     <form asp-action="GeneratePins" method="post">
 
+                        @Html.AntiForgeryToken()
+
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="form-group">

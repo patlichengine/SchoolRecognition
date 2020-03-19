@@ -42,7 +42,9 @@ namespace SchoolRecognition.Controllers
 
             return View();
         }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> GeneratePins(PinsCreateViewModel model)
         {
 
