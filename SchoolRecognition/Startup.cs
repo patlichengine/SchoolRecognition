@@ -9,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SchoolRecognition.Classes;
 using SchoolRecognition.Models;
+using SchoolRecognition.Repository;
+using Vereyon.Web;
 
 namespace SchoolRecognition
 {
@@ -28,7 +31,19 @@ namespace SchoolRecognition
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
 
+            var connectionString = new ConnectionString(connection);
+            services.AddSingleton(connectionString);
+
+            // Add services required for flash message to work.
+            services.AddFlashMessage();
+
+            //Application-Layer Services
+            services.AddTransient<IPins, clsPins>(provider => new clsPins(connectionString));
+            services.AddTransient<IRecognitionTypes, clsRecognitionTypes>(provider => new clsRecognitionTypes(connectionString));
+
+
             services.AddControllersWithViews()
+                .AddNewtonsoftJson()
                 .AddRazorRuntimeCompilation();
 
         }

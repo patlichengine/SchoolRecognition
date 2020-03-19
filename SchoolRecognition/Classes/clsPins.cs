@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using SchoolRecognition.Models;
 using SchoolRecognition.Repository;
 using System;
@@ -11,6 +12,11 @@ namespace SchoolRecognition.Classes
 {
     public class clsPins : IPins
     {
+        private readonly ConnectionString _connectionString;
+        public clsPins(ConnectionString connectionString)
+        {
+            _connectionString = connectionString;
+        }
 
         private const string WAECCODEPREFIX = "WC";
         //private const string CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -22,13 +28,30 @@ namespace SchoolRecognition.Classes
 
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
                         var result = new List<Pins>();
 
-                        string strQuery = "Select * from dbo.Pins;";
+                        //string strQuery = "Select * from dbo.PINs;";
+                        string strQuery = "SELECT * FROM dbo.PINs AS pin " +
+                        "LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
+                        "LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id;";
+                        //"WHERE ;";
 
-                        var _result = await _db.QueryAsync<Pins>(strQuery);
+                        var _result = await _db.QueryAsync<Pins, Users, RecognitionTypes, Pins>(
+                            strQuery, 
+                            (pin, user, recognitionType) => {
+
+                                if (pin != null)
+                                {
+                                    pin.CreatedByNavigation = user;
+                                    pin.RecognitionType = recognitionType;
+                                }
+
+                                return pin;
+
+                            },
+                            splitOn: "Id");
 
                         result = _result.ToList();
 
@@ -43,7 +66,56 @@ namespace SchoolRecognition.Classes
 
             });
         }
-        Task<string> GenerateSerialPin(Guid recognitionTypeID)
+        public Task<List<Pins>> GetPinsByRecognitionTypeId(Guid recognitionTypeId)
+        {
+            return Task.Run(async () =>
+            {
+
+                try
+                {
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
+                    {
+                        var result = new List<Pins>();
+
+                        if (recognitionTypeId != Guid.Empty)
+                        {
+                            //string strQuery = "Select * from dbo.PINs;";
+                            string strQuery = "SELECT * FROM dbo.PINs AS pin " +
+                            "LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
+                            "LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id " +
+                            "WHERE pin.RecognitionTypeId = @_recognitionTypeId;";
+
+                            var _result = await _db.QueryAsync<Pins, Users, RecognitionTypes, Pins>(
+                                strQuery,
+                                (pin, user, recognitionType) =>
+                                {
+
+                                    if (pin != null)
+                                    {
+                                        pin.CreatedByNavigation = user;
+                                        pin.RecognitionType = recognitionType;
+                                    }
+
+                                    return pin;
+
+                                }, new { _recognitionTypeId = recognitionTypeId },
+                                splitOn: "Id");
+
+                            result = _result.ToList();
+                        }
+
+                        return result;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            });
+        }
+        Task<string> GenerateSerialPin(Guid recognitionTypeId)
         {
             return Task.Run(async () =>
             {
@@ -51,7 +123,7 @@ namespace SchoolRecognition.Classes
                 try
                 {
 
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
                         //
                         string strGeneratedSerialPin = null;
@@ -62,15 +134,15 @@ namespace SchoolRecognition.Classes
                         int intTotalNumberOfPins = 0;
 
 
-                        if (recognitionTypeID != Guid.Empty)
+                        if (recognitionTypeId != Guid.Empty)
                         {
-                            string strQueryRecognitionTypes = "Select * from dbo.RecognitionTypes WHERE ID = @_id;";
-                            string strQueryPinSerialPins = "Select SerialPin from dbo.Pins WHERE RecognitionTypeId = @_recognitionTypeId;";
+                            string strQueryRecognitionTypes = "Select * from dbo.RecognitionTypes WHERE Id = @_id;";
+                            string strQueryPinSerialPins = "Select SerialPin from dbo.PINs WHERE RecognitionTypeId = @_recognitionTypeId;";
 
                             //Get List of RecognitionTypes
-                            var _recognitionType = await _db.QueryFirstOrDefaultAsync<RecognitionTypes>(strQueryRecognitionTypes, new { _id = recognitionTypeID });
+                            var _recognitionType = await _db.QueryFirstOrDefaultAsync<RecognitionTypes>(strQueryRecognitionTypes, new { _id = recognitionTypeId });
                             //Get List of Pins of the given RecognitionType currently in the DB
-                            var _pinSerialPins = await _db.QueryFirstOrDefaultAsync<string>(strQueryPinSerialPins, new { _recognitionTypeId = recognitionTypeID });
+                            var _pinSerialPins = await _db.QueryAsync<string>(strQueryPinSerialPins, new { _recognitionTypeId = recognitionTypeId });
 
                             if (_recognitionType != null)
                             {
@@ -85,7 +157,7 @@ namespace SchoolRecognition.Classes
                                 strAlphanumericSecurityCode = guid.ToString().Substring(0, 3);
                                 //Combine components of the GeneratedSerialPin
                                 strGeneratedSerialPin = String.Format("{0}{1}{2,5:00000}{3}", 
-                                    WAECCODEPREFIX, strRecogntionTypeCode, intTotalNumberOfPins, strAlphanumericSecurityCode);
+                                    WAECCODEPREFIX, strRecogntionTypeCode, intTotalNumberOfPins, strAlphanumericSecurityCode.ToUpper());
                                 
                             }
                         }
@@ -101,7 +173,7 @@ namespace SchoolRecognition.Classes
 
             });
         }
-        Task<List<string>> GenerateSerialPins(Guid recognitionTypeID, int numberOfPins)
+        Task<List<string>> GenerateSerialPins(Guid recognitionTypeId, int numberOfPins)
         {
             return Task.Run(async () =>
             {
@@ -109,7 +181,7 @@ namespace SchoolRecognition.Classes
                 try
                 {
 
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
                         //
                         List<string> strGeneratedSerialPins = new List<string>();
@@ -120,15 +192,15 @@ namespace SchoolRecognition.Classes
                         int intTotalNumberOfPins = 0;
 
 
-                        if (recognitionTypeID != Guid.Empty)
+                        if (recognitionTypeId != Guid.Empty)
                         {
-                            string strQueryRecognitionTypes = "Select * from dbo.RecognitionTypes WHERE ID = @_id;";
-                            string strQueryPinSerialPins = "Select SerialPin from dbo.Pins WHERE RecognitionTypeId = @_recognitionTypeId;";
+                            string strQueryRecognitionTypes = "Select * from dbo.RecognitionTypes WHERE Id = @_id;";
+                            string strQueryPinSerialPins = "Select SerialPin from dbo.PINs WHERE RecognitionTypeId = @_recognitionTypeId;";
 
                             //Get List of RecognitionTypes
-                            var _recognitionType = await _db.QueryFirstOrDefaultAsync<RecognitionTypes>(strQueryRecognitionTypes, new { _id = recognitionTypeID });
+                            var _recognitionType = await _db.QueryFirstOrDefaultAsync<RecognitionTypes>(strQueryRecognitionTypes, new { _id = recognitionTypeId });
                             //Get List of Pins of the given RecognitionType currently in the DB
-                            var _pinSerialPins = await _db.QueryFirstOrDefaultAsync<string>(strQueryPinSerialPins, new { _recognitionTypeId = recognitionTypeID });
+                            var _pinSerialPins = await _db.QueryAsync<string>(strQueryPinSerialPins, new { _recognitionTypeId = recognitionTypeId });
 
                             if (_recognitionType != null)
                             {
@@ -147,7 +219,7 @@ namespace SchoolRecognition.Classes
                                     strAlphanumericSecurityCode = guid.ToString().Substring(0, 3);
                                     //Combine components of the GeneratedSerialPin
                                     string _strGeneratedSerialPin = String.Format("{0}{1}{2,5:00000}{3}",
-                                        WAECCODEPREFIX, strRecogntionTypeCode, intTotalNumberOfPins, strAlphanumericSecurityCode);
+                                        WAECCODEPREFIX, strRecogntionTypeCode, intTotalNumberOfPins, strAlphanumericSecurityCode.ToUpper());
 
                                     //Add to list of strings
                                     strGeneratedSerialPins.Add(_strGeneratedSerialPin);
@@ -174,17 +246,54 @@ namespace SchoolRecognition.Classes
 
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
                         Pins result = null;
 
                         if (id != Guid.Empty)
                         {
-                            string strQuery = "Select * from dbo.Pins WHERE ID = @_id;";
+                            //string strQuery = "Select * from dbo.PINs WHERE ID = @_id;";
+                            string strQuery = "SELECT * FROM dbo.PINs AS pin " +
+                                "LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
+                                "LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id " +
+                                "LEFT JOIN dbo.PinHistories AS pnHstrys ON pin.Id = pnHstrys.PinId " +
+                                "LEFT JOIN dbo.SchoolPayments AS schPays ON pin.Id = schPays.PinId " +
+                                "WHERE pin.Id = @_id;";
 
-                            var _result = await _db.QueryFirstOrDefaultAsync<Pins>(strQuery, new { _id = id });
+                            var pinsDictionary = new Dictionary<Guid, Pins>();
 
-                            result = _result;
+                            var _result = await _db.QueryAsync<Pins, Users, RecognitionTypes, PinHistories, SchoolPayments, Pins>(
+                                strQuery,
+                                (pin, user, recognitionType, listPinHistorys, listSchoolPayments) =>
+                                {
+                                    Pins pinData;
+
+                                    if (!pinsDictionary.TryGetValue(pin.Id, out pinData))
+                                    {
+                                        pinData = pin;
+                                        pinData.CreatedByNavigation = user;
+                                        pinData.RecognitionType = recognitionType;
+                                        //
+                                        pinData.PinHistories = new List<PinHistories>();
+                                        pinData.SchoolPayments = new List<SchoolPayments>();
+                                        //
+                                        pinsDictionary.Add(pinData.Id, pinData);
+                                    }
+
+                                    pinData.PinHistories.Add(listPinHistorys);
+                                    pinData.SchoolPayments.Add(listSchoolPayments);
+
+                                    return pinData;
+
+                                }, new { _id = id },
+                                splitOn: "Id");
+
+                            if (_result != null)
+                            {
+                                result = _result.FirstOrDefault();
+                            }
+
+                            return result;
                         }
 
                         return result;
@@ -206,10 +315,10 @@ namespace SchoolRecognition.Classes
 
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
-                        string strQuery = "INSERT INTO dbo.Pins (ID,RecognitionTypeID,SerialPin,IsActive,IsInUse,CreatedBy,DateCreated)" +
-                        " VALUES (@ID,@RecognitionTypeID,@SerialPin,@IsActive,@IsInUse,@CreatedBy,@DateCreated);";
+                        string strQuery = "INSERT INTO dbo.PINs (Id,RecognitionTypeId,SerialPin,IsActive,IsInUse,CreatedBy,DateCreated)" +
+                        " VALUES (@Id,@RecognitionTypeId,@SerialPin,@IsActive,@IsInUse,@CreatedBy,@DateCreated);";
 
                         Guid? returnId = Guid.Empty;
                         if (_obj != null)
@@ -217,15 +326,15 @@ namespace SchoolRecognition.Classes
                             _obj.Id = Guid.NewGuid();
                             _obj.DateCreated = DateTime.Now;
                             //Generate a Custom SerialPin
-                            if (_obj.RecognitionTypeId != Guid.Empty)
+                            if (_obj.RecognitionTypeId != null && _obj.RecognitionTypeId != Guid.Empty)
                             {
                                 _obj.SerialPin = await GenerateSerialPin(_obj.RecognitionTypeId.Value);
                             }
 
                             var _result = await _db.ExecuteAsync(strQuery, new 
                             { 
-                                ID = _obj.Id,
-                                RecognitionID = _obj.RecognitionTypeId,
+                                Id = _obj.Id,
+                                RecognitionId = _obj.RecognitionTypeId,
                                 SerialPin = _obj.SerialPin,
                                 IsActive = _obj.IsActive,
                                 IsInUse = _obj.IsInUse,
@@ -255,20 +364,20 @@ namespace SchoolRecognition.Classes
 
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
 
                         List<string> strGeneratedSerialPins = new List<string>();
                         List<Pins> listObjPins = new List<Pins>();
 
-                        string strQuery = "INSERT INTO dbo.Pins (ID,RecognitionTypeID,SerialPin,IsActive,IsInUse,CreatedBy,DateCreated)" +
-                        " VALUES (@ID,@RecognitionTypeID,@SerialPin,@IsActive,@IsInUse,@CreatedBy,@DateCreated);";
+                        string strQuery = "INSERT INTO dbo.PINs (Id, RecognitionTypeId, SerialPin, IsActive, IsInUse, CreatedBy, DateCreated)" +
+                        " VALUES (@Id, @RecognitionTypeId, @SerialPin, @IsActive, @IsInUse, @CreatedBy, @DateCreated);";
 
                         Guid? returnId = Guid.Empty;
                         if (_obj != null)
                         {
                             //Generate a List of Custom SerialPin
-                            if (_obj.RecognitionType != null && _obj.RecognitionTypeId != Guid.Empty)
+                            if (_obj.RecognitionTypeId != null && _obj.RecognitionTypeId != Guid.Empty)
                             {
                                 strGeneratedSerialPins = await GenerateSerialPins(_obj.RecognitionTypeId.Value, numberOfPinsToGenerate);
                             }
@@ -282,27 +391,19 @@ namespace SchoolRecognition.Classes
                                 Pins pinObj = new Pins()
                                 {
                                     Id = Guid.NewGuid(),
-                                    DateCreated = DateTime.Now,
                                     //
+                                    RecognitionTypeId = _obj.RecognitionTypeId,
                                     SerialPin = strGeneratedSerialPin,
                                     IsActive = _obj.IsActive,
                                     IsInUse = _obj.IsInUse,
                                     CreatedBy = _obj.CreatedBy,
+                                    DateCreated = DateTime.Now,
                                 };
+
+                                listObjPins.Add(pinObj);
                             }
 
-                            var _result = await _db.ExecuteAsync(strQuery, 
-                                from pinObject in listObjPins
-                                        select new                                                                           
-                                        {
-                                            ID = pinObject.Id,
-                                            RecognitionID = pinObject.RecognitionTypeId,
-                                            SerialPin = pinObject.SerialPin,
-                                            IsActive = pinObject.IsActive,
-                                            IsInUse = pinObject.IsInUse,
-                                            CreatedBy = pinObject.CreatedBy,
-                                            DateCreated = pinObject.DateCreated
-                                        });
+                            var _result = await _db.ExecuteAsync(strQuery, listObjPins.ToArray());
 
                             return true;
 
@@ -327,14 +428,14 @@ namespace SchoolRecognition.Classes
 
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
-                        string strQuery = "UPDATE INTO dbo.Pins SET " + 
-                        "RecognitionTypeID = @RecognitionTypeID, " + 
+                        string strQuery = "UPDATE INTO dbo.PINs SET " + 
+                        "RecognitionTypeId = @RecognitionTypeId, " + 
                         "SerialPin = @SerialPin, " +
                         "IsActive = @IsActive, " + 
                         "IsInUse = @IsInUse " + 
-                        "WHERE ID = @ID;";
+                        "WHERE Id = @Id;";
 
                         Guid? returnId = Guid.Empty;
                         if (_obj != null)
@@ -344,8 +445,8 @@ namespace SchoolRecognition.Classes
 
                             var _result = await _db.ExecuteAsync(strQuery, new
                             {
-                                ID = _obj.Id,
-                                RecognitionID = _obj.RecognitionTypeId,
+                                Id = _obj.Id,
+                                RecognitionId = _obj.RecognitionTypeId,
                                 SerialPin = _obj.SerialPin,
                                 IsActive = _obj.IsActive,
                                 IsInUse = _obj.IsInUse,
@@ -366,7 +467,7 @@ namespace SchoolRecognition.Classes
 
             });
         }
-        public Task Delete(Guid pinId) //return type is void
+        public Task Delete(Guid id) //return type is void
         {
 
             return Task.Run(async () =>
@@ -374,11 +475,11 @@ namespace SchoolRecognition.Classes
 
                 try
                 {
-                    using (IDbConnection _db = new clsDBConnection().OpenConnection())
+                    using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
-                        string strQuery = "DELETE FROM dbo.Pins WHERE ID = @ID";
+                        string strQuery = "DELETE FROM dbo.PINs WHERE Id = @Id";
 
-                        if (pinId != Guid.Empty)
+                        if (id != Guid.Empty)
                         {
                             var _result = await _db.ExecuteAsync(strQuery, commandType: CommandType.Text);
                         }
@@ -400,11 +501,11 @@ namespace SchoolRecognition.Classes
         //{
         //    try
         //    {
-        //        using (IDbConnection _db = new clsDBConnection().OpenConnection())
+        //        using (IDbConnection _db = new SqlConnection(_connectionString.Value))
         //        {
         //            var result = new List<Pins>();
 
-        //            string strQuery = "Select * from dbo.Pins;";
+        //            string strQuery = "Select * from dbo.PINs;";
 
         //            var _result = _db.Query<Pins>(strQuery);
 

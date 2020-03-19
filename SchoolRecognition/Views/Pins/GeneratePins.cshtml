@@ -1,15 +1,14 @@
 ﻿@model SchoolRecognition.Models.PinsCreateViewModel
 @{
+    var recognitionTypes = (IEnumerable<SelectListItem>)ViewData["RecognitionTypes"];
     ViewData["Title"] = "Generate Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 @section styles{
 
-    <link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-    <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
-    <link href="~/lib/select2/select2-bootstrap.css" rel="stylesheet" />
-    <link href="~/lib/select2/select2.css" rel="stylesheet" />
-
+    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
+    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
 
 }
 
@@ -47,16 +46,14 @@
                 <div class="card-body">
 
 
-                    <form asp-action="Register" method="post">
+                    <form asp-action="GeneratePins" method="post">
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class="form-group">
                             <label asp-for="RecognitionTypeId">Recognition Type</label>
-                            <select asp-for="RecognitionTypeId" class="form-control">
-                                <option value="">-- Select Recognition Type ---</option>
-                                <option value="volvo">General</option>
-                                <option value="saab">Subject</option>
+                            <select asp-for="RecognitionTypeId" asp-items="@recognitionTypes.ToList()" class="form-control">
+                                <option value="">--Select Recogniton Type---</option>
                             </select>
                             <span asp-validation-for="RecognitionTypeId" class="text-danger"></span>
                         </div>
@@ -64,12 +61,16 @@
                         <div class="form-group">
                             <label asp-for="NoOfPinToGenerate">Number of Pins</label>
                             <input type="number" min="1" max="20" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate">
+                            <span asp-validation-for="NoOfPinToGenerate" class="text-danger"></span>
                         </div>
 
 
                         <!-- /.col -->
-                        <button type="submit" class="btn btn-primary btn-lg"><span class="fas fa-save"></span> Submit</button>
-                        <button type="reset" class="btn btn-secondary btn-lg"><span class="fas fa-refresh"></span> Reset</button>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-spinner fa-spin" id="loading_icon" style="display:none"></i>
+                            Submit
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-lg"> Reset</button>
 
                         <!-- /.col -->
 
@@ -90,12 +91,49 @@
 <!-- /.content -->
 
 @section scripts{
+    <script src="~/js/loading_icon.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
-    <script src="~/lib/select2/select2.min.js"></script>
+    <script src="~/lib/select2/dist/js/select2.min.js"></script>
+    @*<script src="~/lib/select2/dist/js/select2.full.min.js"></script>*@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('select.form-control').select2();
+            $('select.form-control').select2({
+                theme: "classic"
+            });
             //$('.select2me').select2();
+        });
+    </script>
+    <script>
+        // add the rule here
+         $.validator.addMethod("valueNotEquals", function(value, element, arg){
+          return arg !== value;
+         }, "Select a valid value!");
+        $("form").validate({
+            rules: {
+                RecognitionTypeId: {
+                    required: true,
+                    //min: 1
+                },
+                NoOfPinToGenerate: {
+                    required: true,
+                    min: 1,
+                    max: 20
+                },
+
+            },
+            messages: {
+                RecognitionTypeId: {
+                    required: "This field is required!",
+                    valueNotEquals: ""
+                },
+                NoOfPinToGenerate: {
+                    required: "This field is required!",
+                    min: "Select a valid value greater than 0!",
+                    max: "Select a valid value less than 20!",
+                },
+            }
         });
     </script>
 

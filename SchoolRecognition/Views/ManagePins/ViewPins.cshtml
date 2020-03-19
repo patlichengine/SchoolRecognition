@@ -1,0 +1,121 @@
+﻿@model IEnumerable<SchoolRecognition.Models.Pins>
+@{
+    var recognitionType = (RecognitionTypes)ViewData["RecognitionType"];
+    ViewData["Title"] = recognitionType.Name + " Pins";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section styles{
+    <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="ManagePins" asp-action="Index">Manage Pins</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active disabled" id="custom-tabs-three-home-tab" data-toggle="pill" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">
+                                @ViewData["Title"]
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                        <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+
+                            <div class="clearfix mb-3">
+                                <div class="float-right">
+                                    <a asp-area=""  asp-action="GeneratePins" asp-route-id="@recognitionType.Id" class="btn btn-secondary text-white">
+                                        <i class="fas fa-receipt"></i>
+                                        Generate Pins
+                                    </a>
+                                </div>
+                            </div>
+
+                            <table id="datatable-1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <td>Date Generated</td>
+                                        <td>Serial Number</td>
+                                        <td>Created By</td>
+                                        <td>Active</td>
+                                        <td>In Use</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr role="row">
+                                            <td>@item.DateCreated</td>
+                                            <td>@item.SerialPin</td>
+                                            <td>@(item.CreatedByNavigation != null ? String.Format("{0},{1}", item.CreatedByNavigation.Surname.ToUpper(), item.CreatedByNavigation.Others) : "NOT STATED")</td>
+                                            <td>
+                                                <a href="#" class="btn btn-xs disabled @(item.IsActive ? "btn-success" : "btn-danger")">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="btn btn-xs disabled @(item.IsInUse ? "btn-success" : "btn-danger")">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    <script src="~/lib/datatables/datatables.min.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('#datatable-1').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+        } );
+    </script>
+}
+

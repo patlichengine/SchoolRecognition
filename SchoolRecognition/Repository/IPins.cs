@@ -9,10 +9,11 @@ namespace SchoolRecognition.Repository
     public interface IPins
     {
         Task<List<Pins>> Get();
+        Task<List<Pins>> GetPinsByRecognitionTypeId(Guid recognitionTypeId);
         Task<Pins> Get(Guid id);
         Task<Guid?> Create(Pins _obj);
         Task<bool> CreateSeveralPins(Pins _obj, int numberOfPinsToGenerate);
         Task<Pins> Update(Pins _obj);
-        Task Delete(Guid pinId); //return type is void
+        Task Delete(Guid id); //return type is void
     }
 }

@@ -7,3 +7,11 @@
     background-color: #1a237e;
     color: #fff
 }
+
+/*Error*/
+
+.error {
+    color: #dc3545 !important;
+    font-weight: 300 !important;
+    font-style: initial !important;
+}
