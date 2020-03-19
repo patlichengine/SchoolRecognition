@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/css/waeclte.css">
 
     <!-- DataTables-->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="~/lib/jquery-dataTables/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="~/lib/jquery-dataTables/buttons.dataTables.min.css" />
 
@@ -50,6 +51,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- DataTables-->
     <script src="~/lib/jquery-dataTables/jquery.dataTables.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/dataTables.bootstrap4.min.js"></script>
 
     <script src="~/lib/jquery-dataTables/dataTables.buttons.min.js"></script>
 
@@ -62,19 +64,9 @@
     <!-- AdminLTE App -->
     <script src="~/js/waeclte.min.js" asp-append-version="true"></script>
     <script>
-        $(document).ready(function () {
-            $('#schoolCategory').DataTable(
-                {
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copyHtml5',
-                        'excelHtml5',
-                        'csvHtml5',
-                        'pdfHtml5'
-                    ]
-                }
-            );
-        });
+        $(document).ready(function() {
+    $('#schoolCategory').DataTable();
+} );
     </script>
     @RenderSection("Scripts", required: false)
 

@@ -96,7 +96,7 @@ namespace SchoolRecognition.Services
         {
                 SchoolCategories categories = new SchoolCategories();
             
-            {
+            
                
                
                 try
@@ -106,15 +106,11 @@ namespace SchoolRecognition.Services
                        
                                 
 
-                                if (schoolCategoriesId != Guid.Empty)
-                                {
 
                                     //string strQuery = "Select * from procSelectSchoolCategory WHERE ID = @_id;";
 
-                                    var _result = await _db.QueryFirstOrDefaultAsync<SchoolCategories>("stpSelectSchoolCategoryByID",  new { _id = schoolCategoriesId });
-
-                            categories = _result;
-                                }
+                                     categories = await _db.QueryFirstAsync<SchoolCategories>("stpGetUserById",  new { ID = schoolCategoriesId }, commandType: CommandType.StoredProcedure);
+                            
 
                                 
                     
@@ -125,7 +121,7 @@ namespace SchoolRecognition.Services
                     Console.WriteLine(ex.Message);
                 }
                 return categories;
-            }
+            
             
 
         }

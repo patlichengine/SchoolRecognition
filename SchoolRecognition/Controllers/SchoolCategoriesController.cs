@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using SchoolRecognition.Models;
 using SchoolRecognition.Repository;
 using SchoolRecognition.Services;
+using Vereyon.Web;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,22 +16,22 @@ namespace SchoolRecognition.Controllers
 {
     public class SchoolCategoriesController : Controller
     {
-        // GET: /<controller>/
+        
 
 
         private SchoolCategoriesRepo schoolCategoriess;
-
-        
-
+        private IFlashMessage _flashMessage;
         [Obsolete]
         private readonly IHostingEnvironment _hostingEnvironment;
 
         [Obsolete]
-        public SchoolCategoriesController( IHostingEnvironment hostingEnvironment, SchoolCategoriesRepo schoolCategory)
+        public SchoolCategoriesController( IHostingEnvironment hostingEnvironment, SchoolCategoriesRepo schoolCategory, IFlashMessage flashMessage)
         {
             
             _hostingEnvironment = hostingEnvironment;
             schoolCategoriess = schoolCategory;
+
+            _flashMessage = flashMessage;
 
 
         }
@@ -41,21 +42,24 @@ namespace SchoolRecognition.Controllers
             var result = await schoolCategoriess.ListAll();
             return View(result);
         }
-        public IActionResult Categories()
+        public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Categories(SchoolCategories model)
+        public async Task<IActionResult> Create(SchoolCategories model)
         {
             if (ModelState.IsValid)
             {
                  await schoolCategoriess.Create(model);
-                return RedirectToAction("Categories", "SchoolCategories");
+                _flashMessage.Confirmation("New Category Added Successfully! As: ", model.Name);
+               
+                return RedirectToAction("Create", "SchoolCategories");
             }
             return View(model);
         }
+
         public IActionResult Edit()
         {
             
@@ -63,19 +67,34 @@ namespace SchoolRecognition.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Edit(SchoolCategories school)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, SchoolCategories model)
         {
-            var result = await schoolCategoriess.Update(school);
-            return RedirectToAction("Edit", "SchoolCategories");
+            if (model == null)
+            {
+             
+            return NotFound();
+            }
+
+            var singleCategory = await schoolCategoriess.GetBySchoolCategoriesId(id);
+            Console.WriteLine(singleCategory);
+            if (singleCategory == null)
+            {
+              return  NotFound();
+            }
+            var result = await schoolCategoriess.Update(model);
+            
+
+            return View(result);
         }
 
 
         // GET: SchoolCategory/Details/5
         public async Task<IActionResult> Details(Guid schoolCategoriesId)
         {
-            var result = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
+            SchoolCategories model = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
 
-            return View(result);
+            return View(model);
         }
 
         public async Task<IActionResult> Delete(Guid schoolCategoriesId)

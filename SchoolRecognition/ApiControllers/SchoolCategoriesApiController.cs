@@ -16,15 +16,15 @@ namespace SchoolRecognition.ApiControllers
     public class SchoolCategoriesApiController : ControllerBase
     {
 
-       private readonly SchoolCategoriesService _schoolCategoriesService;
-       
+       //private readonly SchoolCategoriesService _schoolCategoriesService;
+        private readonly SchoolCategoriesRepo _schoolCategories;
         [Obsolete]
         private readonly IWebHostEnvironment _hostingEnvironment;
 
         [Obsolete]
-        public SchoolCategoriesApiController(SchoolCategoriesService schoolCategoriesService, IWebHostEnvironment hostingEnvironment)
+        public SchoolCategoriesApiController(SchoolCategoriesRepo schoolCategories, IWebHostEnvironment hostingEnvironment)
         {
-            _schoolCategoriesService = schoolCategoriesService;
+            _schoolCategories = schoolCategories;
             _hostingEnvironment = hostingEnvironment;
             
 
@@ -35,14 +35,16 @@ namespace SchoolRecognition.ApiControllers
         [HttpGet]
         public async Task<ActionResult<List<SchoolCategories>>> Get()
         {
-            return await _schoolCategoriesService.ListAll();
+            return await _schoolCategories.ListAll();
         }
+
+      
 
         // GET: api/SchoolCategories/5
         [HttpGet("{id}", Name = "Get")]
         public async Task<ActionResult<SchoolCategories>> Get(Guid id)
         {
-            return await _schoolCategoriesService.GetBySchoolCategoriesId(id);
+            return await _schoolCategories.GetBySchoolCategoriesId(id);
         }
 
         // POST: api/SchoolCategories

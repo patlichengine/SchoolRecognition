@@ -16,6 +16,8 @@ using SchoolRecognition.Repository;
 using SchoolRecognition.Services;
 using SchoolRecognition.Data;
 using SchoolRecognition.Classes;
+using Vereyon.Web;
+
 namespace SchoolRecognition
 {
     public class Startup
@@ -35,8 +37,8 @@ namespace SchoolRecognition
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
 
             var connectionString = new ConnectionString(Configuration.GetConnectionString("SchoolRecognitionConnection"));
-            
-              
+
+            services.AddFlashMessage();
 
             services.AddSingleton(connectionString);
             //custom Henry Connection
@@ -52,7 +54,9 @@ namespace SchoolRecognition
 
 
             services.AddControllersWithViews()
+                .AddNewtonsoftJson()
                 .AddRazorRuntimeCompilation();
+            
             //Scoping my  services  
             _ = services.AddTransient<SchoolCategoriesRepo, SchoolCategoriesService>(provider => new SchoolCategoriesService(connectionString));
             //services.AddTransient<>

@@ -19,7 +19,7 @@
                 </p>
             </div>
             <div class="col-sm-6">
-                <a class="btn btn-primary float-sm-right" asp-action="Categories" asp-controller="SchoolCategories">
+                <a class="btn btn-primary float-sm-right" asp-action="Create" asp-controller="SchoolCategories">
                     Add Category
                 </a>
             </div>
@@ -29,7 +29,7 @@
 </section>
 
 <section class="content ml-5">
-    <table class="table">
+    <table class="table table-striped table-bordered" style="width:100%" id="schoolCategory">
         <thead>
             <tr>
                 <th>
@@ -53,9 +53,9 @@
                             @Html.DisplayFor(modelItem => item.Code)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id"><span><i class="fa fa-edit" data-placement="top" data-toggle="tooltip" style="color:green;" title="Edit"></i></span></a> 
+                            <a asp-action="Details" asp-route-id="@item.Id"><span><i class="fa fa-folder-open" data-placement="bottom"style="color:blue;"  data-toggle="tooltip" title="Details"></i></span></a> 
+                            <a asp-action="Delete" asp-route-id="@item.Id"><span><i class="fa fa-trash" style="color:red;" data-placement="left" data-toggle="tooltip" title="Delete"></i></span></a>
                         </td>
                     </tr>
                 }
