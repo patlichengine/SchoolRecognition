@@ -9,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SchoolRecognition.Classes;
 using SchoolRecognition.Models;
+using SchoolRecognition.Repository;
+using Vereyon.Web;
 
 namespace SchoolRecognition
 {
@@ -28,9 +31,16 @@ namespace SchoolRecognition
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
 
-            services.AddControllersWithViews()
-                .AddRazorRuntimeCompilation();
+            var connectionString = new ConnectionString(Configuration.GetConnectionString("SchoolRecognitionConnection"));
 
+            services.AddFlashMessage();
+
+            services.AddSingleton(connectionString);
+
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson()
+                .AddRazorRuntimeCompilation();
+            _ = services.AddTransient<IOffices, clsOffices>(provider => new clsOffices(connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. myDapperConnection

@@ -1440,8 +1440,6 @@ C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognit
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
-C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.RazorAssemblyInfo.cache
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.RazorAssemblyInfo.cs
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.AssemblyInfoInputs.cache
@@ -1480,3 +1478,14 @@ C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognit
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\States\Details.cshtml.g.cs
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\States\Edit.cshtml.g.cs
 C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\States\Index.cshtml.g.cs
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.genruntimeconfig.cache
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.Razor.Host.dll
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Globalization.CultureInfoCache.dll
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.Extensions.PlatformAbstractions.dll
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Vereyon.Web.FlashMessage.dll
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csproj.CoreCompileInputs.cache
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\waec\Documents\Abdullahi\WAEC Projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
