@@ -48,6 +48,7 @@ namespace SchoolRecognition.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SchoolCategories model)
         {
             if (ModelState.IsValid)
@@ -55,7 +56,7 @@ namespace SchoolRecognition.Controllers
                  await schoolCategoriess.Create(model);
                 _flashMessage.Confirmation("New Category Added Successfully! As: ", model.Name);
                
-                return RedirectToAction("Create", "SchoolCategories");
+                return RedirectToAction("Index");
             }
             return View(model);
         }
@@ -68,31 +69,36 @@ namespace SchoolRecognition.Controllers
 
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, SchoolCategories model)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (model == null)
+            if (id == null)
             {
              
             return NotFound();
             }
-
-            var singleCategory = await schoolCategoriess.GetBySchoolCategoriesId(id);
-            Console.WriteLine(singleCategory);
-            if (singleCategory == null)
-            {
-              return  NotFound();
-            }
-            var result = await schoolCategoriess.Update(model);
             
+                var model = await schoolCategoriess.GetBySchoolCategoriesId(id);
+          if(model == null)
+            {
+                return NotFound();
+            }
 
-            return View(result);
+            return View(model);
+           
+      
         }
 
 
         // GET: SchoolCategory/Details/5
         public async Task<IActionResult> Details(Guid schoolCategoriesId)
         {
-            SchoolCategories model = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
+            if(schoolCategoriesId == null)
+            {
+                return NotFound();
+               
+            }
+            var model = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
+            // SchoolCategories model = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
 
             return View(model);
         }

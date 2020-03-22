@@ -14,7 +14,11 @@ namespace SchoolRecognition.Services
 {
     public class SchoolCategoriesService :  SchoolCategoriesRepo
     {
-        private const string Sql = "stpCreateSchoolCategory";
+        private const string createCat = "stpCreateUpdateSchoolCategories";
+        private const string updateCat = "updateSchoolCategory";
+        private const string listAllCat = "stpSelectAllSchoolCategories";
+        private const string deleteCat = "";
+        private const string getCatById = "stpGetCategoryById";
         private ConnectionString _connectionString;
 
         public SchoolCategoriesService(ConnectionString connectionString)
@@ -22,6 +26,8 @@ namespace SchoolRecognition.Services
             _connectionString = connectionString;
         }
 
+
+        //working
         public async Task<int> Create(SchoolCategories schoolCategories)
         {
 
@@ -33,16 +39,19 @@ namespace SchoolRecognition.Services
                     using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
 
-                        //Execute the query command
-                        queryResult = await _db.ExecuteAsync(Sql,
-                            new
-                            {
-                                categoryName = schoolCategories.Name,
-                                categoryCode = schoolCategories.Code
-                            },
-                            
-                            
-                            commandType: CommandType.StoredProcedure);
+                    //Execute the query command
+                    queryResult = await _db.ExecuteAsync(createCat,
+                        new
+                        {
+                            //categoryID = schoolCategories.Id, 
+                            //categoryID = Guid.NewGuid(),
+                            categoryName = schoolCategories.Name,
+                            categoryCode = schoolCategories.Code
+                        },
+
+
+                        commandType: CommandType.StoredProcedure);
+                 
                     }
                         
 
@@ -54,6 +63,7 @@ namespace SchoolRecognition.Services
                 {
                     throw ex;
                 }
+           
             return queryResult;
         
             
@@ -76,7 +86,7 @@ namespace SchoolRecognition.Services
 
                         if (schoolCategoriesId != Guid.Empty)
                         {
-                            var _result = await myConnection.ExecuteAsync("stpSchoolCategory", commandType: CommandType.Text);
+                            var _result = await myConnection.ExecuteAsync(deleteCat, commandType: CommandType.Text);
 
                             result = _result;
                         }
@@ -109,7 +119,7 @@ namespace SchoolRecognition.Services
 
                                     //string strQuery = "Select * from procSelectSchoolCategory WHERE ID = @_id;";
 
-                                     categories = await _db.QueryFirstAsync<SchoolCategories>("stpGetUserById",  new { ID = schoolCategoriesId }, commandType: CommandType.StoredProcedure);
+                                     categories = await _db.QueryFirstAsync<SchoolCategories>(getCatById,  new { ID = schoolCategoriesId }, commandType: CommandType.StoredProcedure);
                             
 
                                 
@@ -138,7 +148,7 @@ namespace SchoolRecognition.Services
                 {
                     //Create a sql parater objects
 
-                    queryResult = await _db.ExecuteAsync("stpUpdateSchoolCategory",
+                    queryResult = await _db.ExecuteAsync(updateCat,
                         new
                         {
                             categoryName = schoolCategories.Name,
@@ -169,7 +179,7 @@ namespace SchoolRecognition.Services
                 {
                        
 
-                        var _result = await _db.QueryAsync<SchoolCategories>("stpSelectAllSchoolCategories", commandType: CommandType.StoredProcedure
+                        var _result = await _db.QueryAsync<SchoolCategories>(listAllCat, commandType: CommandType.StoredProcedure
                             
                             
                             );
