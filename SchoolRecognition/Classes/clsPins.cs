@@ -33,13 +33,13 @@ namespace SchoolRecognition.Classes
                         var result = new List<Pins>();
 
                         //string strQuery = "Select * from dbo.PINs;";
-                        string strQuery = "SELECT * FROM dbo.PINs AS pin " +
-                        "LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
-                        "LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id;";
-                        //"WHERE ;";
+                        //string strQuery = "SELECT * FROM dbo.PINs AS pin " +
+                        //"LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
+                        //"LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id;";
+
 
                         var _result = await _db.QueryAsync<Pins, Users, RecognitionTypes, Pins>(
-                            strQuery, 
+                            "dbo.procPinsList", 
                             (pin, user, recognitionType) => {
 
                                 if (pin != null)
@@ -51,7 +51,7 @@ namespace SchoolRecognition.Classes
                                 return pin;
 
                             },
-                            splitOn: "Id");
+                            splitOn: "Id", commandType: CommandType.StoredProcedure);
 
                         result = _result.ToList();
 
@@ -80,13 +80,13 @@ namespace SchoolRecognition.Classes
                         if (recognitionTypeId != Guid.Empty)
                         {
                             //string strQuery = "Select * from dbo.PINs;";
-                            string strQuery = "SELECT * FROM dbo.PINs AS pin " +
-                            "LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
-                            "LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id " +
-                            "WHERE pin.RecognitionTypeId = @_recognitionTypeId;";
+                            //string strQuery = "SELECT * FROM dbo.PINs AS pin " +
+                            //"LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
+                            //"LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id " +
+                            //"WHERE pin.RecognitionTypeId = @_recognitionTypeId;";
 
                             var _result = await _db.QueryAsync<Pins, Users, RecognitionTypes, Pins>(
-                                strQuery,
+                                "dbo.procPinsListByRecognitionTypeId",
                                 (pin, user, recognitionType) =>
                                 {
 
@@ -98,8 +98,8 @@ namespace SchoolRecognition.Classes
 
                                     return pin;
 
-                                }, new { _recognitionTypeId = recognitionTypeId },
-                                splitOn: "Id");
+                                }, new { RecognitionTypeID = recognitionTypeId },
+                                splitOn: "Id", commandType: CommandType.StoredProcedure);
 
                             result = _result.ToList();
                         }
@@ -253,17 +253,17 @@ namespace SchoolRecognition.Classes
                         if (id != Guid.Empty)
                         {
                             //string strQuery = "Select * from dbo.PINs WHERE ID = @_id;";
-                            string strQuery = "SELECT * FROM dbo.PINs AS pin " +
-                                "LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
-                                "LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id " +
-                                "LEFT JOIN dbo.PinHistories AS pnHstrys ON pin.Id = pnHstrys.PinId " +
-                                "LEFT JOIN dbo.SchoolPayments AS schPays ON pin.Id = schPays.PinId " +
-                                "WHERE pin.Id = @_id;";
+                            //string strQuery = "SELECT * FROM dbo.PINs AS pin " +
+                            //    "LEFT JOIN dbo.Users AS usr ON pin.CreatedBy = usr.Id " +
+                            //    "LEFT JOIN dbo.RecognitionTypes AS rType ON pin.RecognitionTypeId = rType.Id " +
+                            //    "LEFT JOIN dbo.PinHistories AS pnHstrys ON pin.Id = pnHstrys.PinId " +
+                            //    "LEFT JOIN dbo.SchoolPayments AS schPays ON pin.Id = schPays.PinId " +
+                            //    "WHERE pin.Id = @ID;";
 
                             var pinsDictionary = new Dictionary<Guid, Pins>();
 
                             var _result = await _db.QueryAsync<Pins, Users, RecognitionTypes, PinHistories, SchoolPayments, Pins>(
-                                strQuery,
+                                "dbo.procPinsDetailById",
                                 (pin, user, recognitionType, listPinHistorys, listSchoolPayments) =>
                                 {
                                     Pins pinData;
@@ -285,8 +285,8 @@ namespace SchoolRecognition.Classes
 
                                     return pinData;
 
-                                }, new { _id = id },
-                                splitOn: "Id");
+                                }, new { ID = id },
+                                splitOn: "Id", commandType: CommandType.StoredProcedure);
 
                             if (_result != null)
                             {
@@ -317,8 +317,8 @@ namespace SchoolRecognition.Classes
                 {
                     using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
-                        string strQuery = "INSERT INTO dbo.PINs (Id,RecognitionTypeId,SerialPin,IsActive,IsInUse,CreatedBy,DateCreated)" +
-                        " VALUES (@Id,@RecognitionTypeId,@SerialPin,@IsActive,@IsInUse,@CreatedBy,@DateCreated);";
+                        //string strQuery = "INSERT INTO dbo.PINs (Id,RecognitionTypeId,SerialPin,IsActive,IsInUse,CreatedBy,DateCreated)" +
+                        //" VALUES (@Id,@RecognitionTypeId,@SerialPin,@IsActive,@IsInUse,@CreatedBy,@DateCreated);";
 
                         Guid? returnId = Guid.Empty;
                         if (_obj != null)
@@ -331,15 +331,15 @@ namespace SchoolRecognition.Classes
                                 _obj.SerialPin = await GenerateSerialPin(_obj.RecognitionTypeId.Value);
                             }
 
-                            var _result = await _db.ExecuteAsync(strQuery, new 
-                            { 
+                            var _result = await _db.ExecuteAsync("dbo.procPinsCreate", new 
+                            {
                                 Id = _obj.Id,
                                 RecognitionId = _obj.RecognitionTypeId,
                                 SerialPin = _obj.SerialPin,
-                                IsActive = _obj.IsActive,
-                                IsInUse = _obj.IsInUse,
+                                //IsActive = _obj.IsActive,
+                                //IsInUse = _obj.IsInUse,
                                 CreatedBy = _obj.CreatedBy,
-                                DateCreated = _obj.DateCreated
+                                //DateCreated = _obj.DateCreated
                             }, commandType: CommandType.StoredProcedure);
 
                             returnId = _obj.Id;
@@ -368,10 +368,11 @@ namespace SchoolRecognition.Classes
                     {
 
                         List<string> strGeneratedSerialPins = new List<string>();
-                        List<Pins> listObjPins = new List<Pins>();
 
-                        string strQuery = "INSERT INTO dbo.PINs (Id, RecognitionTypeId, SerialPin, IsActive, IsInUse, CreatedBy, DateCreated)" +
-                        " VALUES (@Id, @RecognitionTypeId, @SerialPin, @IsActive, @IsInUse, @CreatedBy, @DateCreated);";
+                        List<PinsDTO> listObjPins = new List<PinsDTO>();
+
+                        //string strQuery = "INSERT INTO dbo.PINs (Id, RecognitionTypeId, SerialPin, IsActive, IsInUse, CreatedBy, DateCreated)" +
+                        //" VALUES (@Id, @RecognitionTypeId, @SerialPin, @IsActive, @IsInUse, @CreatedBy, @DateCreated);";
 
                         Guid? returnId = Guid.Empty;
                         if (_obj != null)
@@ -388,22 +389,31 @@ namespace SchoolRecognition.Classes
                                 //Get string at position "i" in the string array
                                 string strGeneratedSerialPin = strGeneratedSerialPins[i];
 
-                                Pins pinObj = new Pins()
+                                PinsDTO pinObj = new PinsDTO()
                                 {
-                                    Id = Guid.NewGuid(),
+                                    //Id = Guid.NewGuid(),
                                     //
                                     RecognitionTypeId = _obj.RecognitionTypeId,
                                     SerialPin = strGeneratedSerialPin,
-                                    IsActive = _obj.IsActive,
-                                    IsInUse = _obj.IsInUse,
+                                    //IsActive = _obj.IsActive,
+                                    //IsInUse = _obj.IsInUse,
                                     CreatedBy = _obj.CreatedBy,
-                                    DateCreated = DateTime.Now,
+                                    //DateCreated = DateTime.Now,
                                 };
 
                                 listObjPins.Add(pinObj);
                             }
 
-                            var _result = await _db.ExecuteAsync(strQuery, listObjPins.ToArray());
+                            var parameters = listObjPins.Select(x =>
+                            {
+                                var tempParams = new DynamicParameters();
+                                tempParams.Add("@RecognitionTypeID", x.RecognitionTypeId, DbType.Guid, ParameterDirection.Input);
+                                tempParams.Add("@SerialPin", x.SerialPin, DbType.String, ParameterDirection.Input);
+                                tempParams.Add("@CreatedBy", x.CreatedBy, DbType.Guid, ParameterDirection.Input);
+                                return tempParams;
+                            });
+
+                            var _result = await _db.ExecuteAsync("dbo.procPinsCreate", parameters, commandType: CommandType.StoredProcedure);
 
                             return true;
 
@@ -430,12 +440,12 @@ namespace SchoolRecognition.Classes
                 {
                     using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
-                        string strQuery = "UPDATE INTO dbo.PINs SET " + 
-                        "RecognitionTypeId = @RecognitionTypeId, " + 
-                        "SerialPin = @SerialPin, " +
-                        "IsActive = @IsActive, " + 
-                        "IsInUse = @IsInUse " + 
-                        "WHERE Id = @Id;";
+                        //string strQuery = "UPDATE INTO dbo.PINs SET " + 
+                        //"RecognitionTypeId = @RecognitionTypeId, " + 
+                        //"SerialPin = @SerialPin, " +
+                        //"IsActive = @IsActive, " + 
+                        //"IsInUse = @IsInUse " + 
+                        //"WHERE Id = @Id;";
 
                         Guid? returnId = Guid.Empty;
                         if (_obj != null)
@@ -443,7 +453,7 @@ namespace SchoolRecognition.Classes
                             _obj.Id = Guid.NewGuid();
                             _obj.DateCreated = DateTime.Now;
 
-                            var _result = await _db.ExecuteAsync(strQuery, new
+                            var _result = await _db.ExecuteAsync("dbo.procPinsUpdate", new
                             {
                                 Id = _obj.Id,
                                 RecognitionId = _obj.RecognitionTypeId,
@@ -452,7 +462,7 @@ namespace SchoolRecognition.Classes
                                 IsInUse = _obj.IsInUse,
                                 //CreatedBy = _obj.CreatedBy,
                                 //DateCreated = _obj.DateCreated
-                            });
+                            }, commandType: CommandType.StoredProcedure);
 
                         }
 
@@ -477,11 +487,11 @@ namespace SchoolRecognition.Classes
                 {
                     using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
-                        string strQuery = "DELETE FROM dbo.PINs WHERE Id = @Id";
+                        //string strQuery = "DELETE FROM dbo.PINs WHERE Id = @Id";
 
                         if (id != Guid.Empty)
                         {
-                            var _result = await _db.ExecuteAsync(strQuery, commandType: CommandType.Text);
+                            var _result = await _db.ExecuteAsync("dbo.procPinsDelete", commandType: CommandType.StoredProcedure);
                         }
                     }
                 }
