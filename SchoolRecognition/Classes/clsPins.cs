@@ -369,7 +369,7 @@ namespace SchoolRecognition.Classes
 
                         List<string> strGeneratedSerialPins = new List<string>();
 
-                        List<PinsDTO> listObjPins = new List<PinsDTO>();
+                        List<Pins> listObjPins = new List<Pins>();
 
                         //string strQuery = "INSERT INTO dbo.PINs (Id, RecognitionTypeId, SerialPin, IsActive, IsInUse, CreatedBy, DateCreated)" +
                         //" VALUES (@Id, @RecognitionTypeId, @SerialPin, @IsActive, @IsInUse, @CreatedBy, @DateCreated);";
@@ -389,7 +389,7 @@ namespace SchoolRecognition.Classes
                                 //Get string at position "i" in the string array
                                 string strGeneratedSerialPin = strGeneratedSerialPins[i];
 
-                                PinsDTO pinObj = new PinsDTO()
+                                Pins pinObj = new Pins()
                                 {
                                     //Id = Guid.NewGuid(),
                                     //
