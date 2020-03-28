@@ -56,8 +56,12 @@ namespace SchoolRecognition.Controllers
                  await schoolCategoriess.Create(model);
                 _flashMessage.Confirmation("New Category Added Successfully! As: ", model.Name);
                
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
+            //else
+            //{
+            //    await schoolCategoriess.Update(model);
+            //}
             return View(model);
         }
 
@@ -70,14 +74,18 @@ namespace SchoolRecognition.Controllers
         [HttpPut]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id)
+
         {
+            SchoolCategories model = new SchoolCategories();
+            
+
             if (id == null)
             {
              
-            return NotFound();
+            return View(model);
             }
             
-                var model = await schoolCategoriess.GetBySchoolCategoriesId(id);
+                 model = await schoolCategoriess.GetBySchoolCategoriesId(id);
           if(model == null)
             {
                 return NotFound();

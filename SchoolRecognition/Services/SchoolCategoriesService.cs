@@ -17,7 +17,7 @@ namespace SchoolRecognition.Services
         private const string createCat = "stpCreateUpdateSchoolCategories";
         private const string updateCat = "updateSchoolCategory";
         private const string listAllCat = "stpSelectAllSchoolCategories";
-        private const string deleteCat = "";
+        private const string deleteCat = "stpDeleteByIDCategory";
         private const string getCatById = "stpGetCategoryById";
         private ConnectionString _connectionString;
 
