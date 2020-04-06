@@ -65,31 +65,42 @@ namespace SchoolRecognition.Controllers
             return View(model);
         }
 
-        public IActionResult Edit()
+
+        public async Task<IActionResult> Edit(Guid id)
         {
-            
-            return View();
+            var model = await schoolCategoriess.GetBySchoolCategoriesId(id);
+            return View(model);
         }
 
-        [HttpPut]
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id, SchoolCategories school)
 
         {
-            SchoolCategories model = new SchoolCategories();
+            try
+            {
+               await schoolCategoriess.Update(school);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             
 
-            if (id == null)
-            {
+            //if (model.Id == null)
+            //{
              
-            return View(model);
-            }
+            //return NotFound();
+            //}
+
             
-                 model = await schoolCategoriess.GetBySchoolCategoriesId(id);
-          if(model == null)
-            {
-                return NotFound();
-            }
+            var     model = await schoolCategoriess.GetBySchoolCategoriesId(id);
+          //if(model == null)
+          //  {
+          //      return NotFound();
+          //  }
 
             return View(model);
            
@@ -111,10 +122,13 @@ namespace SchoolRecognition.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Delete(Guid schoolCategoriesId)
+        public async Task<IActionResult> Delete(SchoolCategories school)
         {
-            var result = await schoolCategoriess.Delete(schoolCategoriesId);
-            return View(result);
+            
+            await schoolCategoriess.Delete(school.Id);
+            return RedirectToAction("Index");
+           
+             
         }
 
     }

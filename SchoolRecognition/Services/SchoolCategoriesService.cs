@@ -39,11 +39,13 @@ namespace SchoolRecognition.Services
                     using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
 
+                   // _db.Open();
+                   // schoolCategories.Id = Guid.NewGuid();
                     //Execute the query command
                     queryResult = await _db.ExecuteAsync(createCat,
                         new
                         {
-                            //categoryID = schoolCategories.Id, 
+                          //  categoryID = schoolCategories.Id, 
                             //categoryID = Guid.NewGuid(),
                             categoryName = schoolCategories.Name,
                             categoryCode = schoolCategories.Code
@@ -51,6 +53,8 @@ namespace SchoolRecognition.Services
 
 
                         commandType: CommandType.StoredProcedure);
+
+                   // _db.Close();
                  
                     }
                         
@@ -61,7 +65,7 @@ namespace SchoolRecognition.Services
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                Console.WriteLine(ex.Message);
                 }
            
             return queryResult;
@@ -73,11 +77,11 @@ namespace SchoolRecognition.Services
 
         public async Task<int> Delete(Guid schoolCategoriesId)
         {
-            
+             int result = 0;
 
                 try
                 {
-                    int result = 0;
+                   
 
                     using (IDbConnection myConnection = new SqlConnection(_connectionString.Value))
                     {
@@ -86,25 +90,25 @@ namespace SchoolRecognition.Services
 
                         if (schoolCategoriesId != Guid.Empty)
                         {
-                            var _result = await myConnection.ExecuteAsync(deleteCat, commandType: CommandType.Text);
+                            var _result = await myConnection.ExecuteAsync(deleteCat, new { ID = schoolCategoriesId }, commandType: CommandType.Text);
 
                             result = _result;
                         }
-                        return result;
+                        
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                Console.WriteLine(ex.Message);
                 }
+            return result;
 
-          
         }
 
         public async Task<SchoolCategories> GetBySchoolCategoriesId(Guid schoolCategoriesId)
         {
-                SchoolCategories categories = new SchoolCategories();
+                var categories = new SchoolCategories();
             
             
                
@@ -113,16 +117,9 @@ namespace SchoolRecognition.Services
                 {
                     using (IDbConnection _db = new SqlConnection(_connectionString.Value))
                     {
-                       
-                                
-
-
-                                    //string strQuery = "Select * from procSelectSchoolCategory WHERE ID = @_id;";
 
                                      categories = await _db.QueryFirstAsync<SchoolCategories>(getCatById,  new { ID = schoolCategoriesId }, commandType: CommandType.StoredProcedure);
-                            
-
-                                
+                                                         
                     
                     }
                 }
@@ -179,10 +176,7 @@ namespace SchoolRecognition.Services
                 {
                        
 
-                        var _result = await _db.QueryAsync<SchoolCategories>(listAllCat, commandType: CommandType.StoredProcedure
-                            
-                            
-                            );
+                        var _result = await _db.QueryAsync<SchoolCategories>(listAllCat, commandType: CommandType.StoredProcedure);
 
                         result = _result.ToList();
 
