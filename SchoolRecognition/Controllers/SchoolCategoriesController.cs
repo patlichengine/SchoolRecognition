@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 //using Microsoft.AspNetCore.Hosting.
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SchoolRecognition.Models;
 using SchoolRecognition.Repository;
 using SchoolRecognition.Services;
@@ -19,17 +20,19 @@ namespace SchoolRecognition.Controllers
         
 
 
-        private SchoolCategoriesRepo schoolCategoriess;
+        private SchoolCategoriesRepo schoolCategories;
         private IFlashMessage _flashMessage;
-        [Obsolete]
-        private readonly IHostingEnvironment _hostingEnvironment;
+        
+        private readonly ILogger _logger;
+       
 
         [Obsolete]
-        public SchoolCategoriesController( IHostingEnvironment hostingEnvironment, SchoolCategoriesRepo schoolCategory, IFlashMessage flashMessage)
+        public SchoolCategoriesController(  SchoolCategoriesRepo schoolCategory, IFlashMessage flashMessage, ILogger<SchoolCategoriesController> logger)
         {
             
-            _hostingEnvironment = hostingEnvironment;
-            schoolCategoriess = schoolCategory;
+            _logger = logger;
+           
+            schoolCategories = schoolCategory;
 
             _flashMessage = flashMessage;
 
@@ -39,7 +42,7 @@ namespace SchoolRecognition.Controllers
         
         public async Task<IActionResult> Index()
         {
-            var result = await schoolCategoriess.ListAll();
+            var result = await schoolCategories.List();
             return View(result);
         }
         public IActionResult Create()
@@ -53,7 +56,7 @@ namespace SchoolRecognition.Controllers
         {
             if (ModelState.IsValid)
             {
-                 await schoolCategoriess.Create(model);
+                 await schoolCategories.Create(model);
                 _flashMessage.Confirmation("New Category Added Successfully! As: ", model.Name);
                
                 return RedirectToAction(nameof(Index));
@@ -65,10 +68,20 @@ namespace SchoolRecognition.Controllers
             return View(model);
         }
 
-
-        public async Task<IActionResult> Edit(Guid id)
+        //[HttpGet("{id}")]
+        public async Task<ActionResult<SchoolCategories>> Edit(Guid id)
         {
-            var model = await schoolCategoriess.GetBySchoolCategoriesId(id);
+           
+
+            _logger.LogInformation("Getting item {Id} at {RequestTime}", id, DateTime.Now);
+            var model = await schoolCategories.GetById(id);
+           // var model = await _context.SchoolCategories.FindAsync(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
             return View(model);
         }
 
@@ -80,23 +93,23 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
-               await schoolCategoriess.Update(school);
+               await schoolCategories.Update(school);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            
+
 
             //if (model.Id == null)
             //{
-             
+
             //return NotFound();
             //}
 
-            
-            var     model = await schoolCategoriess.GetBySchoolCategoriesId(id);
+
+            var model = await schoolCategories.GetById(id);
           //if(model == null)
           //  {
           //      return NotFound();
@@ -116,8 +129,8 @@ namespace SchoolRecognition.Controllers
                 return NotFound();
                
             }
-            var model = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
-            // SchoolCategories model = await schoolCategoriess.GetBySchoolCategoriesId(schoolCategoriesId);
+            var model = await schoolCategories.GetById(schoolCategoriesId);
+         
 
             return View(model);
         }
@@ -125,7 +138,7 @@ namespace SchoolRecognition.Controllers
         public async Task<IActionResult> Delete(SchoolCategories school)
         {
             
-            await schoolCategoriess.Delete(school.Id);
+            await schoolCategories.Delete(school.Id);
             return RedirectToAction("Index");
            
              

@@ -35,7 +35,7 @@ namespace SchoolRecognition.ApiControllers
         [HttpGet]
         public async Task<ActionResult<List<SchoolCategories>>> Get()
         {
-            return await _schoolCategories.ListAll();
+            return await _schoolCategories.List();
         }
 
       
@@ -44,7 +44,7 @@ namespace SchoolRecognition.ApiControllers
         [HttpGet("{id}", Name = "Get")]
         public async Task<ActionResult<SchoolCategories>> Get(Guid id)
         {
-            return await _schoolCategories.GetBySchoolCategoriesId(id);
+            return await _schoolCategories.GetById(id);
         }
 
         // POST: api/SchoolCategories

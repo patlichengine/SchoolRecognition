@@ -9,10 +9,15 @@ namespace SchoolRecognition.Repository
     public interface SchoolCategoriesRepo
     {
 
-        Task<int> Delete(Guid schoolCategoriesId);
-        Task<SchoolCategories> GetBySchoolCategoriesId(Guid schoolCategoriesId);
-        Task<int> Update(SchoolCategories schoolCategories);
-        Task<int> Create(SchoolCategories schoolCategories);
-         Task<List<SchoolCategories>> ListAll();
+        public Task<List<SchoolCategories>> List();
+
+        public Task<int> Delete(Guid id);
+
+        public Task<int> Create(SchoolCategories categories);
+
+        public Task<int> Update(SchoolCategories categories);
+
+        public Task<SchoolCategories> GetById(Guid id);
+
     }
 }

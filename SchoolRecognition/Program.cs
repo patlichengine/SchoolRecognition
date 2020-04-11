@@ -13,14 +13,25 @@ namespace SchoolRecognition
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().Run();
+            //CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        //public static IHostBuilder CreateHostBuilder(string[] args) =>
+        //    Host.CreateDefaultBuilder(args)
+        //        .ConfigureWebHostDefaults(webBuilder =>
+        //        {
+        //            webBuilder.UseStartup<Startup>();
+        //        });
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+             Microsoft.AspNetCore.WebHost.CreateDefaultBuilder(args)
+             .ConfigureLogging(logBuilder =>
+             {
+                logBuilder.ClearProviders(); // removes all providers from LoggerFactory
+                logBuilder.AddConsole();
+                logBuilder.AddTraceSource("Information, ActivityTracing"); // Add Trace listener provider
+             })
+                .UseStartup<Startup>();
     }
 }

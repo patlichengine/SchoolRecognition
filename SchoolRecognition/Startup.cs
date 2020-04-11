@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SchoolRecognition.Context;
-using SchoolRecognition.Helpers;
+
 using SchoolRecognition.Models;
 using SchoolRecognition.Repository;
 using SchoolRecognition.Services;
-using SchoolRecognition.Data;
+
 using SchoolRecognition.Classes;
 using Vereyon.Web;
+using Microsoft.Extensions.Logging;
 
 namespace SchoolRecognition
 {
@@ -41,14 +41,7 @@ namespace SchoolRecognition
             services.AddFlashMessage();
 
             services.AddSingleton(connectionString);
-            //custom Henry Connection
-            //services.AddDbContext<SchoolRecognitionContext>(options =>
-            //  options.UseSqlServer(
-            //      Configuration.GetConnectionString("SchoolRecognitionConnection")));
-
-            //custom project Connection String
-            //var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
-            //services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
+            
 
 
 
@@ -63,16 +56,10 @@ namespace SchoolRecognition
 
 
 
-            //Register dapper in scope  
-            services.AddScoped<IDapperHelper, DapperHelper>();
-
-            //My Scaffold App
-            //services.AddDbContext<SchoolRecognitionAppContext>(options =>
-            //        options.UseSqlServer(Configuration.GetConnectionString("SchoolRecognitionAppContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. myDapperConnection
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -86,7 +73,8 @@ namespace SchoolRecognition
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            // other code remove for clarity 
+            loggerFactory.AddFile("Logs/mylog-{Date}.txt");
             app.UseRouting();
 
             app.UseAuthorization();
