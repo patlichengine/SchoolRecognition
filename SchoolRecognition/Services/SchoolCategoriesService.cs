@@ -33,7 +33,7 @@ namespace SchoolRecognition.Services
                         Name = categories.Name,
                         Code = categories.Code
 
-                    }, commandType: CommandType.Text);
+                    }, commandType: CommandType.StoredProcedure);
 
                 }
 
@@ -47,9 +47,14 @@ namespace SchoolRecognition.Services
             return objResult;
         }
 
-        public Task<int> Delete(Guid id)
+        public async Task<int> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            int result = 0;
+            using (IDbConnection _db = new SqlConnection(_connectionString.Value))
+            {
+                result = await _db.Query("DeleteSchoolCategoryByID", new { @categoryID = id }, commandType: CommandType.StoredProcedure).FirstOrDefault();
+            }
+            return result;
         }
 
         public async Task<SchoolCategories> GetById(Guid id)

@@ -54,12 +54,14 @@
                             @Html.DisplayFor(modelItem => item.Code)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id"><span><i class="fa fa-edit" data-placement="top" data-toggle="tooltip" style="color:green;" title="Edit"></i></span></a> 
-                            <a asp-action="Details" asp-route-id="@item.Id"><span><i class="fa fa-folder-open" data-placement="bottom"style="color:blue;"  data-toggle="tooltip" title="Details"></i></span></a> 
-                            <a asp-action="Delete" asp-route-id="@item.Id"><span><i class="fa fa-trash" style="color:red;" data-placement="left" data-toggle="tooltip" title="Delete"></i></span></a>
+                            <a asp-action="Edit" asp-route-id="@item.Id"><span><i class="fa fa-edit" data-placement="top" data-toggle="tooltip" style="color:green;" title="Edit"></i></span></a>
+                            @*<a asp-action="Details" asp-route-id="@item.Id"><span><i class="fa fa-folder-open" data-placement="bottom"style="color:blue;"  data-toggle="tooltip" title="Details"></i></span></a>*@
+                            <a asp-action="Delete"  asp-route-id="@item.Id"><span><i class="fa fa-trash" style="color:red;" data-placement="left" data-toggle="tooltip" title="Delete"></i></span></a>
                         </td>
                     </tr>
                 }
         </tbody>
     </table>
 </section>
+
+

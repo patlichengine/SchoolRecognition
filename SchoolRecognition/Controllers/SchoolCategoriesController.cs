@@ -57,15 +57,12 @@ namespace SchoolRecognition.Controllers
             if (ModelState.IsValid)
             {
                  await schoolCategories.Create(model);
-                _flashMessage.Confirmation("New Category Added Successfully! As: ", model.Name);
+               _flashMessage.Confirmation("New Category Added Successfully! As: ", model.Name);
                
                 return RedirectToAction(nameof(Index));
             }
-            //else
-            //{
-            //    await schoolCategoriess.Update(model);
-            //}
-            return View(model);
+           
+            return View();
         }
 
         //[HttpGet("{id}")]
@@ -101,20 +98,8 @@ namespace SchoolRecognition.Controllers
                 Console.WriteLine(ex.Message);
             }
 
-
-            //if (model.Id == null)
-            //{
-
-            //return NotFound();
-            //}
-
-
             var model = await schoolCategories.GetById(id);
-          //if(model == null)
-          //  {
-          //      return NotFound();
-          //  }
-
+        
             return View(model);
            
       
@@ -137,10 +122,21 @@ namespace SchoolRecognition.Controllers
 
         public async Task<IActionResult> Delete(SchoolCategories school)
         {
-            
-            await schoolCategories.Delete(school.Id);
-            return RedirectToAction("Index");
-           
+            if (school == null)
+            {
+                return NotFound();
+
+            }
+            try
+            {
+                await schoolCategories.Delete(school.Id);
+                return View("Index");
+            }catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return View("Index");
              
         }
 
