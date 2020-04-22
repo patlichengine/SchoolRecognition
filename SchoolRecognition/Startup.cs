@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using SchoolRecognition.Models;
-using SchoolRecognition.Repository;
+
 using SchoolRecognition.Services;
 
 using SchoolRecognition.Classes;
@@ -32,6 +32,11 @@ namespace SchoolRecognition
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //use th addController to configure what you want to configure
+            services.AddControllers(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters();
 
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
@@ -51,7 +56,7 @@ namespace SchoolRecognition
                 .AddRazorRuntimeCompilation();
             
             //Scoping my  services  
-            _ = services.AddTransient<SchoolCategoriesRepo, SchoolCategoriesService>(provider => new SchoolCategoriesService(connectionString));
+            _ = services.AddTransient<ISchoolCategoryRepository, cSchoolCategoryRepository>();
             //services.AddTransient<>
 
 

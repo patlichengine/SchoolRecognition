@@ -24,38 +24,7 @@ namespace SchoolRecognition.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        public async Task<bool> AccountExists()
-        {
-            return await Task.Run(async () =>
-            {
-                bool result = await _context.Users.AnyAsync();
-                return result;
-            });
-           
-        }
-
-        public async Task<bool> AccountExists(Guid userId)
-        {
-            return await Task.Run(async () => {
-                if (userId == Guid.Empty)
-                {
-                    throw new ArgumentNullException(nameof(userId));
-                }
-
-                return await _context.Users.AnyAsync(a => a.Id == userId);
-            });
-            
-        }
-
-
-       
-
-        
-   
-       
-        
-   
-       
+      
 
         public void Dispose()
         {
@@ -77,7 +46,7 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<SchoolCategoryDto> CreateUser(SchoolCategoryDto schoolCategory)
+        public async Task<SchoolCategoryDto> Create(SchoolCategoryDto schoolCategory)
         {
             return await Task.Run(async () =>
             {
@@ -87,6 +56,8 @@ namespace SchoolRecognition.Services
                 }
                 var categoryEntity = _mapper.Map<Entities.SchoolCategories>(schoolCategory);
                 categoryEntity.Id = Guid.NewGuid();
+                categoryEntity.Name = schoolCategory.Name;
+                categoryEntity.Code = schoolCategory.Code;
 
                 _context.SchoolCategories.Add(categoryEntity);
 
@@ -135,5 +106,7 @@ namespace SchoolRecognition.Services
 
             });
         }
+
+       
     }
 }

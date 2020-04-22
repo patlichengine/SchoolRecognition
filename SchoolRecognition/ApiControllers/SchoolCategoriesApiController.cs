@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
-using SchoolRecognition.Repository;
+
 using SchoolRecognition.Services;
 
 namespace SchoolRecognition.ApiControllers
@@ -17,12 +18,12 @@ namespace SchoolRecognition.ApiControllers
     {
 
        //private readonly SchoolCategoriesService _schoolCategoriesService;
-        private readonly SchoolCategoriesRepo _schoolCategories;
+        private readonly ISchoolCategoryRepository _schoolCategories;
         [Obsolete]
         private readonly IWebHostEnvironment _hostingEnvironment;
 
         [Obsolete]
-        public SchoolCategoriesApiController(SchoolCategoriesRepo schoolCategories, IWebHostEnvironment hostingEnvironment)
+        public SchoolCategoriesApiController(ISchoolCategoryRepository schoolCategories, IWebHostEnvironment hostingEnvironment)
         {
             _schoolCategories = schoolCategories;
             _hostingEnvironment = hostingEnvironment;
@@ -33,27 +34,44 @@ namespace SchoolRecognition.ApiControllers
 
         // GET: api/SchoolCategories
         [HttpGet]
-        public async Task<ActionResult<List<SchoolCategories>>> Get()
+        public async Task<IEnumerable<SchoolCategoryDto>> Get()
         {
-            return await _schoolCategories.List();
+            return  await _schoolCategories.GetAllCategory();
+
+            
         }
 
       
 
         // GET: api/SchoolCategories/5
-        [HttpGet("{id}", Name = "Get")]
-        public async Task<ActionResult<SchoolCategories>> Get(Guid id)
+        [HttpGet("{categoryId}", Name = "Get")]
+        public IActionResult Get(Guid categoryId)
         {
-            return await _schoolCategories.GetById(id);
+
+            if (categoryId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var result = _schoolCategories.GetCategoryById(categoryId).Result;
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+
+           // return await _schoolCategories.GetCategoryById(id);
         }
 
         // POST: api/SchoolCategories
-        //[HttpPost]
-        //public void Post([FromBody] SchoolCategories school)
-        //{
+        [HttpPost]
+        public async Task<ActionResult<SchoolCategoryDto>> Post(SchoolCategoryDto school)
+        {
 
-        //     _schoolCategories.Create(school);
-        //}
+            var result = await _schoolCategories.Create(school);
+
+            return (result);
+        }
 
         //// PUT: api/SchoolCategories/5
         //[HttpPut("{id}")]

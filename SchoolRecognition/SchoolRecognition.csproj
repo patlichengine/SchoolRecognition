@@ -27,7 +27,6 @@
   <ItemGroup>
     <Folder Include="Entities\" />
     <Folder Include="NewFolder\" />
-    <Folder Include="Profiles\" />
     <Folder Include="Views\NewFolder\" />
     <Folder Include="Views\Users\" />
   </ItemGroup>

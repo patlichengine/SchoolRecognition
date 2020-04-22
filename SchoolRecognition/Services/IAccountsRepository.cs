@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.Services
 {
-    public interface ISchoolCategoryRepository
+    public interface IAccountsRepository
     {
         public Task<bool> AccountExists();
         public Task<bool> AccountExists(Guid userId);
