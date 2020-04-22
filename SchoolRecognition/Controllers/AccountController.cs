@@ -26,7 +26,7 @@ namespace SchoolRecognition.Controllers
         {
             if (ModelState.IsValid)
             {
-                new clsAccount().CreateUser(model);
+                new cAccountRepository().CreateUser(model);
             }
             return View();
         }

@@ -38,8 +38,8 @@ namespace SchoolRecognition
             services.AddFlashMessage();
 
             //Application-Layer Services
-            services.AddTransient<IPins, clsPins>(provider => new clsPins(connectionString));
-            services.AddTransient<IRecognitionTypes, clsRecognitionTypes>(provider => new clsRecognitionTypes(connectionString));
+            services.AddTransient<IPins, cPinsRepository>(provider => new cPinsRepository(connectionString));
+            services.AddTransient<IRecognitionTypes, cRecognitionTypesRepository>(provider => new cRecognitionTypesRepository(connectionString));
 
 
             services.AddControllersWithViews()
