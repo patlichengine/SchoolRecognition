@@ -18,20 +18,18 @@ namespace SchoolRecognition.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        public async Task<RolesDto> GetRole(Guid id)
+        public  Task<RolesDto> GetRole(Guid id)
         {
-            if(id == Guid.Empty)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-            var result = _context.Roles.FirstOrDefault(c => c.Id == id);
-            return _mapper.Map<RolesDto>(result);
+
+
+            throw new NotImplementedException();
+
+
         }
 
-        public async Task<IEnumerable<RolesDto>> GetRoles()
+        public  Task<IEnumerable<RolesDto>> GetRoles()
         {
-            var result = _context.Roles.ToList<Roles>();
-            return _mapper.Map<IEnumerable<RolesDto>>(result);
+            throw new NotImplementedException();
         }
 
         public void Dispose()

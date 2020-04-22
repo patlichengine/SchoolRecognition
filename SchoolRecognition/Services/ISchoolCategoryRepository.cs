@@ -17,7 +17,7 @@ namespace SchoolRecognition.Services
 
         public Task<SchoolCategoryDto> Create(SchoolCategoryDto categories);
 
-        public Task<int> Update(SchoolCategories categories);
+        public Task<SchoolCategoryDto> Update(SchoolCategoryDto categories);
 
         
        

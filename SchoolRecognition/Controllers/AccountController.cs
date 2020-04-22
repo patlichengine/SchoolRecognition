@@ -5,14 +5,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SchoolRecognition.Classes;
 using SchoolRecognition.Models;
+using SchoolRecognition.Services;
 
 namespace SchoolRecognition.Controllers
 {
-    public class AccountController : Controller
+    public class AccountsController : Controller
     {
+        IAccountsRepository _accountRepository;
+
+        public AccountsController(IAccountsRepository accountRepository)
+        {
+            _accountRepository = accountRepository ??
+               throw new ArgumentNullException(nameof(accountRepository));
+        }
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Register");
         }
 
         public IActionResult Register()
@@ -26,7 +34,7 @@ namespace SchoolRecognition.Controllers
         {
             if (ModelState.IsValid)
             {
-                new clsAccount().CreateUser(model);
+                _accountRepository.CreateAccount(model);
             }
             return View();
         }

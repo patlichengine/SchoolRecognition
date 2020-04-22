@@ -10,13 +10,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using SchoolRecognition.Models;
+
 
 using SchoolRecognition.Services;
 
 using SchoolRecognition.Classes;
 using Vereyon.Web;
 using Microsoft.Extensions.Logging;
+using SchoolRecognition.Models;
 
 namespace SchoolRecognition
 {

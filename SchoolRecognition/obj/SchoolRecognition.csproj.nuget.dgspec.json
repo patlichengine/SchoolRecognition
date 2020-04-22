@@ -85,6 +85,10 @@
               "target": "Package",
               "version": "[3.1.2, )"
             },
+            "Microsoft.Identity.Client": {
+              "target": "Package",
+              "version": "[4.11.0, )"
+            },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[3.1.1, )"
@@ -92,6 +96,10 @@
             "Serilog.Extensions.Logging.File": {
               "target": "Package",
               "version": "[2.0.0, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.7.0, )"
             },
             "Vereyon.Web.FlashMessage": {
               "target": "Package",

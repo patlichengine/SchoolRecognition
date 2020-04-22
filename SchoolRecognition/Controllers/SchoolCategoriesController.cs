@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SchoolRecognition.Models;
-using SchoolRecognition.Repository;
+
 using SchoolRecognition.Services;
 using Vereyon.Web;
 
@@ -20,14 +20,14 @@ namespace SchoolRecognition.Controllers
         
 
 
-        private SchoolCategoriesRepo schoolCategories;
+        private readonly ISchoolCategoryRepository schoolCategories;
         private IFlashMessage _flashMessage;
         
         private readonly ILogger _logger;
        
 
         [Obsolete]
-        public SchoolCategoriesController(  SchoolCategoriesRepo schoolCategory, IFlashMessage flashMessage, ILogger<SchoolCategoriesController> logger)
+        public SchoolCategoriesController(ISchoolCategoryRepository schoolCategory, IFlashMessage flashMessage, ILogger<SchoolCategoriesController> logger)
         {
             
             _logger = logger;
@@ -42,7 +42,7 @@ namespace SchoolRecognition.Controllers
         
         public async Task<IActionResult> Index()
         {
-            var result = await schoolCategories.List();
+            var result = await schoolCategories.GetAllCategory();
             return View(result);
         }
         public IActionResult Create()
@@ -52,7 +52,7 @@ namespace SchoolRecognition.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SchoolCategories model)
+        public async Task<IActionResult> Create(SchoolCategoryDto model)
         {
             if (ModelState.IsValid)
             {
@@ -66,12 +66,12 @@ namespace SchoolRecognition.Controllers
         }
 
         //[HttpGet("{id}")]
-        public async Task<ActionResult<SchoolCategories>> Edit(Guid id)
+        public async Task<ActionResult<SchoolCategoryDto>> Edit(Guid id)
         {
            
 
             _logger.LogInformation("Getting item {Id} at {RequestTime}", id, DateTime.Now);
-            var model = await schoolCategories.GetById(id);
+            var model = await schoolCategories.GetCategoryById(id);
            // var model = await _context.SchoolCategories.FindAsync(id);
 
             if (model == null)
@@ -85,12 +85,12 @@ namespace SchoolRecognition.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, SchoolCategories school)
+        public async Task<IActionResult> Edit(Guid id, SchoolCategoryDto school)
 
         {
             try
             {
-               await schoolCategories.Update(school);
+                await schoolCategories.Update(school);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -98,7 +98,7 @@ namespace SchoolRecognition.Controllers
                 Console.WriteLine(ex.Message);
             }
 
-            var model = await schoolCategories.GetById(id);
+            var model = await schoolCategories.GetCategoryById(id);
         
             return View(model);
            
@@ -114,31 +114,31 @@ namespace SchoolRecognition.Controllers
                 return NotFound();
                
             }
-            var model = await schoolCategories.GetById(schoolCategoriesId);
+            var model = await schoolCategories.GetCategoryById(schoolCategoriesId);
          
 
             return View(model);
         }
 
-        public async Task<IActionResult> Delete(SchoolCategories school)
-        {
-            if (school == null)
-            {
-                return NotFound();
+        //public async Task<IActionResult> Delete(SchoolCategories school)
+        //{
+        //    if (school == null)
+        //    {
+        //        return NotFound();
 
-            }
-            try
-            {
-                await schoolCategories.Delete(school.Id);
-                return View("Index");
-            }catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+        //    }
+        //    try
+        //    {
+        //        await schoolCategories.Delete(school.Id);
+        //        return View("Index");
+        //    }catch(Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
 
-            return View("Index");
+        //    return View("Index");
              
-        }
+        //}
 
     }
 }

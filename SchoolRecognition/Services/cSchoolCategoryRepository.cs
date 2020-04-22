@@ -77,7 +77,7 @@ namespace SchoolRecognition.Services
 
         }
 
-        public Task<int> Update(SchoolCategories categories)
+        public Task<SchoolCategoryDto> Update(SchoolCategoryDto categories)
         {
             throw new NotImplementedException();
         }
