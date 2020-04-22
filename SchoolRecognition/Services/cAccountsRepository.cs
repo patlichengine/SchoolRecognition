@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.Services
 {
-    public class cAccountsRepository : IAccountsRepository, IDisposable
+    public class cAccountsRepository : ISchoolCategoryRepository, IDisposable
     {
         private readonly SchoolRecognitionContext _context;
         private readonly IMapper _mapper;

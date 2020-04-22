@@ -13,9 +13,9 @@ namespace SchoolRecognition.ApiControllers
     [ApiController]
     public class AccountsApiController : ControllerBase
     {
-        private readonly IAccountsRepository _accountsRepository;
+        private readonly ISchoolCategoryRepository _accountsRepository;
 
-        public AccountsApiController(IAccountsRepository accountsRepository)
+        public AccountsApiController(ISchoolCategoryRepository accountsRepository)
         {
             _accountsRepository = accountsRepository ??
                throw new ArgumentNullException(nameof(accountsRepository));

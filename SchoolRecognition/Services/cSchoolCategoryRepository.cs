@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.Services
 {
-    public class cAccountsRepository : IAccountsRepository, IDisposable
+    public class cSchoolCategoryRepository : ISchoolCategoryRepository, IDisposable
     {
         private readonly SchoolRecognitionContext _context;
         private readonly IMapper _mapper;
 
-        public cAccountsRepository(SchoolRecognitionContext  context, IMapper mapper)
+        public cSchoolCategoryRepository(SchoolRecognitionContext  context, IMapper mapper)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -48,90 +48,14 @@ namespace SchoolRecognition.Services
         }
 
 
-        //create account/use method
-        public async void CreateAccount(RegisterViewModel _obj)
-        {
-            await Task.Run(async () => {
-                if (_obj == null)
-                {
-                    throw new ArgumentNullException(nameof(_obj));
-                }
-                var mPassword = Encryption.EncryptPassword(_obj.Password);
-                //Add the user details
-                await _context.Users.AddAsync(new Users
-                {
-                    Id = Guid.NewGuid(),
-                    Surname = _obj.Surname,
-                    Othernames = _obj.OtherName,
-                    EmailAddress = _obj.Email,
-                    Password = mPassword,
-                    PhoneNo = _obj.PhoneNo
-                });
-            });
-            
-        }
-
-
+       
 
         
-        //use user account by id
-        public async Task<AccountsDto> GetAccount(Guid id)
-        {
-            return await Task.Run(async () =>
-            {
-                if (id == Guid.Empty)
-                {
-                    throw new ArgumentNullException(nameof(id));
-                }
-
-                var result = await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
-                //return the mapped object
-                return _mapper.Map<AccountsDto>(result);
-            });
-            
-        }
-
-        public async Task<AccountsDto> GetAccount(string emailAddress, string password)
-        {
-            return await Task.Run(async () =>
-            {
-                if (string.IsNullOrEmpty(emailAddress))
-                {
-                    throw new ArgumentNullException(nameof(emailAddress));
-                }
-
-                if (string.IsNullOrEmpty(password))
-                {
-                    throw new ArgumentNullException(nameof(password));
-                }
-
-                //get password in byte
-                var pwd = Encryption.EncryptPassword(password);
-
-                var result = await _context.Users.FirstOrDefaultAsync(c => c.EmailAddress == emailAddress && c.Password == pwd);
-                //return the mapped object
-                return _mapper.Map<AccountsDto>(result);
-            });
-        }
-
-        public async Task<IEnumerable<AccountsDto>> GetAccounts()
-        {
-            return await Task.Run(async () =>
-            {
-                var result = await _context.Users.ToListAsync<Users>();
-                return _mapper.Map<IEnumerable<AccountsDto>>(result);
-
-            });
-        }
-
-        public async Task<IEnumerable<AccountsDto>> GetRoleAccounts(Guid roleId)
-        {
-            return await Task.Run(async () =>
-            {
-                var result = await _context.Users.Where(c => c.RoleId == roleId).ToListAsync<Users>();
-                return _mapper.Map<IEnumerable<AccountsDto>>(result);
-            });
-        }
+   
+       
+        
+   
+       
 
         public void Dispose()
         {
@@ -145,6 +69,71 @@ namespace SchoolRecognition.Services
             {
                 // dispose resources when needed
             }
+        }
+
+        public Task<int> Delete(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public async Task<SchoolCategoryDto> CreateUser(SchoolCategoryDto schoolCategory)
+        {
+            return await Task.Run(async () =>
+            {
+                if (schoolCategory == null)
+                {
+                    throw new ArgumentNullException(nameof(schoolCategory));
+                }
+                var categoryEntity = _mapper.Map<Entities.SchoolCategories>(schoolCategory);
+                categoryEntity.Id = Guid.NewGuid();
+
+                _context.SchoolCategories.Add(categoryEntity);
+
+                //call the save method
+                bool saveResult = await Save();   //this method is also part of the Interface methods
+
+                return _mapper.Map<SchoolCategoryDto>(categoryEntity);
+            });
+        }
+
+        public async Task<bool> Save()
+        {
+            return await Task.Run(async () =>
+            {
+                return (await _context.SaveChangesAsync() >= 0);
+            });
+
+        }
+
+        public Task<int> Update(SchoolCategories categories)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<SchoolCategoryDto> GetCategoryById(Guid id)
+        {
+            return await Task.Run(async () =>
+            {
+                if (id == Guid.Empty)
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+
+                var result = await _context.SchoolCategories.FirstOrDefaultAsync(c => c.Id == id);
+                //return the mapped object
+                return _mapper.Map<SchoolCategoryDto>(result);
+            });
+        }
+
+        public async Task<IEnumerable<SchoolCategoryDto>> GetAllCategory()
+        {
+            return await Task.Run(async () =>
+            {
+                var result = await _context.SchoolCategories.ToListAsync<SchoolCategories>();
+                return _mapper.Map<IEnumerable<SchoolCategoryDto>>(result);
+
+            });
         }
     }
 }

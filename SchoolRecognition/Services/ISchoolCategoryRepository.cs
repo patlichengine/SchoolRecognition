@@ -15,7 +15,7 @@ namespace SchoolRecognition.Services
 
         public Task<int> Delete(Guid id);
 
-        public Task<int> Create(SchoolCategories categories);
+        public Task<SchoolCategoryDto> Create(SchoolCategoryDto categories);
 
         public Task<int> Update(SchoolCategories categories);
 

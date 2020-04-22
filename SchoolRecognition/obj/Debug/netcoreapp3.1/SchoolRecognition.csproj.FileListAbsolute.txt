@@ -1053,6 +1053,4 @@ C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\D
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Serilog.Sinks.Async.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Serilog.Sinks.File.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Serilog.Sinks.RollingFile.dll
-C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Dapper.Contrib.dll
