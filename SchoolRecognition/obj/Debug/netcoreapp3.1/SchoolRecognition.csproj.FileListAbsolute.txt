@@ -1017,7 +1017,6 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\r
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.RazorAssemblyInfo.cache
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.RazorAssemblyInfo.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.AssemblyInfoInputs.cache
@@ -1052,3 +1051,8 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\s
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\staticwebassets\SchoolRecognition.StaticWebAssets.xml
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.pdb
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\AutoMapper.dll
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache

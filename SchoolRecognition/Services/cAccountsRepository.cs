@@ -3,6 +3,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SchoolRecognition.Classes;
+using SchoolRecognition.DbContexts;
 using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
 using System;

@@ -9,10 +9,10 @@ namespace SchoolRecognition.Models
     {
         public Guid Id { get; set; }
         public String RecognitionTypeName { get; set; }
-        public string SerialPin { get; set; }
+        public string SerialNumber { get; set; }
         public bool IsActive { get; set; }
         public bool IsInUse { get; set; }
-        public String CreatedByName { get; set; }
+        public String CreatedByUser { get; set; }
         public DateTime? DateCreated { get; set; }
     }
 }

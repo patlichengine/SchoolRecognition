@@ -1,7 +1,7 @@
-﻿@model IEnumerable<SchoolRecognition.Models.Pins>
+﻿@model IEnumerable<SchoolRecognition.Models.PinsViewDto>
 @{
-    var recognitionType = (RecognitionTypes)ViewData["RecognitionType"];
-    ViewData["Title"] = recognitionType.Name + " Pins";
+    var recognitionType = (RecognitionTypesDto)ViewData["RecognitionType"];
+    ViewData["Title"] = recognitionType.RecognitionTypeName + " Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
@@ -75,8 +75,8 @@
                                     {
                                         <tr role="row">
                                             <td>@item.DateCreated</td>
-                                            <td>@item.SerialPin</td>
-                                            <td>@(item.CreatedByNavigation != null ? String.Format("{0},{1}", item.CreatedByNavigation.Surname.ToUpper(), item.CreatedByNavigation.Others) : "NOT STATED")</td>
+                                            <td>@item.SerialNumber</td>
+                                            <td>@item.CreatedByUser</td>
                                             <td>
                                                 <a href="#" class="btn btn-xs disabled @(item.IsActive ? "btn-success" : "btn-danger")">
                                                     <i class="fas fa-check"></i>

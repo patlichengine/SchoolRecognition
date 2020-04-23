@@ -13,7 +13,10 @@ namespace SchoolRecognition.Controllers
             return View();
         }
 
-        
-        
+
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }

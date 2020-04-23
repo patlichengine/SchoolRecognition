@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SchoolRecognition.Models;
-using SchoolRecognition.Repository;
+using SchoolRecognition.Services;
 using Vereyon.Web;
 
 namespace SchoolRecognition.Controllers
@@ -13,10 +13,10 @@ namespace SchoolRecognition.Controllers
     public class PinsController : Controller
     {
         private IFlashMessage _flashMessage;
-        private IPins _pinsService;
-        private IRecognitionTypes _recognitionTypesService;
+        private IPinsRepository _pinsService;
+        private IRecognitionTypesRepository _recognitionTypesService;
 
-        public PinsController(IFlashMessage flashMessage, IPins pinsService, IRecognitionTypes recognitionTypesService)
+        public PinsController(IFlashMessage flashMessage, IPinsRepository pinsService, IRecognitionTypesRepository recognitionTypesService)
         {
             _flashMessage = flashMessage;
             _pinsService = pinsService;
@@ -38,25 +38,24 @@ namespace SchoolRecognition.Controllers
             var recognitionTypes = await _recognitionTypesService.Get();
 
             ViewData["RecognitionTypes"] =  recognitionTypes.Select(x => 
-            new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }).ToList();
+            new SelectListItem() { Text = x.RecognitionTypeName, Value = x.Id.ToString() }).ToList();
 
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GeneratePins(PinsCreateViewModel model)
+        public async Task<IActionResult> GeneratePins(PinsCreateDto model)
         {
 
             var recognitionTypes = await _recognitionTypesService.Get();
             //
             ViewData["RecognitionTypes"] = recognitionTypes.Select(x =>
-           new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }).ToList();
+           new SelectListItem() { Text = x.RecognitionTypeName, Value = x.Id.ToString() }).ToList();
 
             if (ModelState.IsValid)
             {
-                var pinObject = new Pins() { RecognitionTypeId = model.RecognitionTypeId, IsActive = true };
-                var result = await _pinsService.CreateSeveralPins(pinObject, model.NoOfPinToGenerate);
+                var result = await _pinsService.CreateSeveralPins(model);
 
                 if (result)
                 {

@@ -45,9 +45,9 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
-            "AutoMapper": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[7.0.0, )"
             },
             "Dapper": {
               "target": "Package",
@@ -82,6 +82,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[3.1.1, )"
+            },
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.7.0, )"
             },
             "Vereyon.Web.FlashMessage": {
               "target": "Package",

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SchoolRecognition.Models.RecognitionTypes>
+﻿@model IEnumerable<SchoolRecognition.Models.RecognitionTypesDto>
 @{
     ViewData["Title"] = "Manage Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -61,8 +61,8 @@
                             @foreach (var item in Model)
                             {
                                 <tr role="row">
-                                    <td>@item.Name</td>
-                                    <td>@item.Code</td>
+                                    <td>@item.RecognitionTypeName</td>
+                                    <td>@item.RecognitionTypeCode</td>
                                     <td class="text-center">
                                         <a asp-action="ViewPins" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">
                                             <i class="fas fa-desktop"></i>

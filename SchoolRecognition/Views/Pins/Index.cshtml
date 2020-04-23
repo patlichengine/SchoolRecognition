@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SchoolRecognition.Models.Pins>
+﻿@model IEnumerable<SchoolRecognition.Models.PinsViewDto>
 @{
     ViewData["Title"] = "All Pins Generated";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -66,8 +66,8 @@
                             {
                                 <tr role="row">
                                     <td>@item.DateCreated.Value.ToString("d-MMM-yyyy")</td>
-                                    <td>@item.SerialPin</td>
-                                    <td>@(item.CreatedByNavigation != null ? String.Format("{0},{1}", item.CreatedByNavigation.Surname.ToUpper(), item.CreatedByNavigation.Others) : "NOT STATED")</td>
+                                    <td>@item.SerialNumber</td>
+                                    <td>@item.CreatedByUser</td>
                                     <td>
                                         <a href="#" class="btn btn-xs disabled @(item.IsActive ? "btn-success" : "btn-danger")">
                                             <i class="fas fa-check"></i>

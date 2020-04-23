@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 using SchoolRecognition.Entities;
 
 namespace SchoolRecognition.DbContexts
@@ -16,7 +17,12 @@ namespace SchoolRecognition.DbContexts
         {
         }
 
+        public virtual DbSet<AuditTrail> AuditTrail { get; set; }
+        public virtual DbSet<Centres> Centres { get; set; }
+        public virtual DbSet<Dblogger> Dblogger { get; set; }
         public virtual DbSet<LocalGovernments> LocalGovernments { get; set; }
+        public virtual DbSet<LocationTypes> LocationTypes { get; set; }
+        public virtual DbSet<OfficeTypes> OfficeTypes { get; set; }
         public virtual DbSet<Offices> Offices { get; set; }
         public virtual DbSet<PinHistories> PinHistories { get; set; }
         public virtual DbSet<Pins> Pins { get; set; }
@@ -26,26 +32,93 @@ namespace SchoolRecognition.DbContexts
         public virtual DbSet<SchoolCategories> SchoolCategories { get; set; }
         public virtual DbSet<SchoolPayments> SchoolPayments { get; set; }
         public virtual DbSet<Schools> Schools { get; set; }
+        public virtual DbSet<SecurityConfig> SecurityConfig { get; set; }
         public virtual DbSet<States> States { get; set; }
         public virtual DbSet<Titles> Titles { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<VwUsers> VwUsers { get; set; }
+
+
+        public IConfiguration Configuration { get; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=NORMAL-PC\\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI");
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
+                optionsBuilder.UseSqlServer(connection);
             }
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AuditTrail>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Action)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.DateCreated)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasColumnType("ntext");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+            });
+
+            modelBuilder.Entity<Centres>(entity =>
+            {
+                entity.HasIndex(e => e.CentreNo)
+                    .HasName("IX_Centres")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.CentreName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.CentreNo)
+                    .IsRequired()
+                    .HasMaxLength(7);
+
+                entity.Property(e => e.SchoolCategoryId).HasColumnName("SchoolCategoryID");
+
+                entity.HasOne(d => d.SchoolCategory)
+                    .WithMany(p => p.Centres)
+                    .HasForeignKey(d => d.SchoolCategoryId)
+                    .HasConstraintName("FK_Centres_SchoolCategories");
+            });
+
+            modelBuilder.Entity<Dblogger>(entity =>
+            {
+                entity.ToTable("DBLogger");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DateCreated)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ErrorMsg).IsRequired();
+            });
+
             modelBuilder.Entity<LocalGovernments>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Code).HasMaxLength(3);
 
@@ -59,11 +132,35 @@ namespace SchoolRecognition.DbContexts
                     .HasConstraintName("FK_LocalGovernments_State");
             });
 
+            modelBuilder.Entity<LocationTypes>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Description).HasMaxLength(100);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<OfficeTypes>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Description).HasMaxLength(50);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+            });
+
             modelBuilder.Entity<Offices>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Address).HasMaxLength(50);
 
@@ -71,14 +168,21 @@ namespace SchoolRecognition.DbContexts
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
+                entity.Property(e => e.OfficeTypeId).HasColumnName("OfficeTypeID");
+
                 entity.Property(e => e.StateId).HasColumnName("StateID");
+
+                entity.HasOne(d => d.OfficeType)
+                    .WithMany(p => p.Offices)
+                    .HasForeignKey(d => d.OfficeTypeId)
+                    .HasConstraintName("FK_Offices_OfficeTypes");
             });
 
             modelBuilder.Entity<PinHistories>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.DateActive).HasColumnType("date");
 
@@ -99,15 +203,15 @@ namespace SchoolRecognition.DbContexts
 
             modelBuilder.Entity<Pins>(entity =>
             {
-                entity.ToTable("PINs");
-
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.DateCreated).HasColumnType("date");
 
                 entity.Property(e => e.RecognitionTypeId).HasColumnName("RecognitionTypeID");
+
+                entity.Property(e => e.SerialPin).HasMaxLength(25);
 
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.Pins)
@@ -124,7 +228,7 @@ namespace SchoolRecognition.DbContexts
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Code).HasMaxLength(10);
 
@@ -135,7 +239,7 @@ namespace SchoolRecognition.DbContexts
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Code)
                     .HasMaxLength(3)
@@ -148,7 +252,7 @@ namespace SchoolRecognition.DbContexts
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
@@ -157,7 +261,7 @@ namespace SchoolRecognition.DbContexts
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Code).HasMaxLength(2);
 
@@ -168,7 +272,7 @@ namespace SchoolRecognition.DbContexts
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Amount).HasColumnType("decimal(18, 0)");
 
@@ -200,7 +304,7 @@ namespace SchoolRecognition.DbContexts
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Address).HasMaxLength(50);
 
@@ -232,6 +336,36 @@ namespace SchoolRecognition.DbContexts
                     .HasConstraintName("FK_School_Office");
             });
 
+            modelBuilder.Entity<SecurityConfig>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Address)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ClientAllowedIp)
+                    .HasColumnName("ClientAllowedIP")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastUpdateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.OrganisationName)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SupportedBrowsers)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SupportedClientVersion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<States>(entity =>
             {
                 entity.HasIndex(e => e.Code)
@@ -240,7 +374,7 @@ namespace SchoolRecognition.DbContexts
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.Code).HasMaxLength(3);
 
@@ -260,7 +394,7 @@ namespace SchoolRecognition.DbContexts
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .ValueGeneratedNever();
+                    .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.EmailAddress).HasMaxLength(50);
 
@@ -268,11 +402,15 @@ namespace SchoolRecognition.DbContexts
                     .HasColumnName("LPNO")
                     .HasMaxLength(30);
 
+                entity.Property(e => e.Othernames).HasMaxLength(50);
+
                 entity.Property(e => e.PhoneNo).HasMaxLength(20);
 
                 entity.Property(e => e.RankId).HasColumnName("RankID");
 
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
+
+                entity.Property(e => e.Surname).HasMaxLength(50);
 
                 entity.HasOne(d => d.Rank)
                     .WithMany(p => p.Users)
@@ -285,9 +423,37 @@ namespace SchoolRecognition.DbContexts
                     .HasConstraintName("FK_User_Role");
             });
 
+            modelBuilder.Entity<VwUsers>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vwUsers");
+
+                entity.Property(e => e.EmailAddress).HasMaxLength(50);
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Lpno)
+                    .HasColumnName("LPNO")
+                    .HasMaxLength(30);
+
+                entity.Property(e => e.Othernames).HasMaxLength(50);
+
+                entity.Property(e => e.PhoneNo).HasMaxLength(20);
+
+                entity.Property(e => e.RankId).HasColumnName("RankID");
+
+                entity.Property(e => e.RoleId).HasColumnName("RoleID");
+
+                entity.Property(e => e.RoleName).HasMaxLength(50);
+
+                entity.Property(e => e.Surname).HasMaxLength(50);
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
+
 }

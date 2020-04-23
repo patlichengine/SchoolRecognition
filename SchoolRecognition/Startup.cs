@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,8 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SchoolRecognition.Classes;
+using SchoolRecognition.DbContexts;
 using SchoolRecognition.Models;
-using SchoolRecognition.Repository;
+using SchoolRecognition.Services;
 using Vereyon.Web;
 
 namespace SchoolRecognition
@@ -28,19 +30,31 @@ namespace SchoolRecognition
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //use th addController to configure what you want to configure
+            services.AddControllers(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters();
+
+            //Add the AutoMapper extension
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
 
-            var connectionString = new ConnectionString(connection);
+            var connectionString = new ConnectionString(Configuration.GetConnectionString("SchoolRecognitionConnection"));
             services.AddSingleton(connectionString);
 
             // Add services required for flash message to work.
             services.AddFlashMessage();
 
             //Application-Layer Services
-            services.AddTransient<IPins, cPinsRepository>(provider => new cPinsRepository(connectionString));
-            services.AddTransient<IRecognitionTypes, cRecognitionTypesRepository>(provider => new cRecognitionTypesRepository(connectionString));
+            //services.AddTransient<IPinsRepository, cPinsRepository>(provider => new cPinsRepository(connectionString));
+            //services.AddTransient<IRecognitionTypesRepository, cRecognitionTypesRepository>(provider => new cRecognitionTypesRepository(connectionString));
 
+            services.AddScoped<IAccountsRepository, cAccountsRepository>();
+            services.AddScoped<IPinsRepository, cPinsRepository>();
+            services.AddScoped<IRecognitionTypesRepository, cRecognitionTypesRepository>();
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson()
