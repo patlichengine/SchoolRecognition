@@ -121,25 +121,26 @@ namespace SchoolRecognition.Controllers
             return View(model);
         }
 
-        //public async Task<IActionResult> Delete(SchoolCategories school)
-        //{
-        //    if (school == null)
-        //    {
-        //        return NotFound();
+        public async Task<IActionResult> Delete(SchoolCategories school)
+        {
+            if (school == null)
+            {
+                return NotFound();
 
-        //    }
-        //    try
-        //    {
-        //        await schoolCategories.Delete(school.Id);
-        //        return View("Index");
-        //    }catch(Exception ex)
-        //    {
-        //        Console.WriteLine(ex.Message);
-        //    }
+            }
+            try
+            {
+                await schoolCategories.Delete(school.Id);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
-        //    return View("Index");
-             
-        //}
+            return View("Index");
+
+        }
 
     }
 }

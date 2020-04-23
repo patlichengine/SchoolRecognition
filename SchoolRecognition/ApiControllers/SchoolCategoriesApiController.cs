@@ -49,10 +49,11 @@ namespace SchoolRecognition.ApiControllers
 
 
 
-      
+
 
         // GET: api/SchoolCategories/5
-        [HttpGet("{categoryId}", Name = "Get")]
+       
+        [HttpGet("Edit/{categoryId}", Name = "Get")]
         public IActionResult Get(Guid categoryId)
         {
 
@@ -89,10 +90,16 @@ namespace SchoolRecognition.ApiControllers
         //}
 
         //// DELETE: api/ApiWithActions/5
-        //[HttpDelete("{id}")]
-        //public void Delete(Guid id)
-        //{
-        //    _schoolCategories.Delete(id);
-        //}
+       
+        [HttpDelete("Delete/{id}", Name = "Delete")]
+        public IActionResult Delete(Guid id)
+        {
+           
+          var result =  _schoolCategories.Delete(id).Result;
+           
+            return Ok(result);
+
+            
+        }
     }
 }

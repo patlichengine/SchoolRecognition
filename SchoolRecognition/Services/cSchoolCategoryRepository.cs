@@ -41,10 +41,62 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public Task<int> Delete(Guid id)
+
+        
+        //Delete Section
+         public async Task<SchoolCategoryDto> Delete(Guid id)
         {
-            throw new NotImplementedException();
-        }
+            return await Task.Run(async () => {
+
+                if (id == Guid.Empty)
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+                var result = await _context.SchoolCategories.FirstOrDefaultAsync(x => x.Id == id);
+
+
+
+                if (result != null)
+                {
+                    //Delete that post
+                    _context.SchoolCategories.Remove(result);                   
+                }
+                //Commit the transaction
+                bool saveResult = await Save();
+
+                return _mapper.Map<SchoolCategoryDto>(result);
+            });
+
+             
+            }
+
+          
+        
+
+
+
+        //public async Task<int> Delete(Guid id)
+        //{
+        //    int result = 0;
+
+        //    if (id != null)
+        //    {
+        //        Find the post for specific post id
+        //        var post = await _context.SchoolCategories.FirstOrDefaultAsync(x => x.Id == id);
+
+        //        if (post != null)
+        //        {
+        //            Delete that post
+        //            _context.SchoolCategories.Remove(post);
+
+        //            Commit the transaction
+        //            result = await _context.SaveChangesAsync();
+        //        }
+        //        return result;
+        //    }
+
+        //    return result;
+        //}
 
 
         public async Task<SchoolCategoryDto> Create(SchoolCategories schoolCategory)

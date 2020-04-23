@@ -13,7 +13,7 @@ namespace SchoolRecognition.Services
 
        
 
-        public Task<int> Delete(Guid id);
+        public Task<SchoolCategoryDto> Delete(Guid id);
 
         public Task<SchoolCategoryDto> Create(SchoolCategories categories);
 
