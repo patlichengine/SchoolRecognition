@@ -18,6 +18,8 @@ using SchoolRecognition.Classes;
 using Vereyon.Web;
 using Microsoft.Extensions.Logging;
 using SchoolRecognition.Models;
+using AutoMapper;
+using SchoolRecognition.Profiles;
 
 namespace SchoolRecognition
 {
@@ -37,7 +39,8 @@ namespace SchoolRecognition
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-            }).AddXmlDataContractSerializerFormatters();
+            });
+               // .AddXmlDataContractSerializerFormatters();
 
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
@@ -47,15 +50,21 @@ namespace SchoolRecognition
             services.AddFlashMessage();
 
             services.AddSingleton(connectionString);
-            
 
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new SchoolCategoryProfile());
+            });
 
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson()
                 .AddRazorRuntimeCompilation();
-            
+          
             //Scoping my  services  
             _ = services.AddTransient<ISchoolCategoryRepository, cSchoolCategoryRepository>();
             //services.AddTransient<>

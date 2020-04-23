@@ -34,12 +34,20 @@ namespace SchoolRecognition.ApiControllers
 
         // GET: api/SchoolCategories
         [HttpGet]
-        public async Task<IEnumerable<SchoolCategoryDto>> Get()
+        public ActionResult<IEnumerable<SchoolCategoryDto>> Get()
         {
-            return  await _schoolCategories.GetAllCategory();
+           
 
-            
+            var result =  _schoolCategories.GetAllCategory().Result;
+
+            return Ok(result);
+
+
+          
+
         }
+
+
 
       
 
@@ -65,7 +73,7 @@ namespace SchoolRecognition.ApiControllers
 
         // POST: api/SchoolCategories
         [HttpPost]
-        public async Task<ActionResult<SchoolCategoryDto>> Post(SchoolCategoryDto school)
+        public async Task<ActionResult<SchoolCategoryDto>> Post(SchoolCategories school)
         {
 
             var result = await _schoolCategories.Create(school);

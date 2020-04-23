@@ -47,6 +47,10 @@
               "target": "Package",
               "version": "[9.0.0, )"
             },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "Dapper": {
               "target": "Package",
               "version": "[2.0.35, )"

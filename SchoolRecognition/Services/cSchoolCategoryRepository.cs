@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -46,7 +47,7 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<SchoolCategoryDto> Create(SchoolCategoryDto schoolCategory)
+        public async Task<SchoolCategoryDto> Create(SchoolCategories schoolCategory)
         {
             return await Task.Run(async () =>
             {
@@ -54,10 +55,10 @@ namespace SchoolRecognition.Services
                 {
                     throw new ArgumentNullException(nameof(schoolCategory));
                 }
-                var categoryEntity = _mapper.Map<Entities.SchoolCategories>(schoolCategory);
+                var categoryEntity = _mapper.Map<SchoolCategories>(schoolCategory);
                 categoryEntity.Id = Guid.NewGuid();
-                categoryEntity.Name = schoolCategory.Name;
-                categoryEntity.Code = schoolCategory.Code;
+                //categoryEntity.Name = schoolCategory.Name;
+                //categoryEntity.Code = schoolCategory.Code;
 
                 _context.SchoolCategories.Add(categoryEntity);
 

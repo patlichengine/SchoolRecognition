@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 //using Microsoft.AspNetCore.Hosting.
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
 
 using SchoolRecognition.Services;
@@ -52,7 +53,7 @@ namespace SchoolRecognition.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SchoolCategoryDto model)
+        public async Task<IActionResult> Create(SchoolCategories model)
         {
             if (ModelState.IsValid)
             {

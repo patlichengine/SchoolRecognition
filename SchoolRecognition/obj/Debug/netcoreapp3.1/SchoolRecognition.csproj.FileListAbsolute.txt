@@ -1054,11 +1054,12 @@ C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\D
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Serilog.Sinks.RollingFile.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Dapper.Contrib.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\AutoMapper.dll
-C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
