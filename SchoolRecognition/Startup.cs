@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 using SchoolRecognition.Classes;
 using SchoolRecognition.DbContexts;
 using SchoolRecognition.Models;
@@ -34,10 +35,19 @@ namespace SchoolRecognition
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-            }).AddXmlDataContractSerializerFormatters();
+            })
+            //Enable For JSON endpoint data
+            //.AddNewtonsoftJson(options =>
+            //{
+            //    //Fixing JSON Self Referencing Loop Exceptions
+            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            //})
+            .AddXmlDataContractSerializerFormatters();
 
             //Add the AutoMapper extension
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            //
 
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
@@ -57,7 +67,12 @@ namespace SchoolRecognition
             services.AddScoped<IRecognitionTypesRepository, cRecognitionTypesRepository>();
 
             services.AddControllersWithViews()
-                .AddNewtonsoftJson()
+                //Required By FlashMessage 
+                .AddNewtonsoftJson(options =>
+                {
+                    //Fixing JSON Self Referencing Loop Exceptions
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                })
                 .AddRazorRuntimeCompilation();
 
         }
@@ -87,6 +102,8 @@ namespace SchoolRecognition
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
+                endpoints.MapControllers();
             });
         }
     }
