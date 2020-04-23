@@ -355,7 +355,7 @@ namespace SchoolRecognition.Services
                             //IsActive = _obj.IsActive,
                             //IsInUse = _obj.IsInUse,
                             CreatedBy = _obj.CreatedBy,
-                            //DateCreated = DateTime.Now,
+                            DateCreated = DateTime.Now,
                         };
 
                         listPinsEntities.Add(pinsEntity);
