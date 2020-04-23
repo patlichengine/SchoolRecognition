@@ -65,7 +65,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr role="row">
-                                    <td>@item.DateCreated.Value.ToString("d-MMM-yyyy")</td>
+                                    <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
                                     <td>@item.SerialNumber</td>
                                     <td>@item.CreatedByUser</td>
                                     <td>

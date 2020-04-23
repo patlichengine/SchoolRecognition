@@ -23,48 +23,78 @@ namespace SchoolRecognition.ApiControllers
         }
         // GET: api/PinsApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PinsViewDto>>> Get()
+        public async Task<ActionResult> Get()
         {
-            var result = await _recognitionTypesRepository.Get();
-            return Ok(result);
+            
+            try
+            {
+                var result = await _recognitionTypesRepository.Get();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
+
 
         // GET: api/PinsApi/5
         [HttpGet]
         [Route("{pinId}")]
         public async Task<IActionResult> Get(Guid pinId)
-        {
-            if (pinId == Guid.Empty)
-            {
-                return NotFound();
-            }
+        {            
 
-            var result = await _recognitionTypesRepository.Get(pinId);
-            if (result == null)
+            try
             {
-                return NotFound();
-            }
+                if (pinId == Guid.Empty)
+                {
+                    return NotFound();
+                }
 
-            return Ok(result);
+                var result = await _recognitionTypesRepository.Get(pinId);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
         // GET: api/PinsApi/5
         [HttpPost]
         public async Task<IActionResult> Post(PinsCreateDto model)
-        {
-            if (model == null)
-            {
-                return BadRequest();
-            }
+        {          
 
-            var result = await _recognitionTypesRepository.CreateSeveralPins(model);
-            if (result == false)
+            try
             {
-                return BadRequest();
-            }
+                if (model == null)
+                {
+                    return BadRequest();
+                }
 
-            return Ok(result);
+                var result = await _recognitionTypesRepository.CreateSeveralPins(model);
+                if (result == false)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
+
+
 
 
     }

@@ -73,21 +73,21 @@
                                 <tbody>
                                     @foreach (var item in Model)
                                     {
-                                        <tr role="row">
-                                            <td>@item.DateCreated</td>
-                                            <td>@item.SerialNumber</td>
-                                            <td>@item.CreatedByUser</td>
-                                            <td>
-                                                <a href="#" class="btn btn-xs disabled @(item.IsActive ? "btn-success" : "btn-danger")">
-                                                    <i class="fas fa-check"></i>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="#" class="btn btn-xs disabled @(item.IsInUse ? "btn-success" : "btn-danger")">
-                                                    <i class="fas fa-check"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                    <tr role="row">
+                                        <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
+                                        <td>@item.SerialNumber</td>
+                                        <td>@item.CreatedByUser</td>
+                                        <td>
+                                            <a href="#" class="btn btn-xs disabled @(item.IsActive ? "btn-success" : "btn-danger")">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="#" class="btn btn-xs disabled @(item.IsInUse ? "btn-success" : "btn-danger")">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                     }
 
                                 </tbody>

@@ -23,10 +23,18 @@ namespace SchoolRecognition.ApiControllers
         }
         // GET: api/RecognitionTypesApi
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RecognitionTypesDto>>> Get()
-        {
-            var result = await _recognitionTypesRepository.Get();
-            return Ok(result);
+        public async Task<ActionResult> Get()
+        {           
+            try
+            {
+                var result = await _recognitionTypesRepository.Get();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
         // GET: api/RecognitionTypesApi/5
@@ -34,18 +42,27 @@ namespace SchoolRecognition.ApiControllers
         [Route("{recognitionTypeId}")]
         public async Task<IActionResult> Get(Guid recognitionTypeId)
         {
-            if (recognitionTypeId == Guid.Empty)
+            
+            try
             {
-                return NotFound();
-            }
+                if (recognitionTypeId == Guid.Empty)
+                {
+                    return NotFound();
+                }
 
-            var result = await _recognitionTypesRepository.Get(recognitionTypeId);
-            if (result == null)
+                var result = await _recognitionTypesRepository.Get(recognitionTypeId);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
-            }
 
-            return Ok(result);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
 
