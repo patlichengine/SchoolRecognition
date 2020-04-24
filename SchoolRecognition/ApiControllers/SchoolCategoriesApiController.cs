@@ -36,14 +36,14 @@ namespace SchoolRecognition.ApiControllers
         [HttpGet]
         public ActionResult<IEnumerable<SchoolCategoryDto>> Get()
         {
-           
 
-            var result =  _schoolCategories.GetAllCategory().Result;
+
+            var result = _schoolCategories.GetAllCategory().Result;
 
             return Ok(result);
 
 
-          
+
 
         }
 
@@ -52,8 +52,9 @@ namespace SchoolRecognition.ApiControllers
 
 
         // GET: api/SchoolCategories/5
-       
-        [HttpGet("Edit/{categoryId}", Name = "Get")]
+       [HttpGet]
+        [Route("{categoryId:guid}", Name = "GetSchoolCategory")]
+      //  [HttpGet("Edit/{categoryId}", Name = "Get")]
         public IActionResult Get(Guid categoryId)
         {
 
@@ -74,32 +75,46 @@ namespace SchoolRecognition.ApiControllers
 
         // POST: api/SchoolCategories
         [HttpPost]
-        public async Task<ActionResult<SchoolCategoryDto>> Post(SchoolCategories school)
+        public ActionResult<SchoolCategoryDto>  Post(CreateSchoolCategoryDto school)
         {
 
-            var result = await _schoolCategories.Create(school);
-
-            return (result);
+            var result = _schoolCategories.Create(school).Result;
+            //Return the named user using the specified URI name
+            return CreatedAtRoute("GetSchoolCategory",
+                new { userId = result.Id }, result);
         }
 
         //// PUT: api/SchoolCategories/5
-        //[HttpPut("{id}")]
-        //public void Put(Guid id, [FromBody] SchoolCategories school)
-        //{
-        //    _schoolCategories.Update(school);
-        //}
+        [HttpPut("Update/{id}")]
+        public ActionResult Update(Guid id, UpdateSchoolCategoryDto usersUpdate)
+        {
+            if (!_schoolCategories.SchoolCategoriesExists(id).Result)
+            {
+                return NotFound();
+            }
+
+            var result = _schoolCategories.Update(id, usersUpdate).Result;
+
+            return NoContent();
+        }
 
         //// DELETE: api/ApiWithActions/5
-       
-        [HttpDelete("Delete/{id}", Name = "Delete")]
-        public IActionResult Delete(Guid id)
-        {
-           
-          var result =  _schoolCategories.Delete(id).Result;
-           
-            return Ok(result);
 
-            
+        [HttpDelete("Delete/{id}")]
+        
+        public ActionResult Delete(Guid id)
+        {
+            if (! _schoolCategories.SchoolCategoriesExists(id).Result)
+            {
+                return NotFound();
+            }
+
+            var result = _schoolCategories.DeleteSchoolCategory(id);
+
+            return NoContent();
         }
+
+
+
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 //using Microsoft.AspNetCore.Hosting.
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NToastNotify;
 using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
 
@@ -18,32 +19,34 @@ namespace SchoolRecognition.Controllers
 {
     public class SchoolCategoriesController : Controller
     {
-        
 
 
+        private readonly IToastNotification _toastNotification;
         private readonly ISchoolCategoryRepository schoolCategories;
         private IFlashMessage _flashMessage;
-        
-        private readonly ILogger _logger;
-       
 
-        [Obsolete]
-        public SchoolCategoriesController(ISchoolCategoryRepository schoolCategory, IFlashMessage flashMessage, ILogger<SchoolCategoriesController> logger)
+        private readonly ILogger _logger;
+
+
+        public SchoolCategoriesController(ISchoolCategoryRepository schoolCategory, IFlashMessage flashMessage, ILogger<SchoolCategoriesController> logger, IToastNotification toastNotification)
         {
-            
+
             _logger = logger;
-           
+
             schoolCategories = schoolCategory;
 
             _flashMessage = flashMessage;
 
+            _toastNotification = toastNotification;
+
 
         }
 
-        
+
         public async Task<IActionResult> Index()
         {
             var result = await schoolCategories.GetAllCategory();
+
             return View(result);
         }
         public IActionResult Create()
@@ -53,27 +56,28 @@ namespace SchoolRecognition.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SchoolCategories model)
+        public async Task<ActionResult<SchoolCategoryDto>> Create(CreateSchoolCategoryDto model)
         {
             if (ModelState.IsValid)
             {
-                 await schoolCategories.Create(model);
-               _flashMessage.Confirmation("New Category Added Successfully! As: ", model.Name);
-               
+                await schoolCategories.Create(model);
+                _toastNotification.AddSuccessToastMessage("New Category Added Successfully!");
+                // _flashMessage.Confirmation("New Category Added Successfully! As: ", model.Name);
+
                 return RedirectToAction(nameof(Index));
             }
-           
+
             return View();
         }
 
         //[HttpGet("{id}")]
         public async Task<ActionResult<SchoolCategoryDto>> Edit(Guid id)
         {
-           
+
 
             _logger.LogInformation("Getting item {Id} at {RequestTime}", id, DateTime.Now);
             var model = await schoolCategories.GetCategoryById(id);
-           // var model = await _context.SchoolCategories.FindAsync(id);
+            // var model = await _context.SchoolCategories.FindAsync(id);
 
             if (model == null)
             {
@@ -86,12 +90,12 @@ namespace SchoolRecognition.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, SchoolCategoryDto school)
+        public async Task<IActionResult> Edit(Guid id, UpdateSchoolCategoryDto school)
 
         {
             try
             {
-                await schoolCategories.Update(school);
+                await schoolCategories.Update(id, school);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -99,48 +103,60 @@ namespace SchoolRecognition.Controllers
                 Console.WriteLine(ex.Message);
             }
 
-            var model = await schoolCategories.GetCategoryById(id);
-        
-            return View(model);
-           
-      
+
+
+            return View();
+
+
         }
 
 
         // GET: SchoolCategory/Details/5
         public async Task<IActionResult> Details(Guid schoolCategoriesId)
         {
-            if(schoolCategoriesId == null)
+            if (schoolCategoriesId == null)
             {
                 return NotFound();
-               
+
             }
             var model = await schoolCategories.GetCategoryById(schoolCategoriesId);
-         
+
 
             return View(model);
         }
 
-        public async Task<IActionResult> Delete(SchoolCategories school)
+        #region
+
+        // GET: api/SchoolCategories
+        [HttpGet]
+        public JsonResult Get()
         {
-            if (school == null)
-            {
-                return NotFound();
 
-            }
-            try
-            {
-                await schoolCategories.Delete(school.Id);
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
 
-            return View("Index");
+            var result = schoolCategories.GetAllCategory().Result;
+
+            return new JsonResult(new { data = result });
 
         }
 
+
+
+
+        //[HttpDelete]
+        public ActionResult Delete(Guid id)
+        {
+            if (!schoolCategories.SchoolCategoriesExists(id).Result)
+            {
+                return Json(new { success = false, message = "Error while Deleting" });
+            }
+
+            schoolCategories.DeleteSchoolCategory(id);
+            schoolCategories.Save();
+
+            return Json(new { success = true, message = "Success, Record Deleted " });
+
+
+            #endregion
+        }
     }
 }

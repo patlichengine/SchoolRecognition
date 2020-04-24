@@ -15,6 +15,8 @@
     <!-- DataTables-->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/dataTables.bootstrap4.min.css" />
     <link rel="stylesheet" href="~/lib/jquery-dataTables/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="~/lib/jquery-dataTables/buttons.dataTables.min.css" />
 
 
@@ -50,8 +52,16 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- DataTables-->
-    <script src="~/lib/jquery-dataTables/jquery.dataTables.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/dataTables.bootstrap4.min.js"></script>
+    @*<script src="~/lib/jquery-dataTables/jquery.dataTables.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/dataTables.bootstrap4.min.js"></script>*@
+
+    <!--CDNs-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://kit.fontawesome.com/c51e053546.js" crossorigin="anonymous"></script>
 
     <script src="~/lib/jquery-dataTables/dataTables.buttons.min.js"></script>
 
@@ -60,13 +70,13 @@
     <script src="~/lib/jquery-dataTables/vfs_fonts.js"></script>
     <script src="~/lib/jquery-dataTables/buttons.html5.min.js"></script>
 
- 
+
     <!-- AdminLTE App -->
     <script src="~/js/waeclte.min.js" asp-append-version="true"></script>
     <script>
-        $(document).ready(function() {
-    $('#schoolCategory').DataTable();
-} );
+        $(document).ready(function () {
+            $('#schoolCategory').DataTable();
+        });
     </script>
     @RenderSection("Scripts", required: false)
 

@@ -17,6 +17,11 @@ namespace SchoolRecognition.Profiles
                 .ForMember(
                     dest => dest.Code,
                     opt => opt.MapFrom(src => $"{src.Code}"));
+
+            CreateMap<Models.CreateSchoolCategoryDto, Entities.SchoolCategories>();
+            CreateMap<Models.UpdateSchoolCategoryDto, Entities.SchoolCategories>();
+
+          
         }
     }
 }

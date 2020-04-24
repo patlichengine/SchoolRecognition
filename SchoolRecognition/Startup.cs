@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 using SchoolRecognition.Models;
 using AutoMapper;
 using SchoolRecognition.Profiles;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SchoolRecognition
 {
@@ -69,7 +70,8 @@ namespace SchoolRecognition
             _ = services.AddTransient<ISchoolCategoryRepository, cSchoolCategoryRepository>();
             //services.AddTransient<>
 
-
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNToastNotifyToastr();
 
         }
 
@@ -93,7 +95,7 @@ namespace SchoolRecognition
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseNToastNotify();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

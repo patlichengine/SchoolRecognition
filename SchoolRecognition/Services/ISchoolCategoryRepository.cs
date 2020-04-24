@@ -1,4 +1,5 @@
-﻿using SchoolRecognition.Entities;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
 using System;
 using System.Collections.Generic;
@@ -11,22 +12,21 @@ namespace SchoolRecognition.Services
     {
 
 
-       
 
-        public Task<SchoolCategoryDto> Delete(Guid id);
 
-        public Task<SchoolCategoryDto> Create(SchoolCategories categories);
-
-        public Task<SchoolCategoryDto> Update(SchoolCategoryDto categories);
-
-        
-       
         public Task<SchoolCategoryDto> GetCategoryById(Guid id);
 
-        
-
         public Task<IEnumerable<SchoolCategoryDto>> GetAllCategory();
-        
 
+
+        public Task<SchoolCategoryDto> Create(CreateSchoolCategoryDto categories);
+
+        public Task<SchoolCategoryDto> Update(Guid id, UpdateSchoolCategoryDto categories);
+
+        public Task<SchoolCategoryDto> DeleteSchoolCategory(Guid catId);
+
+        public Task<bool> SchoolCategoriesExists(Guid catId);
+        public Task<bool> Save();
     }
+
 }

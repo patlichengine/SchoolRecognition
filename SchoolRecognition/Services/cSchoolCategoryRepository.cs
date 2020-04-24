@@ -1,16 +1,12 @@
 ﻿
 using AutoMapper;
-using Dapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using SchoolRecognition.Classes;
 using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace SchoolRecognition.Services
 {
@@ -41,86 +37,8 @@ namespace SchoolRecognition.Services
             }
         }
 
-
-        
-        //Delete Section
-         public async Task<SchoolCategoryDto> Delete(Guid id)
-        {
-            return await Task.Run(async () => {
-
-                if (id == Guid.Empty)
-                {
-                    throw new ArgumentNullException(nameof(id));
-                }
-                var result = await _context.SchoolCategories.FirstOrDefaultAsync(x => x.Id == id);
-
-
-
-                if (result != null)
-                {
-                    //Delete that post
-                    _context.SchoolCategories.Remove(result);                   
-                }
-                //Commit the transaction
-                bool saveResult = await Save();
-
-                return _mapper.Map<SchoolCategoryDto>(result);
-            });
-
-             
-            }
-
-          
-        
-
-
-
-        //public async Task<int> Delete(Guid id)
-        //{
-        //    int result = 0;
-
-        //    if (id != null)
-        //    {
-        //        Find the post for specific post id
-        //        var post = await _context.SchoolCategories.FirstOrDefaultAsync(x => x.Id == id);
-
-        //        if (post != null)
-        //        {
-        //            Delete that post
-        //            _context.SchoolCategories.Remove(post);
-
-        //            Commit the transaction
-        //            result = await _context.SaveChangesAsync();
-        //        }
-        //        return result;
-        //    }
-
-        //    return result;
-        //}
-
-
-        public async Task<SchoolCategoryDto> Create(SchoolCategories schoolCategory)
-        {
-            return await Task.Run(async () =>
-            {
-                if (schoolCategory == null)
-                {
-                    throw new ArgumentNullException(nameof(schoolCategory));
-                }
-                var categoryEntity = _mapper.Map<SchoolCategories>(schoolCategory);
-                categoryEntity.Id = Guid.NewGuid();
-                //categoryEntity.Name = schoolCategory.Name;
-                //categoryEntity.Code = schoolCategory.Code;
-
-                _context.SchoolCategories.Add(categoryEntity);
-
-                //call the save method
-                bool saveResult = await Save();   //this method is also part of the Interface methods
-
-                return _mapper.Map<SchoolCategoryDto>(categoryEntity);
-            });
-        }
-
+       
+        // save category
         public async Task<bool> Save()
         {
             return await Task.Run(async () =>
@@ -130,11 +48,8 @@ namespace SchoolRecognition.Services
 
         }
 
-        public Task<SchoolCategoryDto> Update(SchoolCategoryDto categories)
-        {
-            throw new NotImplementedException();
-        }
-
+     
+        //Get category by Id
         public async Task<SchoolCategoryDto> GetCategoryById(Guid id)
         {
             return await Task.Run(async () =>
@@ -150,6 +65,7 @@ namespace SchoolRecognition.Services
             });
         }
 
+        //Get all Category
         public async Task<IEnumerable<SchoolCategoryDto>> GetAllCategory()
         {
             return await Task.Run(async () =>
@@ -160,6 +76,91 @@ namespace SchoolRecognition.Services
             });
         }
 
+
+        //Delete Section
+
        
+
+        public async Task<SchoolCategoryDto> Create(CreateSchoolCategoryDto categories)
+        {
+            return await Task.Run(async () =>
+            {
+                if (categories == null)
+                {
+                    throw new ArgumentNullException(nameof(categories));
+                }
+                var categoryEntity = _mapper.Map<SchoolCategories>(categories);
+                categoryEntity.Id = Guid.NewGuid();
+                categoryEntity.Name = categories.Name;
+                categoryEntity.Code = categories.Code;
+                _context.SchoolCategories.Add(categoryEntity);
+
+                //call the save method
+                bool saveResult = await Save();
+
+                return _mapper.Map<SchoolCategoryDto>(categoryEntity);
+            });
+        }
+
+        public async Task<SchoolCategoryDto> Update(Guid id, UpdateSchoolCategoryDto categories)
+        {
+            return await Task.Run(async () =>
+            {
+                if (categories == null)
+                {
+                    throw new ArgumentNullException(nameof(categories));
+                }
+
+                var user = await _context.SchoolCategories.FirstOrDefaultAsync(c => c.Id == id);
+
+                if (user == null)
+                {
+                    throw new ArgumentNullException(nameof(user));
+                }
+
+                _mapper.Map(user, user);
+
+                bool save = await Save();
+
+                return _mapper.Map<SchoolCategoryDto>(user);
+            });
+        }
+
+
+        public async Task<SchoolCategoryDto> DeleteSchoolCategory(Guid catId)
+        {
+            return await Task.Run(async () =>
+            {
+                var user = await _context.SchoolCategories.FirstOrDefaultAsync(c => c.Id == catId);
+                if (user == null)
+                {
+                    throw new ArgumentNullException(nameof(catId));
+                }
+
+                _context.SchoolCategories.Remove(user);
+                await Save();
+
+                return _mapper.Map<SchoolCategoryDto>(user);
+            });
+        }
+
+        public async Task<bool> SchoolCategoriesExists(Guid catId)
+        {
+            return await Task.Run(async () =>
+            {
+                if (catId == Guid.Empty)
+                {
+                    throw new ArgumentNullException(nameof(catId));
+                }
+
+                return await _context.SchoolCategories.AnyAsync(a => a.Id == catId);
+            });
+        }
+
+
+
+
+
+
     }
 }

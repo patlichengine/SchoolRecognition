@@ -1040,7 +1040,6 @@ C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\D
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.Razor.Host.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Globalization.CultureInfoCache.dll
-C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.Extensions.PlatformAbstractions.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Vereyon.Web.FlashMessage.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
@@ -1061,5 +1060,11 @@ C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\D
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\SchoolRecognition.StaticWebAssets.xml
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\NToastNotify.Views.dll
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\NToastNotify.dll
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\System.Security.Cryptography.Pkcs.dll
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Cryptography.Pkcs.dll
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\SchoolCategories\Result.cshtml.g.cs
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
