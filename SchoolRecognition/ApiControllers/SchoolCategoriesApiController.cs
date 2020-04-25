@@ -80,8 +80,10 @@ namespace SchoolRecognition.ApiControllers
 
             var result = _schoolCategories.Create(school).Result;
             //Return the named user using the specified URI name
-            return CreatedAtRoute("GetSchoolCategory",
+
+            var final = CreatedAtRoute("GetSchoolCategory",
                 new { userId = result.Id }, result);
+            return Ok(final);
         }
 
         //// PUT: api/SchoolCategories/5
@@ -95,7 +97,12 @@ namespace SchoolRecognition.ApiControllers
 
             var result = _schoolCategories.Update(id, usersUpdate).Result;
 
-            return NoContent();
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         //// DELETE: api/ApiWithActions/5
@@ -110,8 +117,12 @@ namespace SchoolRecognition.ApiControllers
             }
 
             var result = _schoolCategories.DeleteSchoolCategory(id);
+            if(result == null)
+            {
+                return NotFound();
+            }
 
-            return NoContent();
+            return Ok(result);
         }
 
 
