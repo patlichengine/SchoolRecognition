@@ -21,6 +21,8 @@ using SchoolRecognition.Models;
 using AutoMapper;
 using SchoolRecognition.Profiles;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace SchoolRecognition
 {
@@ -40,8 +42,13 @@ namespace SchoolRecognition
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-            });
-               // .AddXmlDataContractSerializerFormatters();
+            }).AddNewtonsoftJson(setupAction =>
+            {
+                setupAction.SerializerSettings.ContractResolver =
+                new CamelCasePropertyNamesContractResolver();
+                setupAction.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; 
+            }).AddXmlDataContractSerializerFormatters();
+              
 
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
             services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
@@ -69,8 +76,11 @@ namespace SchoolRecognition
             //Scoping my  services  
             _ = services.AddTransient<ISchoolCategoryRepository, cSchoolCategoryRepository>();
             //services.AddTransient<>
+            
+    
+            services.AddMvc()
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNToastNotifyToastr();
 
         }

@@ -147,11 +147,12 @@ namespace SchoolRecognition.Controllers
         {
             if (!schoolCategories.SchoolCategoriesExists(id).Result)
             {
+               // return NotFound();
                 return Json(new { success = false, message = "Error while Deleting" });
             }
 
             schoolCategories.DeleteSchoolCategory(id);
-            schoolCategories.Save();
+           // schoolCategories.Save();
 
             return Json(new { success = true, message = "Success, Record Deleted " });
 
