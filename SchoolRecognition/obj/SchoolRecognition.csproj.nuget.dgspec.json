@@ -53,6 +53,10 @@
               "target": "Package",
               "version": "[2.0.30, )"
             },
+            "Humanizer": {
+              "target": "Package",
+              "version": "[2.8.2, )"
+            },
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
               "version": "[3.1.2, )"

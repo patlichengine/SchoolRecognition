@@ -81,6 +81,8 @@ namespace SchoolRecognition.Controllers
 
             if (ModelState.IsValid)
             {
+                //Set Pins as active 
+                model.IsActive = true;
                 var result = await _pinsService.CreateSeveralPins(model);
 
                 if (result)

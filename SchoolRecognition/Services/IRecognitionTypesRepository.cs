@@ -1,4 +1,5 @@
 ﻿using SchoolRecognition.Entities;
+using SchoolRecognition.Extensions;
 using SchoolRecognition.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,9 @@ namespace SchoolRecognition.Services
     {
 
         Task<IEnumerable<RecognitionTypesDto>> Get();
+        Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex);
+        Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex, string searchQuery);
+        Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex, string searchQuery, string orderCriteria, bool reverseOrder);
         Task<RecognitionTypesDto> Get(Guid id);
         Task<Guid?> Create(RecognitionTypesDto _obj);
         Task<RecognitionTypesDto> Update(RecognitionTypesDto _obj);

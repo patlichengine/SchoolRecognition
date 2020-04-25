@@ -1,4 +1,5 @@
 ﻿using SchoolRecognition.Entities;
+using SchoolRecognition.Extensions;
 using SchoolRecognition.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,9 @@ namespace SchoolRecognition.Services
     public interface IPinsRepository
     {
         Task<IEnumerable<PinsViewDto>> Get();
+        Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex);
+        Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex, string searchQuery);
+        Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex, string searchQuery, string orderCriteria, bool reverseOrder);
         Task<IEnumerable<PinsViewDto>> GetPinsByRecognitionTypeId(Guid recognitionTypeId);
         Task<PinsViewDto> Get(Guid id);
         Task<Guid?> Create(PinsCreateDto _obj);

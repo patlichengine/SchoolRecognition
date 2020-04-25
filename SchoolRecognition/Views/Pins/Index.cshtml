@@ -5,7 +5,7 @@
 }
 
 @section styles{
-    <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
+    @*<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />*@
 
 }
 
@@ -50,8 +50,59 @@
                 </div>
                 <div class="card-body">
 
+                    <div class="row mb-2">
+                        <div class="col">
+                        </div>
+                        <div class="col-8">
 
-                    <table id="datatable-1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                            <form asp-action="index" method="get" class="md-form mb-3" id="searchForm">
+
+                                <div class="input-group">
+                                    <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewBag.SearchQuery" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
+                                    @*<div class="input-group-prepend">
+                            <span class="input-group-text md-addon" id="material-addon1">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>*@
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-md btn-outline-primary" type="submit">
+                                            <i class="fas fa-search"></i>
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
+
+
+
+                            </form>
+
+                        </div>
+
+                        <div class="col-md-12 mb-1">
+
+
+                            <a href="@Url.Action("Index", "Pins", new { sortOrder = "serial_number", searchQuery = ViewBag.SearchQuery,  pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
+                                Name Ascending
+                                <i class="fas fa-sort-up"></i>
+                            </a>
+
+                            <a href="@Url.Action("Index", "Pins", new { sortOrder = "serial_number_desc", searchQuery = ViewBag.SearchQuery,  pageNumber = ViewBag.CurrentPage})" class="btn btn-light btn-xs">
+                                Name Descending
+                                <i class="fas fa-sort-down"></i>
+                            </a>
+                            <a href="@Url.Action("Index", "Pins", new { sortOrder = "date", searchQuery = ViewBag.SearchQuery, pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
+                                Date Generated Ascending
+                                <i class="fas fa-sort-up"></i>
+                            </a>
+                            <a href="@Url.Action("Index", "Pins", new { sortOrder = "date_desc", searchQuery = ViewBag.SearchQuery, pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
+                                Date Generated Descending
+                                <i class="fas fa-sort-down"></i>
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-striped" role="grid" aria-describedby="example1_info">
                         <thead>
                             <tr role="row">
                                 <td>Date Generated</td>
@@ -84,6 +135,70 @@
                         </tbody>
                     </table>
 
+                    @{
+                        var prevDisabled = ViewBag.CurrentPage <= 1 ? "disabled" : "";
+                        var nextDisabled = ViewBag.CurrentPage >= ViewBag.FinalPage ? "disabled" : "";
+                        //var disableAll =
+                    }
+                    <ul class="pagination mt-2">
+                        <li class="page-item @prevDisabled">
+                            <a asp-controller="Pins" asp-action="Index"
+                               asp-route-sortOrder="@ViewBag.SortOrder"
+                               asp-route-searchQuery="@ViewBag.SearchQuery"
+                               asp-route-pageNumber=""
+                               class="page-link">
+                                <i class="fas fa-angle-double-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item @prevDisabled">
+                            <a asp-controller="Pins" asp-action="Index"
+                               asp-route-sortOrder="@ViewBag.SortOrder"
+                               asp-route-searchQuery="@ViewBag.SearchQuery"
+                               asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
+                               class="page-link">
+                                <i class="fas fa-angle-left"></i>
+                            </a>
+                        </li>
+                        @foreach (var item in ViewBag.PaginationIndices)
+                        {
+                            <li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
+                                <a asp-controller="Pins" asp-action="Index"
+                                   asp-route-sortOrder="@ViewBag.SortOrder"
+                                   asp-route-searchQuery="@ViewBag.SearchQuery"
+                                   asp-route-pageNumber="@item"
+                                   class="page-link">
+                                    @item
+                                </a>
+                            </li>
+
+                            @*<li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
+                    <a href="@Url.Action("Index", "Pins", new { sortOrder = ViewBag.SortOrder, searchQuery = ViewBag.SearchQuery, pageNumber = item })"
+                       class="page-link">
+                        @item
+                    </a>
+                </li>*@
+
+                        }
+                        <li class="page-item @nextDisabled">
+                            <a asp-controller="Pins" asp-action="Index"
+                               asp-route-sortOrder="@ViewBag.SortOrder"
+                               asp-route-searchQuery="@ViewBag.SearchQuery"
+                               asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
+                               class="page-link">
+                                <i class="fas fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item @nextDisabled">
+                            <a asp-controller="Pins" asp-action="Index"
+                               asp-route-sortOrder="@ViewBag.SortOrder"
+                               asp-route-searchQuery="@ViewBag.SearchQuery"
+                               asp-route-pageNumber="@ViewBag.FinalPage"
+                               class="page-link">
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -98,12 +213,12 @@
 <!-- /.content -->
 
 @section scripts{
-    <script src="~/lib/datatables/datatables.min.js"></script>
+    @*<script src="~/lib/datatables/datatables.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#datatable-1').DataTable({
                 "order": [[0, "desc"]]
             });
         });
-    </script>
+    </script>*@
 }

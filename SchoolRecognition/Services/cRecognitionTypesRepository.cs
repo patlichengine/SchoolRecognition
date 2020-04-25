@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SchoolRecognition.Classes;
 using SchoolRecognition.DbContexts;
 using SchoolRecognition.Entities;
+using SchoolRecognition.Extensions;
 using SchoolRecognition.Models;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,184 @@ namespace SchoolRecognition.Services
                 var result = await _context.RecognitionTypes.ToListAsync();
 
                 return _mapper.Map<IEnumerable<RecognitionTypesDto>>(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex)
+        {
+            //Default Range Limit is 100 Rows
+            int _lowerLimit = 0;
+            int _upperLimit = 100;
+            try
+            {
+                //Instantiate Array objects
+                IList<RecognitionTypesDto> listOfDtos = new List<RecognitionTypesDto>();
+                var cstPageList = new CustomPagedList<RecognitionTypesDto>();
+
+                var count = await _context.RecognitionTypes.CountAsync();
+
+                //Set Range of Row Based on rangeIndex parameter
+                if (rangeIndex > 0)
+                {
+                    _lowerLimit = (rangeIndex.Value) * 100;
+                    _upperLimit = (rangeIndex.Value + 1) * 100;
+                }
+
+                var _result = await _context.RecognitionTypes
+                    .Skip(_lowerLimit)
+                    .Take(_upperLimit)
+                    .ToListAsync();
+                //Assign count value
+                cstPageList.TotalDBEntitysCount = count;
+                //Map list of entities to list of dtos
+                listOfDtos = _mapper.Map<IList<RecognitionTypesDto>>(_result);
+                //Assign list value
+                cstPageList.Entitys = listOfDtos.ToList();
+                //Return value of upper and lower limit
+                cstPageList.LowerLimit = _lowerLimit;
+                cstPageList.UpperLimit = _upperLimit;
+
+                return cstPageList;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex, string searchQuery)
+        {
+            //Default Range Limit is 100 Rows
+            int _lowerLimit = 0;
+            int _upperLimit = 100;
+            //Default search query
+            string _searchQuery = "";
+            try
+            {
+                //Instantiate Array objects
+                IList<RecognitionTypesDto> listOfDtos = new List<RecognitionTypesDto>();
+                var cstPageList = new CustomPagedList<RecognitionTypesDto>();
+
+                var count = await _context.RecognitionTypes.CountAsync();
+
+                //Set Range of Row Based on rangeIndex parameter
+                if (rangeIndex > 0)
+                {
+                    _lowerLimit = (rangeIndex.Value) * 100;
+                    _upperLimit = (rangeIndex.Value + 1) * 100;
+                }
+
+                //Check searchQuery paramter is not null
+                if (searchQuery != null)
+                {
+                    _searchQuery = searchQuery;
+                }
+
+                var _result = await _context.RecognitionTypes
+                    .Where(
+                    //Add all columns you wish to search
+                    x => x.Name.ToUpper().Contains(searchQuery)
+                    || x.Code.ToUpper().Contains(searchQuery)
+                    )
+                    .Skip(_lowerLimit)
+                    .Take(_upperLimit)
+                    .ToListAsync();
+                //Assign count value
+                cstPageList.TotalDBEntitysCount = count;
+                //Map list of entities to list of dtos
+                listOfDtos = _mapper.Map<IList<RecognitionTypesDto>>(_result);
+                //Assign list value
+                cstPageList.Entitys = listOfDtos.ToList();
+                //Return value of upper and lower limit
+                cstPageList.LowerLimit = _lowerLimit;
+                cstPageList.UpperLimit = _upperLimit;
+
+                return cstPageList;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex, string searchQuery, string orderCriteria, bool reverseOrder)
+        {
+            //Default Range Limit is 100 Rows
+            int _lowerLimit = 0;
+            int _upperLimit = 100;
+            //Default search query
+            string _searchQuery = "";
+            try
+            {
+                //Instantiate Array objects
+                IList<RecognitionTypesDto> listOfDtos = new List<RecognitionTypesDto>();
+                IList<RecognitionTypes> listResult = new List<RecognitionTypes>();
+                var cstPageList = new CustomPagedList<RecognitionTypesDto>();
+
+                var count = await _context.RecognitionTypes.CountAsync();
+
+                //Set Range of Row Based on rangeIndex parameter
+                if (rangeIndex > 0)
+                {
+                    _lowerLimit = (rangeIndex.Value) * 100;
+                    _upperLimit = (rangeIndex.Value + 1) * 100;
+                }
+
+                //Check searchQuery paramter is not null
+                if (searchQuery != null)
+                {
+                    _searchQuery = searchQuery;
+                }
+
+                //Enabling orderCriteria 
+                var orderParameter = typeof(RecognitionTypes).GetProperty(orderCriteria);
+
+                ///Order or reverse order  by a property
+                if (reverseOrder == false)
+                {
+                    var _result = await _context.RecognitionTypes
+                    .Where(
+                    //Add all columns you wish to search
+                    x => x.Name.ToUpper().Contains(searchQuery)
+                    || x.Code.ToUpper().Contains(searchQuery)
+                    )
+                    .OrderBy(x => orderParameter.GetValue(x, null))
+                    .Skip(_lowerLimit)
+                    .Take(_upperLimit)
+                    .ToListAsync();
+
+                    listResult = _result;
+                }
+                else
+                {
+                    var _result = await _context.RecognitionTypes
+                    .Where(
+                    //Add all columns you wish to search
+                    x => x.Name.ToUpper().Contains(searchQuery)
+                    || x.Code.ToUpper().Contains(searchQuery)
+                    )
+                    .OrderByDescending(x => orderParameter.GetValue(x, null))
+                    .Skip(_lowerLimit)
+                    .Take(_upperLimit)
+                    .ToListAsync();
+                    //
+                    listResult = _result;
+                }
+                //Assign count value
+                cstPageList.TotalDBEntitysCount = count;
+                //Map list of entities to list of dtos
+                listOfDtos = _mapper.Map<IList<RecognitionTypesDto>>(listResult);
+                //Assign list value
+                cstPageList.Entitys = listOfDtos.ToList();
+                //Return value of upper and lower limit
+                cstPageList.LowerLimit = _lowerLimit;
+                cstPageList.UpperLimit = _upperLimit;
+
+                return cstPageList;
             }
             catch (Exception ex)
             {
