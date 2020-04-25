@@ -90,11 +90,12 @@ namespace SchoolRecognition.ApiControllers
         [HttpPut("Update/{id}")]
         public ActionResult Update(Guid id, UpdateSchoolCategoryDto usersUpdate)
         {
+            
             if (!_schoolCategories.SchoolCategoriesExists(id).Result)
             {
                 return NotFound();
             }
-
+           
             var result = _schoolCategories.Update(id, usersUpdate).Result;
 
             if(result == null)

@@ -704,3 +704,4 @@ System.InvalidOperationException: Invalid operation. The connection is closed.
    at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(DbContext _, Boolean result, CancellationToken cancellationToken)
    at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
    at Microsoft.EntityFrameworkCore.Query.Internal.QueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+2020-04-25T14:47:41.5044382+01:00 800000e6-0002-f900-b63f-84710c7967bb [INF] Getting item 29e0979f-036e-4af3-9683-516c0dab8de3 at 04/25/2020 14:47:41 (fae628c1)

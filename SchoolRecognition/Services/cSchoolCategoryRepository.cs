@@ -117,12 +117,14 @@ namespace SchoolRecognition.Services
                 {
                     throw new ArgumentNullException(nameof(user));
                 }
+                var val =   _mapper.Map(user, user);
 
-                _mapper.Map(user, user);
-
+                val.Name = categories.Name;
+                val.Code = categories.Code;
+                _context.SchoolCategories.Update(val);
                 bool save = await Save();
 
-                return _mapper.Map<SchoolCategoryDto>(user);
+                return _mapper.Map<SchoolCategoryDto>(val);
             });
         }
 
