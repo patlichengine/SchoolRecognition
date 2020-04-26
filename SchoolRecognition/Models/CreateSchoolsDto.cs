@@ -14,8 +14,7 @@ namespace SchoolRecognition.Models
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "A School Unique Code is Required")]
-        [MaxLength(2)]
+        
 
 
         public Guid? CategoryId { get; set; }

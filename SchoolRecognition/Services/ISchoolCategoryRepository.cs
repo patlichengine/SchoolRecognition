@@ -17,11 +17,13 @@ namespace SchoolRecognition.Services
         public Task<SchoolCategoryDto> GetCategoryById(Guid id);
 
         public Task<IEnumerable<SchoolCategoryDto>> GetAllCategory();
+        public Task<IEnumerable<SchoolsDto>> GetAllSchoolsForACategory();
 
 
         public Task<SchoolCategoryDto> Create(CreateSchoolCategoryDto categories);
 
         public Task<SchoolCategoryDto> Update(Guid id, UpdateSchoolCategoryDto categories);
+
 
         public Task<SchoolCategoryDto> DeleteSchoolCategory(Guid catId);
 

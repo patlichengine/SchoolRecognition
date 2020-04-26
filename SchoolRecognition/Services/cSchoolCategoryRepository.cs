@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
@@ -159,10 +160,9 @@ namespace SchoolRecognition.Services
             });
         }
 
-
-
-
-
-
+        public Task<IEnumerable<SchoolsDto>> GetAllSchoolsForACategory()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

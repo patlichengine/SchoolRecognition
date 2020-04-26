@@ -9,7 +9,7 @@ using SchoolRecognition.Services;
 
 namespace SchoolRecognition.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Schools")]
     [ApiController]
     public class SchoolsApiController : ControllerBase
     {

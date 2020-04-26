@@ -63,6 +63,7 @@ namespace SchoolRecognition
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new SchoolCategoryProfile());
+                mc.AddProfile(new SchoolsProfile());
             });
 
             IMapper mapper = mappingConfig.CreateMapper();

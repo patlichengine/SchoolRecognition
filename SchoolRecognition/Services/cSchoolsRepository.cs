@@ -59,6 +59,8 @@ namespace SchoolRecognition.Services
                     throw new ArgumentNullException(nameof(id));
                 }
 
+               // IEnumerable<SchoolsDto> result = _context.Schools.Include(v => v.Name);
+
                 var result = await _context.Schools.FirstOrDefaultAsync(c => c.Id == id);
                 //return the mapped object
                 return _mapper.Map<SchoolsDto>(result);
@@ -70,6 +72,7 @@ namespace SchoolRecognition.Services
         {
             return await Task.Run(async () =>
             {
+              //  IEnumerable<SchoolsDto> result = _context.Schools.Include(v => v.Category);
                 var result = await _context.Schools.ToListAsync();
                 return _mapper.Map<IEnumerable<SchoolsDto>>(result);
 
@@ -88,13 +91,15 @@ namespace SchoolRecognition.Services
                 }
                 var categoryEntity = _mapper.Map<Schools>(categories);
                 categoryEntity.Id = Guid.NewGuid();
-                categoryEntity.Name = categories.Name;
+               // categoryEntity.Name = categories.Name;
                 categoryEntity.Address = categories.Address;
                 categoryEntity.EmailAddress = categories.EmailAddress;
                 categoryEntity.PhoneNo = categories.PhoneNo;
-                categoryEntity.LgId = categories.LgId;
-                categoryEntity.OfficeId = categories.OfficeId;
-                categoryEntity.CategoryId = categories.CategoryId;
+                categoryEntity.YearEstablished = categories.YearEstablished;
+                categoryEntity.Name = categories.Name;
+               // categoryEntity.LgId = categories.LgId;
+               // categoryEntity.OfficeId = categories.OfficeId;
+              //  categoryEntity.CategoryId = categories.CategoryId;
                 _context.Schools.Add(categoryEntity);
 
                 //call the save method
@@ -120,14 +125,14 @@ namespace SchoolRecognition.Services
                     throw new ArgumentNullException(nameof(user));
                 }
                 var categoryEntity =   _mapper.Map(user, user);
-                categoryEntity.Name = categories.Name;
+
                 categoryEntity.Address = categories.Address;
                 categoryEntity.EmailAddress = categories.EmailAddress;
                 categoryEntity.PhoneNo = categories.PhoneNo;
-                categoryEntity.LgId = categories.LgId;
-                categoryEntity.OfficeId = categories.OfficeId;
-                categoryEntity.CategoryId = categories.CategoryId;
-               
+                categoryEntity.Name = categories.Name;
+                categoryEntity.YearEstablished = categories.YearEstablished;
+
+
                 _context.Schools.Update(categoryEntity);
                 bool save = await Save();
 
