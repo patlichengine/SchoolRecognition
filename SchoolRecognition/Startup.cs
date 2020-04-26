@@ -75,6 +75,7 @@ namespace SchoolRecognition
           
             //Scoping my  services  
             _ = services.AddTransient<ISchoolCategoryRepository, cSchoolCategoryRepository>();
+            _ = services.AddTransient<ISchoolsRepository, cSchoolsRepository>();
             //services.AddTransient<>
             
     

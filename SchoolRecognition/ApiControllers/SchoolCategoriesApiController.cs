@@ -19,14 +19,13 @@ namespace SchoolRecognition.ApiControllers
 
        //private readonly SchoolCategoriesService _schoolCategoriesService;
         private readonly ISchoolCategoryRepository _schoolCategories;
-        [Obsolete]
-        private readonly IWebHostEnvironment _hostingEnvironment;
+       
 
-        [Obsolete]
-        public SchoolCategoriesApiController(ISchoolCategoryRepository schoolCategories, IWebHostEnvironment hostingEnvironment)
+   
+        public SchoolCategoriesApiController(ISchoolCategoryRepository schoolCategories)
         {
             _schoolCategories = schoolCategories;
-            _hostingEnvironment = hostingEnvironment;
+            
             
 
 
