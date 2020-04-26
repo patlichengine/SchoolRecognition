@@ -13,7 +13,8 @@ namespace SchoolRecognition.Services
         Task<IEnumerable<PinsViewDto>> Get();
         Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex);
         Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex, string searchQuery);
-        Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex, string searchQuery, string orderCriteria, bool reverseOrder);
+        Task<CustomPagedList<PinsViewDto>> GetAndOrderByDateCreated(int? rangeIndex, string searchQuery, bool reverseOrder);
+        Task<CustomPagedList<PinsViewDto>> GetAndOrderBySerialPin(int? rangeIndex, string searchQuery, bool reverseOrder);
         Task<IEnumerable<PinsViewDto>> GetPinsByRecognitionTypeId(Guid recognitionTypeId);
         Task<PinsViewDto> Get(Guid id);
         Task<Guid?> Create(PinsCreateDto _obj);

@@ -61,19 +61,19 @@ namespace SchoolRecognition.Controllers
             switch (sortOrder)
             {
                 case "date_desc":
-                    result = await _pinsService.Get(_pageNumber, _searchCriteria, "DateCreated", true);
+                    result = await _pinsService.GetAndOrderByDateCreated(_pageNumber, _searchCriteria, true);
                     break;
                 case "date":
-                    result = await _pinsService.Get(_pageNumber, _searchCriteria, "DateCreated", false);
+                    result = await _pinsService.GetAndOrderByDateCreated(_pageNumber, _searchCriteria, false);
                     break;
                 case "serial_number_desc":
-                    result = await _pinsService.Get(_pageNumber, _searchCriteria, "SerialPin", true);
+                    result = await _pinsService.GetAndOrderBySerialPin(_pageNumber, _searchCriteria, true);
                     break;
                 case "serial_number":
-                    result = await _pinsService.Get(_pageNumber, _searchCriteria, "SerialPin", false);
+                    result = await _pinsService.GetAndOrderBySerialPin(_pageNumber, _searchCriteria, false);
                     break;
                 default:
-                    result = await _pinsService.Get(_pageNumber, _searchCriteria, "DateCreated", false);
+                    result = await _pinsService.Get(_pageNumber, _searchCriteria);
                     break;
             }
 
