@@ -21,7 +21,7 @@ namespace SchoolRecognition.Extensions
                 //
                 List<int> _paginationIndices = new List<int>();
 
-                _upperLimit = this.TotalDBEntitysCount / 100;
+                _upperLimit = Decimal.Divide(this.TotalDBEntitysCount, 100);
 
                 _upperLimitCeilingValue = Convert.ToInt32(Math.Ceiling(_upperLimit));
 

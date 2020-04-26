@@ -88,7 +88,7 @@ namespace SchoolRecognition.Services
 
                 var _result = await _context.RecognitionTypes
                     .Skip(_lowerLimit)
-                    .Take(_upperLimit)
+                    .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
                 //Assign count value
                 cstPageList.TotalDBEntitysCount = count;
@@ -143,7 +143,7 @@ namespace SchoolRecognition.Services
                     || x.Code.ToUpper().Contains(searchQuery)
                     )
                     .Skip(_lowerLimit)
-                    .Take(_upperLimit)
+                    .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
                 //Assign count value
                 cstPageList.TotalDBEntitysCount = count;
@@ -206,7 +206,7 @@ namespace SchoolRecognition.Services
                     )
                     .OrderBy(x => orderParameter.GetValue(x, null))
                     .Skip(_lowerLimit)
-                    .Take(_upperLimit)
+                    .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
 
                     listResult = _result;
@@ -221,7 +221,7 @@ namespace SchoolRecognition.Services
                     )
                     .OrderByDescending(x => orderParameter.GetValue(x, null))
                     .Skip(_lowerLimit)
-                    .Take(_upperLimit)
+                    .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
                     //
                     listResult = _result;

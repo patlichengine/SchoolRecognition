@@ -140,64 +140,72 @@
                         var nextDisabled = ViewBag.CurrentPage >= ViewBag.FinalPage ? "disabled" : "";
                         //var disableAll =
                     }
-                    <ul class="pagination mt-2">
-                        <li class="page-item @prevDisabled">
-                            <a asp-controller="Pins" asp-action="Index"
-                               asp-route-sortOrder="@ViewBag.SortOrder"
-                               asp-route-searchQuery="@ViewBag.SearchQuery"
-                               asp-route-pageNumber=""
-                               class="page-link">
-                                <i class="fas fa-angle-double-left"></i>
-                            </a>
-                        </li>
-                        <li class="page-item @prevDisabled">
-                            <a asp-controller="Pins" asp-action="Index"
-                               asp-route-sortOrder="@ViewBag.SortOrder"
-                               asp-route-searchQuery="@ViewBag.SearchQuery"
-                               asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
-                               class="page-link">
-                                <i class="fas fa-angle-left"></i>
-                            </a>
-                        </li>
-                        @foreach (var item in ViewBag.PaginationIndices)
-                        {
-                            <li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
-                                <a asp-controller="Pins" asp-action="Index"
-                                   asp-route-sortOrder="@ViewBag.SortOrder"
-                                   asp-route-searchQuery="@ViewBag.SearchQuery"
-                                   asp-route-pageNumber="@item"
-                                   class="page-link">
-                                    @item
-                                </a>
-                            </li>
+                    <div class="row mt-2">
+                        <div class="col">
+                            @String.Format("Showing {0} to {1} of {2} ", (ViewBag.LowerLimit + 1), ViewBag.UpperLimit,ViewBag.Count)
+                        </div>
+                        <div class="col-8">
 
-                            @*<li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
+                            <ul class="pagination">
+                                <li class="page-item @prevDisabled">
+                                    <a asp-controller="Pins" asp-action="Index"
+                                       asp-route-sortOrder="@ViewBag.SortOrder"
+                                       asp-route-searchQuery="@ViewBag.SearchQuery"
+                                       asp-route-pageNumber=""
+                                       class="page-link">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item @prevDisabled">
+                                    <a asp-controller="Pins" asp-action="Index"
+                                       asp-route-sortOrder="@ViewBag.SortOrder"
+                                       asp-route-searchQuery="@ViewBag.SearchQuery"
+                                       asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
+                                       class="page-link">
+                                        <i class="fas fa-angle-left"></i>
+                                    </a>
+                                </li>
+                                @foreach (var item in ViewBag.PaginationIndices)
+                                {
+                                    <li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
+                                        <a asp-controller="Pins" asp-action="Index"
+                                           asp-route-sortOrder="@ViewBag.SortOrder"
+                                           asp-route-searchQuery="@ViewBag.SearchQuery"
+                                           asp-route-pageNumber="@item"
+                                           class="page-link">
+                                            @item
+                                        </a>
+                                    </li>
+
+                                    @*<li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
                     <a href="@Url.Action("Index", "Pins", new { sortOrder = ViewBag.SortOrder, searchQuery = ViewBag.SearchQuery, pageNumber = item })"
                        class="page-link">
                         @item
                     </a>
                 </li>*@
 
-                        }
-                        <li class="page-item @nextDisabled">
-                            <a asp-controller="Pins" asp-action="Index"
-                               asp-route-sortOrder="@ViewBag.SortOrder"
-                               asp-route-searchQuery="@ViewBag.SearchQuery"
-                               asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
-                               class="page-link">
-                                <i class="fas fa-angle-right"></i>
-                            </a>
-                        </li>
-                        <li class="page-item @nextDisabled">
-                            <a asp-controller="Pins" asp-action="Index"
-                               asp-route-sortOrder="@ViewBag.SortOrder"
-                               asp-route-searchQuery="@ViewBag.SearchQuery"
-                               asp-route-pageNumber="@ViewBag.FinalPage"
-                               class="page-link">
-                                <i class="fas fa-angle-double-right"></i>
-                            </a>
-                        </li>
-                    </ul>
+                                }
+                                <li class="page-item @nextDisabled">
+                                    <a asp-controller="Pins" asp-action="Index"
+                                       asp-route-sortOrder="@ViewBag.SortOrder"
+                                       asp-route-searchQuery="@ViewBag.SearchQuery"
+                                       asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
+                                       class="page-link">
+                                        <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                                <li class="page-item @nextDisabled">
+                                    <a asp-controller="Pins" asp-action="Index"
+                                       asp-route-sortOrder="@ViewBag.SortOrder"
+                                       asp-route-searchQuery="@ViewBag.SearchQuery"
+                                       asp-route-pageNumber="@ViewBag.FinalPage"
+                                       class="page-link">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
                 </div>
                 <!-- /.card-body -->
