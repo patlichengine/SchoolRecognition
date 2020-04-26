@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,6 +28,59 @@ namespace SchoolRecognition.Models
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
+
+    }
+    public class SchoolPaymentViewModel
+    {
+        public Guid ID { get; set; }
+        public SelectList RecognitionTypes { get; set; }
+
+
+        public Guid CenterNoID { get; set; }
+        [Display(Name = "Center Number")]
+        public string CenterNo { get; set; }
+        [Display(Name = "School Name")]
+        public string SchoolName { get; set; }
+
+        [Display(Name = "School Category")]
+        public string SchoolCategory { get; set; }
+
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+
+        [Display(Name = "Address")]
+        public string EmailAddress { get; set; }
+
+        [Display(Name = "Phone Number")]
+        public string PhoneNo { get; set; }
+
+        [Display(Name = "Year of Establishment")]
+        public string YearEstablished { get; set; }
+
+        public Guid LgID { get; set; }
+
+        public Guid SchoolCategoryID { get; set; }
+        public Guid RecognitionTypeID { get; set; }
+
+        public Guid OfficeID { get; set; }
+
+
+
+        public Guid PinID { get; set; }
+
+        public Guid SchoolID { get; set; }
+        public decimal Amount { get; set; }
+        [Display(Name = "Receipt Number")]
+        public string ReceiptNo { get; set; }
+
+
+
+        [Display(Name = "Scanned Receipt")]
+        public IFormFile ReceiptImage { get; set; }
+        public string DateCreated { get; set; }
+
+        public Guid CreatedBy { get; set; }
+
 
     }
 

@@ -67,7 +67,7 @@
 
                 <hr />
                 <!-- /.col -->
-                <button type="submit" class="btn btn-secondary btn-flat">Sign In</button>
+                <button type="submit" class="btn btn-secondary btn-flat" id="btnSignIn">Sign In</button>
 
                 <!-- /.col -->
                 <!-- Register -->
@@ -94,3 +94,25 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script type="text/javascript">
+    //inplemenet a login function using ajax
+    const loadingString = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span>';
+    $("#btnSignIn").on("Click", function (event) {
+
+        event.preventDefault();
+
+        const buttonString = $(this).text();
+        $(this).html(loadingString)
+
+        //Get Login user
+        $.post()
+
+    });
+
+    const LoginUser = (event) => {
+        
+        
+        
+    };
+</script>
