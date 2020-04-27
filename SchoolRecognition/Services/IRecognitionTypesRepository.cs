@@ -8,6 +8,6 @@ namespace SchoolRecognition.Services
 {
     public interface IRecognitionTypesRepository
     {
-        public Task<IEnumerable<RecognitionTypesDto>> GetAllRecognitionTypes();
+         Task<IEnumerable<RecognitionTypesDto>> GetAllRecognitionTypes();
     }
 }

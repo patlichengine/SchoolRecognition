@@ -8,8 +8,8 @@ namespace SchoolRecognition.Services
 {
     public interface IRolesRepository
     {
-        public Task<RolesDto> GetRole(Guid id);
+         Task<RolesDto> GetRole(Guid id);
 
-        public Task<IEnumerable<RolesDto>> GetRoles();
+         Task<IEnumerable<RolesDto>> GetRoles();
     }
 }

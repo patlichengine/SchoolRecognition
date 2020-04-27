@@ -8,6 +8,6 @@ namespace SchoolRecognition.Services
 {
     public interface IRanksRepository
     {
-        public Task<IEnumerable<RanksDto>> GetAllRanks();
+         Task<IEnumerable<RanksDto>> GetAllRanks();
     }
 }

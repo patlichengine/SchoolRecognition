@@ -8,15 +8,15 @@ namespace SchoolRecognition.Services
 {
     public interface IOfficeRepository
     {
-        public Task<OfficesDto> GetOffice(Guid id);
+         Task<OfficesDto> GetOffice(Guid id);
 
-        public Task<IEnumerable<OfficesDto>> GetOffices();
+         Task<IEnumerable<OfficesDto>> GetOffices();
 
-        public Task<IEnumerable<RolesDto>> GetOfficeSchools(Guid officeId);
+         Task<IEnumerable<RolesDto>> GetOfficeSchools(Guid officeId);
 
-        public Task<IEnumerable<RolesDto>> GetOfficeSchools(Guid officeId, Guid schoolId);
+         Task<IEnumerable<RolesDto>> GetOfficeSchools(Guid officeId, Guid schoolId);
 
-        public Task<IEnumerable<RolesDto>> GetOfficeCentres(Guid officeId);
-        public Task<IEnumerable<RolesDto>> GetOfficeCentres(Guid officeId, Guid centreId);
+         Task<IEnumerable<RolesDto>> GetOfficeCentres(Guid officeId);
+         Task<IEnumerable<RolesDto>> GetOfficeCentres(Guid officeId, Guid centreId);
     }
 }

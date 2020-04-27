@@ -8,7 +8,7 @@ namespace SchoolRecognition.Services
 {
     public interface IPinsRepository
     {
-        public Task<IEnumerable<PinsDto>> GetPins();
-        public Task<IEnumerable<PinsDto>> GetPinsByRecognitionType(Guid recognitionTypeID);
+         Task<IEnumerable<PinsDto>> GetPins();
+         Task<IEnumerable<PinsDto>> GetPinsByRecognitionType(Guid recognitionTypeID);
     }
 }

@@ -8,15 +8,15 @@ namespace SchoolRecognition.Services
 {
     public interface IAccountsRepository
     {
-        public Task<bool> AccountExists();
-        public Task<bool> AccountExists(Guid userId);
-        public void CreateAccount(RegisterViewModel model);
-        public Task<AccountsDto> GetAccount(Guid id);
+         Task<bool> AccountExists();
+         Task<bool> AccountExists(Guid userId);
+         void CreateAccount(RegisterViewModel model);
+         Task<AccountsDto> GetAccount(Guid id);
 
-        public Task<AccountsDto> GetAccount(string emailAddress, string password);
+         Task<AccountsDto> GetAccount(string emailAddress, string password);
 
-        public Task<IEnumerable<AccountsDto>> GetAccounts();
-        public Task<IEnumerable<AccountsDto>> GetRoleAccounts(Guid roleId);
+         Task<IEnumerable<AccountsDto>> GetAccounts();
+         Task<IEnumerable<AccountsDto>> GetRoleAccounts(Guid roleId);
 
     }
 }
