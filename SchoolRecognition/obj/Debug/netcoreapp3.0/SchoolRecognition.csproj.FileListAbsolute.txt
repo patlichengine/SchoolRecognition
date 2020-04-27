@@ -109,3 +109,6 @@ C:\Users\WAEC\Desktop\ApplicationFolder\SchoolRecognition\SchoolRecognition\obj\
 C:\Users\WAEC\Desktop\ApplicationFolder\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.0\SchoolRecognition.pdb
 C:\Users\WAEC\Desktop\ApplicationFolder\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.0\Razor\Views\Payment\AddSchoolPayment.cshtml.g.cs
 C:\Users\WAEC\Desktop\ApplicationFolder\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.0\SchoolRecognition.csprojAssemblyReference.cache
+C:\Users\WAEC\Desktop\ApplicationFolder\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_LayoutAdmin.cshtml.g.cs
+C:\Users\WAEC\Desktop\ApplicationFolder\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_NavigationAdmin.cshtml.g.cs
+C:\Users\WAEC\Desktop\ApplicationFolder\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.0\Razor\Views\Shared\_SidebarAdmin.cshtml.g.cs

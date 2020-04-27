@@ -1,0 +1,166 @@
+﻿
+<aside class="main-sidebar sidebar-dark-primary bg-gradient-navy elevation-4">
+    <!-- Brand Logo -->
+    <a class="brand-link z-depth-0" asp-area="" asp-controller="Home" asp-action="Index">
+        <img src="~/images/bgLogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <div class="brand-text">
+            <span class="font-weight-bold">WAEC</span>
+            <p class="font-weight-lighter" style="font-size: .95rem">
+                School Recognition System
+            </p>
+        </div>
+        
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user (optional) -->
+        @*<div class="user-panel mt-1 pb-1 mb-1 d-flex">
+            <small class="info">
+                School Recognition System
+            </small>
+        </div>*@
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-header text-muted">Modules</li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        @*<i class="nav-icon fas fa-copy"></i>*@
+                        <p>
+                            Administrative Operations
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-receipt nav-icon"></i>
+                                <p>Generate PINs</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-mail-bulk nav-icon"></i>
+                                <p>Manage PINs</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-map nav-icon"></i>
+                                <p>Offices</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-map-marked nav-icon"></i>
+                                <p>Office States</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-th-large nav-icon"></i>
+                                <p>School Categories</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <!--<i class="nav-icon fas fa-copy"></i>-->
+                        <p>
+                            School Management
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                                <p>Payments</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Index" asp-controller="SchoolCategories">
+                           
+                                <i class="fas fa-school nav-icon"></i>
+                                <p>Manage Schools</p>
+                            </a>
+                        </li>
+                        @*<li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Functionality 3</p>
+                            </a>
+                        </li>*@
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        @*<i class="nav-icon fas fa-copy"></i>*@
+                        <p>
+                            Account Management
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-users-cog nav-icon"></i>
+                                <p>Manage Users</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-user-tag nav-icon"></i>
+                                <p>Manage Roles</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        @*<i class="nav-icon fas fa-copy"></i>*@
+                        <p>
+                            Reporting
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-bug nav-icon"></i>
+                                <p>View Error Logs</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-file-medical-alt nav-icon"></i>
+                                <p>View System Audit</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+
+</aside>

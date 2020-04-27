@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.ApiControllers
 {
-    [Route("api/RecognitionTypes")]
+    [Route("api/recognitiontypes")]
     [ApiController]
     public class RecognitionTypesApiController: ControllerBase
     {
@@ -27,7 +27,7 @@ namespace SchoolRecognition.ApiControllers
 
 
         }
-        [HttpGet]
+        [HttpGet(Name = "GetRecognitionTypes")]
         public ActionResult<IEnumerable<RecognitionTypesDto>> GetRecognitionTypes()
         {
 

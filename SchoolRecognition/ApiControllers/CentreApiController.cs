@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.ApiControllers
 {
-    [Route("api/Centres")]
+    [Route("api/centres")]
     [ApiController]
     public class CentreApiController:ControllerBase
     {
