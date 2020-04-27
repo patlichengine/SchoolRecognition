@@ -9,17 +9,18 @@ using SchoolRecognition.Services;
 
 namespace SchoolRecognition.Controllers
 {
-    public class AccountController : Controller
+    public class AccountsController : Controller
     {
-        private IAccountsRepository _accountsService;
+        IAccountsRepository _accountRepository;
 
-        public AccountController(IAccountsRepository accountsService)
+        public AccountsController(IAccountsRepository accountRepository)
         {
-            _accountsService = accountsService;
+            _accountRepository = accountRepository ??
+               throw new ArgumentNullException(nameof(accountRepository));
         }
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Register");
         }
 
         

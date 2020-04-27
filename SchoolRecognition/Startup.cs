@@ -74,11 +74,22 @@ namespace SchoolRecognition
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 })
                 .AddRazorRuntimeCompilation();
+          
+            //Scoping my  services  
+            _ = services.AddTransient<ISchoolCategoryRepository, cSchoolCategoryRepository>();
+            _ = services.AddTransient<ISchoolsRepository, cSchoolsRepository>();
+            //services.AddTransient<>
+            
+    
+            services.AddMvc()
+
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNToastNotifyToastr();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. myDapperConnection
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -92,11 +103,12 @@ namespace SchoolRecognition
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            // other code remove for clarity 
+            loggerFactory.AddFile("Logs/mylog-{Date}.txt");
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseNToastNotify();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
