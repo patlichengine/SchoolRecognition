@@ -11,6 +11,12 @@ namespace SchoolRecognition.Controllers
 {
     public class AccountController : Controller
     {
+        private IAccountsRepository _accountsService;
+
+        public AccountController(IAccountsRepository accountsService)
+        {
+            _accountsService = accountsService;
+        }
         public IActionResult Index()
         {
             return View();
@@ -24,11 +30,12 @@ namespace SchoolRecognition.Controllers
 
 
         [HttpPost]
-        public IActionResult Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                new clsAccount().CreateUser(model);
+                _accountsService.CreateAccount(model);
+                //new clsAccount().CreateUser(model);
             }
             return View();
         }

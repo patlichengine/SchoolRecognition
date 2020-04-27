@@ -9,6 +9,7 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Configuration;
 using Microsoft.Data.SqlClient;
+using SchoolRecognition.Entities;
 
 namespace SchoolRecognition.Classes
 {

@@ -1,4 +1,5 @@
-﻿using SchoolRecognition.Models;
+﻿using SchoolRecognition.Entities;
+using SchoolRecognition.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
