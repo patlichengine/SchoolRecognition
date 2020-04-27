@@ -6,10 +6,12 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using SchoolRecognition.Classes;
 using SchoolRecognition.DbContexts;
@@ -64,7 +66,9 @@ namespace SchoolRecognition
 
             services.AddScoped<IAccountsRepository, cAccountsRepository>();
             services.AddScoped<IPinsRepository, cPinsRepository>();
-            services.AddScoped<IRecognitionTypesRepository, cRecognitionTypesRepository>();
+            services.AddScoped<IRecognitionTypesRepository, cRecognitionTypesRepository>();;
+            services.AddScoped<ISchoolCategoryRepository, cSchoolCategoryRepository>();
+            services.AddScoped<ISchoolsRepository, cSchoolsRepository>();
 
             services.AddControllersWithViews()
                 //Required By FlashMessage 
@@ -75,10 +79,6 @@ namespace SchoolRecognition
                 })
                 .AddRazorRuntimeCompilation();
           
-            //Scoping my  services  
-            _ = services.AddTransient<ISchoolCategoryRepository, cSchoolCategoryRepository>();
-            _ = services.AddTransient<ISchoolsRepository, cSchoolsRepository>();
-            //services.AddTransient<>
             
     
             services.AddMvc()
@@ -89,7 +89,7 @@ namespace SchoolRecognition
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline. myDapperConnection
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -103,8 +103,6 @@ namespace SchoolRecognition
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            // other code remove for clarity 
-            loggerFactory.AddFile("Logs/mylog-{Date}.txt");
             app.UseRouting();
 
             app.UseAuthorization();

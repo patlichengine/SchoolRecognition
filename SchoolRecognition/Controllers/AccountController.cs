@@ -35,7 +35,7 @@ namespace SchoolRecognition.Controllers
         {
             if (ModelState.IsValid)
             {
-                _accountsService.CreateAccount(model);
+                _accountRepository.CreateAccount(model);
                 //new clsAccount().CreateUser(model);
             }
             return View();

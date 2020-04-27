@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
+using SchoolRecognition.DbContexts;
 using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
 using System;

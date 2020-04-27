@@ -14,20 +14,23 @@ namespace SchoolRecognition.Controllers
     public class ManagePinsController : Controller
     {
         private IFlashMessage _flashMessage;
-        private IPinsRepository _pinsService;
-        private IRecognitionTypesRepository _recognitionTypesService;
+        private IPinsRepository _pinsRepository;
+        private IRecognitionTypesRepository _recognitionTypesRepository;
 
-        public ManagePinsController(IFlashMessage flashMessage, IPinsRepository pinsService, IRecognitionTypesRepository recognitionTypesService)
+        public ManagePinsController(IFlashMessage flashMessage, IPinsRepository pinsRepository, IRecognitionTypesRepository recognitionTypesRepository)
         {
             _flashMessage = flashMessage;
-            _pinsService = pinsService;
-            _recognitionTypesService = recognitionTypesService;
+            _pinsRepository = pinsRepository ??
+               throw new ArgumentNullException(nameof(pinsRepository));
+            _recognitionTypesRepository = recognitionTypesRepository ??
+               throw new ArgumentNullException(nameof(pinsRepository));
         }
+
 
         //Get
         public async Task<IActionResult> Index()
         {
-            var recognitionTypes = await _recognitionTypesService.Get();
+            var recognitionTypes = await _recognitionTypesRepository.Get();
 
             return View(recognitionTypes);
         }
@@ -73,23 +76,23 @@ namespace SchoolRecognition.Controllers
                 }
 
 
-                //var recognitionType = await _recognitionTypesService.Get(id);
+                //var recognitionType = await _recognitionTypesRepository.Get(id);
                 switch (sortOrder)
                 {
                     case "date_desc":
-                        recognitionType = await _recognitionTypesService.GetDetailsAndIncludePinsAndOrderByDateCreated(id, _pageNumber, _searchQuery, true);
+                        recognitionType = await _recognitionTypesRepository.GetDetailsAndIncludePinsAndOrderByDateCreated(id, _pageNumber, _searchQuery, true);
                         break;
                     case "date":
-                        recognitionType = await _recognitionTypesService.GetDetailsAndIncludePinsAndOrderByDateCreated(id, _pageNumber, _searchQuery, false);
+                        recognitionType = await _recognitionTypesRepository.GetDetailsAndIncludePinsAndOrderByDateCreated(id, _pageNumber, _searchQuery, false);
                         break;
                     case "serial_number_desc":
-                        recognitionType = await _recognitionTypesService.GetDetailsAndIncludePinsAndOrderBySerialPin(id, _pageNumber, _searchQuery, true);
+                        recognitionType = await _recognitionTypesRepository.GetDetailsAndIncludePinsAndOrderBySerialPin(id, _pageNumber, _searchQuery, true);
                         break;
                     case "serial_number":
-                        recognitionType = await _recognitionTypesService.GetDetailsAndIncludePinsAndOrderBySerialPin(id, _pageNumber, _searchQuery, true);
+                        recognitionType = await _recognitionTypesRepository.GetDetailsAndIncludePinsAndOrderBySerialPin(id, _pageNumber, _searchQuery, true);
                         break;
                     default:
-                        recognitionType = await _recognitionTypesService.GetDetailsAndIncludePins(id, _pageNumber, _searchQuery);
+                        recognitionType = await _recognitionTypesRepository.GetDetailsAndIncludePins(id, _pageNumber, _searchQuery);
                         break;
                 }
                 if (recognitionType != null)
@@ -153,7 +156,7 @@ namespace SchoolRecognition.Controllers
         //Create
         public async Task<IActionResult> GeneratePins(Guid id)
         {
-            var recognitionTypes = await _recognitionTypesService.Get();
+            var recognitionTypes = await _recognitionTypesRepository.Get();
 
             ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()
@@ -173,7 +176,7 @@ namespace SchoolRecognition.Controllers
         public async Task<IActionResult> GeneratePins(PinsCreateDto model)
         {
 
-            var recognitionTypes = await _recognitionTypesService.Get();
+            var recognitionTypes = await _recognitionTypesRepository.Get();
             //
             ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()
@@ -186,7 +189,7 @@ namespace SchoolRecognition.Controllers
             {
                 //Set Pins as active 
                 model.IsActive = true;
-                var result = await _pinsService.CreateSeveralPins(model);
+                var result = await _pinsRepository.CreateSeveralPins(model);
 
                 if (result)
                 {

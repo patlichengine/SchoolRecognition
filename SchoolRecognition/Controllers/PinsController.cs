@@ -14,14 +14,16 @@ namespace SchoolRecognition.Controllers
     public class PinsController : Controller
     {
         private IFlashMessage _flashMessage;
-        private IPinsRepository _pinsService;
-        private IRecognitionTypesRepository _recognitionTypesService;
+        private IPinsRepository _pinsRepository;
+        private IRecognitionTypesRepository _recognitionTypesRepository;
 
-        public PinsController(IFlashMessage flashMessage, IPinsRepository pinsService, IRecognitionTypesRepository recognitionTypesService)
+        public PinsController(IFlashMessage flashMessage, IPinsRepository pinsRepository, IRecognitionTypesRepository recognitionTypesRepository)
         {
             _flashMessage = flashMessage;
-            _pinsService = pinsService;
-            _recognitionTypesService = recognitionTypesService;
+            _pinsRepository = pinsRepository ??
+               throw new ArgumentNullException(nameof(pinsRepository));
+            _recognitionTypesRepository = recognitionTypesRepository ??
+               throw new ArgumentNullException(nameof(pinsRepository));
         }
 
         public async Task<IActionResult> Index(string sortOrder, string searchQuery, int? pageNumber)
@@ -61,19 +63,19 @@ namespace SchoolRecognition.Controllers
             switch (sortOrder)
             {
                 case "date_desc":
-                    result = await _pinsService.GetAndOrderByDateCreated(_pageNumber, _searchQuery, true);
+                    result = await _pinsRepository.GetAndOrderByDateCreated(_pageNumber, _searchQuery, true);
                     break;
                 case "date":
-                    result = await _pinsService.GetAndOrderByDateCreated(_pageNumber, _searchQuery, false);
+                    result = await _pinsRepository.GetAndOrderByDateCreated(_pageNumber, _searchQuery, false);
                     break;
                 case "serial_number_desc":
-                    result = await _pinsService.GetAndOrderBySerialPin(_pageNumber, _searchQuery, true);
+                    result = await _pinsRepository.GetAndOrderBySerialPin(_pageNumber, _searchQuery, true);
                     break;
                 case "serial_number":
-                    result = await _pinsService.GetAndOrderBySerialPin(_pageNumber, _searchQuery, false);
+                    result = await _pinsRepository.GetAndOrderBySerialPin(_pageNumber, _searchQuery, false);
                     break;
                 default:
-                    result = await _pinsService.Get(_pageNumber, _searchQuery);
+                    result = await _pinsRepository.Get(_pageNumber, _searchQuery);
                     break;
             }
 
@@ -129,7 +131,7 @@ namespace SchoolRecognition.Controllers
 
         public async Task<IActionResult> GeneratePins()
         {
-            var recognitionTypes = await _recognitionTypesService.Get();
+            var recognitionTypes = await _recognitionTypesRepository.Get();
 
             ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()
@@ -146,7 +148,7 @@ namespace SchoolRecognition.Controllers
         public async Task<IActionResult> GeneratePins(PinsCreateDto model)
         {
 
-            var recognitionTypes = await _recognitionTypesService.Get();
+            var recognitionTypes = await _recognitionTypesRepository.Get();
             //
             ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()
@@ -158,7 +160,7 @@ namespace SchoolRecognition.Controllers
             if (ModelState.IsValid)
             {
                 model.IsActive = true;
-                var result = await _pinsService.CreateSeveralPins(model);
+                var result = await _pinsRepository.CreateSeveralPins(model);
 
                 if (result)
                 {
