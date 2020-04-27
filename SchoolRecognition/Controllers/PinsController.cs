@@ -47,10 +47,10 @@ namespace SchoolRecognition.Controllers
             }
 
             //Handling search queries
-            string _searchCriteria = "";
+            string _searchQuery = "";
             if (searchQuery != null)
             {
-                _searchCriteria = searchQuery;
+                _searchQuery = searchQuery;
             }
 
             if (_pageNumber > 0)
@@ -61,19 +61,19 @@ namespace SchoolRecognition.Controllers
             switch (sortOrder)
             {
                 case "date_desc":
-                    result = await _pinsService.GetAndOrderByDateCreated(_pageNumber, _searchCriteria, true);
+                    result = await _pinsService.GetAndOrderByDateCreated(_pageNumber, _searchQuery, true);
                     break;
                 case "date":
-                    result = await _pinsService.GetAndOrderByDateCreated(_pageNumber, _searchCriteria, false);
+                    result = await _pinsService.GetAndOrderByDateCreated(_pageNumber, _searchQuery, false);
                     break;
                 case "serial_number_desc":
-                    result = await _pinsService.GetAndOrderBySerialPin(_pageNumber, _searchCriteria, true);
+                    result = await _pinsService.GetAndOrderBySerialPin(_pageNumber, _searchQuery, true);
                     break;
                 case "serial_number":
-                    result = await _pinsService.GetAndOrderBySerialPin(_pageNumber, _searchCriteria, false);
+                    result = await _pinsService.GetAndOrderBySerialPin(_pageNumber, _searchQuery, false);
                     break;
                 default:
-                    result = await _pinsService.Get(_pageNumber, _searchCriteria);
+                    result = await _pinsService.Get(_pageNumber, _searchQuery);
                     break;
             }
 
@@ -131,8 +131,12 @@ namespace SchoolRecognition.Controllers
         {
             var recognitionTypes = await _recognitionTypesService.Get();
 
-            ViewData["RecognitionTypes"] =  recognitionTypes.Select(x => 
-            new SelectListItem() { Text = x.RecognitionTypeName, Value = x.Id.ToString() }).ToList();
+            ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
+             new SelectListItem()
+             {
+                 Text = x.RecognitionTypeName,
+                 Value = x.Id.ToString(),
+             }).ToList();
 
             return View();
         }
@@ -144,8 +148,12 @@ namespace SchoolRecognition.Controllers
 
             var recognitionTypes = await _recognitionTypesService.Get();
             //
-            ViewData["RecognitionTypes"] = recognitionTypes.Select(x =>
-           new SelectListItem() { Text = x.RecognitionTypeName, Value = x.Id.ToString() }).ToList();
+            ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
+             new SelectListItem()
+             {
+                 Text = x.RecognitionTypeName,
+                 Value = x.Id.ToString(),
+             }).ToList();
 
             if (ModelState.IsValid)
             {

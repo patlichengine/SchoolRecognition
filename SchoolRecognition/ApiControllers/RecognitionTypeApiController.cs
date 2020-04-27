@@ -65,6 +65,84 @@ namespace SchoolRecognition.ApiControllers
             }
         }
 
+        // POST: api/RecognitionTypesApi
+        [HttpPost]
+        public async Task<IActionResult> Post(RecognitionTypesDto model)
+        {
+            
+            try
+            {
+                if (model == null)
+                {
+                    return BadRequest();
+                }
+
+                var result = await _recognitionTypesRepository.Create(model);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+        
+
+        // PUT: api/RecognitionTypesApi
+        [HttpPut]
+        public async Task<IActionResult> Put(RecognitionTypesDto model)
+        {
+            
+            try
+            {
+                if (model == null)
+                {
+                    return BadRequest();
+                }
+
+                var result = await _recognitionTypesRepository.Update(model);
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+        // PUT: api/RecognitionTypesApi
+        [HttpDelete]
+        [Route("{recognitionTypeId}")]
+        public async Task<IActionResult> Delete(Guid recognitionTypeId)
+        {
+            
+            try
+            {
+                if (recognitionTypeId == Guid.Empty)
+                {
+                    return NotFound();
+                }
+
+                await _recognitionTypesRepository.Delete(recognitionTypeId);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
 
     }
 }

@@ -74,7 +74,7 @@ namespace SchoolRecognition.Services
                 var count = await _context.Pins.CountAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex > 0)
+                if (rangeIndex != null && rangeIndex > 0)
                 {
                     _lowerLimit = (rangeIndex.Value) * 100;
                     _upperLimit = (rangeIndex.Value + 1) * 100;
@@ -121,7 +121,7 @@ namespace SchoolRecognition.Services
                 var count = await _context.Pins.CountAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex > 0)
+                if (rangeIndex != null && rangeIndex > 0)
                 {
                     _lowerLimit = (rangeIndex.Value) * 100;
                     _upperLimit = (rangeIndex.Value + 1) * 100;
@@ -182,7 +182,7 @@ namespace SchoolRecognition.Services
                 var count = await _context.Pins.CountAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex > 0)
+                if (rangeIndex != null && rangeIndex > 0)
                 {
                     _lowerLimit = (rangeIndex.Value) * 100;
                     _upperLimit = (rangeIndex.Value + 1) * 100;
@@ -248,7 +248,7 @@ namespace SchoolRecognition.Services
                 var count = await _context.Pins.CountAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex > 0)
+                if (rangeIndex != null && rangeIndex > 0)
                 {
                     _lowerLimit = (rangeIndex.Value) * 100;
                     _upperLimit = (rangeIndex.Value + 1) * 100;
@@ -430,10 +430,13 @@ namespace SchoolRecognition.Services
 
                     var _result = await _context.Pins
                         .Include(x => x.CreatedByNavigation)
-                        .ThenInclude(r => r.Role)
+                        .ThenInclude(y => y.Role)
                         .Include(y => y.RecognitionType)
                         .Include(z => z.SchoolPayments)
+                        .Where(x => x.Id == id)
                         .FirstOrDefaultAsync();
+
+                    result = _mapper.Map<PinsViewDto>(_result);
                 }
 
                 return result;

@@ -80,13 +80,14 @@ namespace SchoolRecognition.Services
                 var count = await _context.RecognitionTypes.CountAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex > 0)
+                if (rangeIndex != null && rangeIndex > 0)
                 {
                     _lowerLimit = (rangeIndex.Value) * 100;
                     _upperLimit = (rangeIndex.Value + 1) * 100;
                 }
 
                 var _result = await _context.RecognitionTypes
+                    .OrderBy(x => x.Name)
                     .Skip(_lowerLimit)
                     .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
@@ -124,7 +125,7 @@ namespace SchoolRecognition.Services
                 var count = await _context.RecognitionTypes.CountAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex > 0)
+                if (rangeIndex != null && rangeIndex > 0)
                 {
                     _lowerLimit = (rangeIndex.Value) * 100;
                     _upperLimit = (rangeIndex.Value + 1) * 100;
@@ -137,6 +138,7 @@ namespace SchoolRecognition.Services
                 }
 
                 var _result = await _context.RecognitionTypes
+                    .OrderBy(x => x.Name)
                     .Where(
                     //Add all columns you wish to search
                     x => x.Name.ToUpper().Contains(searchQuery)
@@ -163,7 +165,7 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-        public async Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex, string searchQuery, string orderCriteria, bool reverseOrder)
+        public async Task<CustomPagedList<RecognitionTypesDto>> GetAndOrderByName(int? rangeIndex, string searchQuery, bool reverseOrder)
         {
             //Default Range Limit is 100 Rows
             int _lowerLimit = 0;
@@ -174,13 +176,12 @@ namespace SchoolRecognition.Services
             {
                 //Instantiate Array objects
                 IList<RecognitionTypesDto> listOfDtos = new List<RecognitionTypesDto>();
-                IList<RecognitionTypes> listResult = new List<RecognitionTypes>();
                 var cstPageList = new CustomPagedList<RecognitionTypesDto>();
 
                 var count = await _context.RecognitionTypes.CountAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex > 0)
+                if (rangeIndex != null && rangeIndex > 0)
                 {
                     _lowerLimit = (rangeIndex.Value) * 100;
                     _upperLimit = (rangeIndex.Value + 1) * 100;
@@ -192,44 +193,24 @@ namespace SchoolRecognition.Services
                     _searchQuery = searchQuery;
                 }
 
-                //Enabling orderCriteria 
-                var orderParameter = typeof(RecognitionTypes).GetProperty(orderCriteria);
-
                 ///Order or reverse order  by a property
-                if (reverseOrder == false)
-                {
-                    var _result = await _context.RecognitionTypes
+                bool orderAscending = !reverseOrder;
+
+                var _result = await _context.RecognitionTypes
                     .Where(
                     //Add all columns you wish to search
                     x => x.Name.ToUpper().Contains(searchQuery)
                     || x.Code.ToUpper().Contains(searchQuery)
                     )
-                    .OrderBy(x => orderParameter.GetValue(x, null))
+                    .OrderByAscCustom(x => x.Name, orderAscending)
                     .Skip(_lowerLimit)
                     .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
 
-                    listResult = _result;
-                }
-                else
-                {
-                    var _result = await _context.RecognitionTypes
-                    .Where(
-                    //Add all columns you wish to search
-                    x => x.Name.ToUpper().Contains(searchQuery)
-                    || x.Code.ToUpper().Contains(searchQuery)
-                    )
-                    .OrderByDescending(x => orderParameter.GetValue(x, null))
-                    .Skip(_lowerLimit)
-                    .Take((_upperLimit - _lowerLimit))
-                    .ToListAsync();
-                    //
-                    listResult = _result;
-                }
                 //Assign count value
                 cstPageList.TotalDBEntitysCount = count;
                 //Map list of entities to list of dtos
-                listOfDtos = _mapper.Map<IList<RecognitionTypesDto>>(listResult);
+                listOfDtos = _mapper.Map<IList<RecognitionTypesDto>>(_result);
                 //Assign list value
                 cstPageList.Entitys = listOfDtos.ToList();
                 //Return value of upper and lower limit
@@ -287,9 +268,331 @@ namespace SchoolRecognition.Services
                     if (_result != null)
                     {
                         result = _mapper.Map<RecognitionTypesDto>(_result);
-                        result.RecognitionTypePins = _mapper.Map<IEnumerable<PinsViewDto>>(_result.Pins);
+                        //result.RecognitionTypePins = _mapper.Map<IEnumerable<PinsViewDto>>(_result.Pins);
                     }
                 }
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<RecognitionTypesViewPinsDto> GetDetailsAndIncludePins(Guid id, int? rangeIndex)
+        {
+
+            //Default Range Limit is 100 Rows
+            int _lowerLimit = 0;
+            int _upperLimit = 100;
+
+            try
+            {
+                //Instantiate Array objects
+                IList<PinsViewDto> listOfPinsDtos = new List<PinsViewDto>();
+                var cstPageList = new CustomPagedList<PinsViewDto>();
+
+                var count = await _context.Pins.Where(x => x.RecognitionTypeId == id).CountAsync();
+
+                //Set Range of Row Based on rangeIndex parameter
+                if (rangeIndex != null && rangeIndex > 0)
+                {
+                    _lowerLimit = (rangeIndex.Value) * 100;
+                    _upperLimit = (rangeIndex.Value + 1) * 100;
+                }
+
+                RecognitionTypesViewPinsDto result = null;
+                List<Pins> _pins = new List<Pins>();
+
+                if (id != Guid.Empty)
+                {
+                    var _result = await _context.Pins
+                        .Where(x => x.RecognitionTypeId == id)
+                    .Include(x => x.RecognitionType)
+                    .Include(x => x.CreatedByNavigation)
+                    .OrderByDescending(x => x.DateCreated)
+                    .Skip(_lowerLimit)
+                    .Take((_upperLimit - _lowerLimit))
+                    .ToListAsync();
+   
+
+                    if (_result != null)
+                    {
+                        var grouped = _result.GroupBy(x => x.RecognitionType)
+                            .Select(x => new PinsGroup { RecognitionType = x.Key, Pins = x.ToList() }).FirstOrDefault();
+
+                        result = _mapper.Map<RecognitionTypesViewPinsDto>(grouped.RecognitionType);
+                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(grouped.Pins);
+                    }
+                }
+
+                //Assign count value
+                cstPageList.TotalDBEntitysCount = count;
+                //Assign list value
+                cstPageList.Entitys = listOfPinsDtos.ToList();
+                //Return value of upper and lower limit
+                cstPageList.LowerLimit = _lowerLimit;
+                cstPageList.UpperLimit = _upperLimit;
+
+                result.RecognitionTypePins = cstPageList;
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<RecognitionTypesViewPinsDto> GetDetailsAndIncludePins(Guid id, int? rangeIndex, string searchQuery)
+        {
+
+            //Default Range Limit is 100 Rows
+            int _lowerLimit = 0;
+            int _upperLimit = 100;
+            //Default search query
+            string _searchQuery = "";
+
+            try
+            {
+                //Instantiate Array objects
+                IList<PinsViewDto> listOfPinsDtos = new List<PinsViewDto>();
+                var cstPageList = new CustomPagedList<PinsViewDto>();
+
+                var count = await _context.Pins.Where(x => x.RecognitionTypeId == id).CountAsync();
+
+                //Set Range of Row Based on rangeIndex parameter
+                if (rangeIndex != null && rangeIndex > 0)
+                {
+                    _lowerLimit = (rangeIndex.Value) * 100;
+                    _upperLimit = (rangeIndex.Value + 1) * 100;
+                }
+
+                //Check searchQuery paramter is not null
+                if (searchQuery != null)
+                {
+                    _searchQuery = searchQuery;
+                }
+
+                RecognitionTypesViewPinsDto result = null;
+                List<Pins> _pins = new List<Pins>();
+
+                if (id != Guid.Empty)
+                {
+                    var _result = await _context.Pins
+                        .Where(x => x.RecognitionTypeId == id)
+                    .Where(
+                    //Add all columns you wish to search
+                    x => x.SerialPin.ToUpper().Contains(_searchQuery.ToUpper())
+                    || (x.DateCreated != null ? x.DateCreated.Value.ToString().ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.RecognitionType != null ? x.RecognitionType.Code.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Surname.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Othernames.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    )
+                    .Include(x => x.RecognitionType)
+                    .Include(x => x.CreatedByNavigation)
+                    .OrderByDescending(x => x.DateCreated)
+                    .Skip(_lowerLimit)
+                    .Take((_upperLimit - _lowerLimit))
+                    .ToListAsync();
+   
+
+                    if (_result != null)
+                    {
+                        var grouped = _result.GroupBy(x => x.RecognitionType)
+                            .Select(x => new PinsGroup { RecognitionType = x.Key, Pins = x.ToList() }).FirstOrDefault();
+
+                        result = _mapper.Map<RecognitionTypesViewPinsDto>(grouped.RecognitionType);
+                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(grouped.Pins);
+                    }
+                }
+
+                //Assign count value
+                cstPageList.TotalDBEntitysCount = count;
+                //Assign list value
+                cstPageList.Entitys = listOfPinsDtos.ToList();
+                //Return value of upper and lower limit
+                cstPageList.LowerLimit = _lowerLimit;
+                cstPageList.UpperLimit = _upperLimit;
+
+                result.RecognitionTypePins = cstPageList;
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<RecognitionTypesViewPinsDto> GetDetailsAndIncludePinsAndOrderByDateCreated(Guid id, int? rangeIndex, string searchQuery, bool reverseOrder)
+        {
+
+            //Default Range Limit is 100 Rows
+            int _lowerLimit = 0;
+            int _upperLimit = 100;
+            //Default search query
+            string _searchQuery = "";
+
+            try
+            {
+                //Instantiate Array objects
+                IList<PinsViewDto> listOfPinsDtos = new List<PinsViewDto>();
+                var cstPageList = new CustomPagedList<PinsViewDto>();
+
+                var count = await _context.Pins.Where(x => x.RecognitionTypeId == id).CountAsync();
+
+                //Set Range of Row Based on rangeIndex parameter
+                if (rangeIndex != null && rangeIndex > 0)
+                {
+                    _lowerLimit = (rangeIndex.Value) * 100;
+                    _upperLimit = (rangeIndex.Value + 1) * 100;
+                }
+
+                //Check searchQuery paramter is not null
+                if (searchQuery != null)
+                {
+                    _searchQuery = searchQuery;
+                }
+
+                ///Order or reverse order  by a property
+                bool orderAscending = !reverseOrder;
+
+                RecognitionTypesViewPinsDto result = null;
+                List<Pins> _pins = new List<Pins>();
+
+                if (id != Guid.Empty)
+                {
+                    var _result = await _context.Pins
+                        .Where(x => x.RecognitionTypeId == id)
+                       //See extensions folder for how the following method was implemented
+                       .OrderByAscCustom(x => x.DateCreated, orderAscending)
+                    .Where(
+                    //Add all columns you wish to search
+                    x => x.SerialPin.ToUpper().Contains(_searchQuery.ToUpper())
+                    || (x.DateCreated != null ? x.DateCreated.Value.ToString().ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.RecognitionType != null ? x.RecognitionType.Code.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Surname.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Othernames.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    )
+                    .Include(x => x.RecognitionType)
+                    .Include(x => x.CreatedByNavigation)
+                    .OrderByDescending(x => x.DateCreated)
+                    .Skip(_lowerLimit)
+                    .Take((_upperLimit - _lowerLimit))
+                    .ToListAsync();
+   
+
+                    if (_result != null)
+                    {
+                        var grouped = _result.GroupBy(x => x.RecognitionType)
+                            .Select(x => new PinsGroup { RecognitionType = x.Key, Pins = x.ToList() }).FirstOrDefault();
+
+                        result = _mapper.Map<RecognitionTypesViewPinsDto>(grouped.RecognitionType);
+                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(grouped.Pins);
+                    }
+                }
+
+                //Assign count value
+                cstPageList.TotalDBEntitysCount = count;
+                //Assign list value
+                cstPageList.Entitys = listOfPinsDtos.ToList();
+                //Return value of upper and lower limit
+                cstPageList.LowerLimit = _lowerLimit;
+                cstPageList.UpperLimit = _upperLimit;
+
+                result.RecognitionTypePins = cstPageList;
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<RecognitionTypesViewPinsDto> GetDetailsAndIncludePinsAndOrderBySerialPin(Guid id, int? rangeIndex, string searchQuery, bool reverseOrder)
+        {
+
+            //Default Range Limit is 100 Rows
+            int _lowerLimit = 0;
+            int _upperLimit = 100;
+            //Default search query
+            string _searchQuery = "";
+
+            try
+            {
+                //Instantiate Array objects
+                IList<PinsViewDto> listOfPinsDtos = new List<PinsViewDto>();
+                var cstPageList = new CustomPagedList<PinsViewDto>();
+
+                var count = await _context.Pins.Where(x => x.RecognitionTypeId == id).CountAsync();
+
+                //Set Range of Row Based on rangeIndex parameter
+                if (rangeIndex != null && rangeIndex > 0)
+                {
+                    _lowerLimit = (rangeIndex.Value) * 100;
+                    _upperLimit = (rangeIndex.Value + 1) * 100;
+                }
+
+                //Check searchQuery paramter is not null
+                if (searchQuery != null)
+                {
+                    _searchQuery = searchQuery;
+                }
+
+                ///Order or reverse order  by a property
+                bool orderAscending = !reverseOrder;
+
+                RecognitionTypesViewPinsDto result = null;
+                List<Pins> _pins = new List<Pins>();
+
+                if (id != Guid.Empty)
+                {
+                    var _result = await _context.Pins
+                        .Where(x => x.RecognitionTypeId == id)
+                       //See extensions folder for how the following method was implemented
+                       .OrderByAscCustom(x => x.SerialPin, orderAscending)
+                    .Where(
+                    //Add all columns you wish to search
+                    x => x.SerialPin.ToUpper().Contains(_searchQuery.ToUpper())
+                    || (x.DateCreated != null ? x.DateCreated.Value.ToString().ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.RecognitionType != null ? x.RecognitionType.Code.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Surname.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Othernames.ToUpper().Contains(_searchQuery.ToUpper()) : false)
+                    )
+                    .Include(x => x.RecognitionType)
+                    .Include(x => x.CreatedByNavigation)
+                    .OrderByDescending(x => x.DateCreated)
+                    .Skip(_lowerLimit)
+                    .Take((_upperLimit - _lowerLimit))
+                    .ToListAsync();
+   
+
+                    if (_result != null)
+                    {
+                        var grouped = _result.GroupBy(x => x.RecognitionType)
+                            .Select(x => new PinsGroup { RecognitionType = x.Key, Pins = x.ToList() }).FirstOrDefault();
+
+                        result = _mapper.Map<RecognitionTypesViewPinsDto>(grouped.RecognitionType);
+                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(grouped.Pins);
+                    }
+                }
+
+                //Assign count value
+                cstPageList.TotalDBEntitysCount = count;
+                //Assign list value
+                cstPageList.Entitys = listOfPinsDtos.ToList();
+                //Return value of upper and lower limit
+                cstPageList.LowerLimit = _lowerLimit;
+                cstPageList.UpperLimit = _upperLimit;
+
+                result.RecognitionTypePins = cstPageList;
 
                 return result;
 
@@ -417,6 +720,12 @@ namespace SchoolRecognition.Services
 
                 throw ex;
             }
+        }
+
+        internal class PinsGroup
+        {
+            internal RecognitionTypes RecognitionType { get; set; }
+            internal List<Pins> Pins { get; set; }
         }
 
         #region Base Methods
