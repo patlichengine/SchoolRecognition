@@ -32,7 +32,7 @@ namespace SchoolRecognition.ApiControllers
 
         // GET: api/Schools/5
         [HttpGet("{id}", Name = "GetSchool")]
-        public IActionResult Get(Guid schoolId)
+        public ActionResult Get(Guid schoolId)
         {
             if (schoolId == Guid.Empty)
             {

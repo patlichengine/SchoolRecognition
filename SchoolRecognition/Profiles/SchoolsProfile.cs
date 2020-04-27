@@ -12,12 +12,12 @@ namespace SchoolRecognition.Profiles
         {
             CreateMap<Entities.Schools, Models.SchoolsDto>()
                .ForMember( dest => dest.Name,opt => opt.MapFrom(src => $"{src.Name}"))
-              // .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => $"{src.CategoryId}"))
-               //.ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => $"{src.Category}"))
-             //  .ForMember(dest => dest.LgId, opt => opt.MapFrom(src => $"{src.LgId}"))
-             //  .ForMember(dest => dest.LgName, opt => opt.MapFrom(src => $"{src.Lg}"))
-            //   .ForMember( dest => dest.OfficeId, opt => opt.MapFrom(src => $"{src.OfficeId}"))
-             //  .ForMember( dest => dest.OfficeName, opt => opt.MapFrom(src => $"{src.Office}"))
+                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => $"{src.Category.Id}"))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => $"{src.Category.Name}"))
+                  .ForMember(dest => dest.LgId, opt => opt.MapFrom(src => $"{src.Lg.Id}"))
+                  .ForMember(dest => dest.LgName, opt => opt.MapFrom(src => $"{src.Lg.Name}"))
+                   .ForMember(dest => dest.OfficeId, opt => opt.MapFrom(src => $"{src.Office.Id}"))
+                  .ForMember(dest => dest.OfficeName, opt => opt.MapFrom(src => $"{src.Office.Name}"))
                 .ForMember(dest => dest.PhoneNo, opt => opt.MapFrom(src => $"{src.PhoneNo}"))
             .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address}"));
 
@@ -25,15 +25,15 @@ namespace SchoolRecognition.Profiles
             CreateMap<Models.UpdateSchoolsDto, Entities.Schools>();
 
 
-            //CreateMap<Entities.Offices, Models.OfficesDto>();
-            //CreateMap<Entities.SchoolCategories, Models.SchoolCategoryDto>();
-            //CreateMap<Entities.LocalGovernments, Models.LocalGovernmentsDto>();
+            CreateMap<Entities.Offices, Models.OfficesDto>();
+            CreateMap<Entities.SchoolCategories, Models.SchoolCategoryDto>();
+            CreateMap<Entities.LocalGovernments, Models.LocalGovernmentsDto>();
 
-            //CreateMap<Models.SchoolsDto, Entities.Schools>();
+            CreateMap<Models.SchoolsDto, Entities.Schools>();
 
-            //CreateMap<Models.OfficesDto, Entities.Offices>();
-            //CreateMap<Models.SchoolCategoryDto, Entities.SchoolCategories>();
-            //CreateMap<Models.LocalGovernmentsDto, Entities.LocalGovernments>();
+            CreateMap<Models.OfficesDto, Entities.Offices>();
+            CreateMap<Models.SchoolCategoryDto, Entities.SchoolCategories>();
+            CreateMap<Models.LocalGovernmentsDto, Entities.LocalGovernments>();
 
         }
     }

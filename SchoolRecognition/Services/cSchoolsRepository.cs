@@ -59,9 +59,9 @@ namespace SchoolRecognition.Services
                     throw new ArgumentNullException(nameof(id));
                 }
 
-               // IEnumerable<SchoolsDto> result = _context.Schools.Include(v => v.Name);
-
-                var result = await _context.Schools.FirstOrDefaultAsync(c => c.Id == id);
+               
+                
+                var result = await _context.Schools.Include(b => b.Category).Include(o => o.Office).Include(l => l.Lg).FirstOrDefaultAsync(c => c.Id == id );
                 //return the mapped object
                 return _mapper.Map<SchoolsDto>(result);
             });
@@ -72,40 +72,31 @@ namespace SchoolRecognition.Services
         {
             return await Task.Run(async () =>
             {
-              //  IEnumerable<SchoolsDto> result = _context.Schools.Include(v => v.Category);
-                var result = await _context.Schools.ToListAsync();
+                var result = await _context.Schools.Include(b => b.Category).Include(o => o.Office).Include(l => l.Lg).ToListAsync();
                 return _mapper.Map<IEnumerable<SchoolsDto>>(result);
 
             });
         }
 
 
-        //Delete Section
-        public async Task<SchoolsDto> Create(CreateSchoolsDto categories)
+        //Create School Section
+        public async Task<SchoolsDto> Create(CreateSchoolsDto schools)
         {
             return await Task.Run(async () =>
             {
-                if (categories == null)
+                if (schools == null)
                 {
-                    throw new ArgumentNullException(nameof(categories));
+                    throw new ArgumentNullException(nameof(schools));
                 }
-                var categoryEntity = _mapper.Map<Schools>(categories);
-                categoryEntity.Id = Guid.NewGuid();
-               // categoryEntity.Name = categories.Name;
-                categoryEntity.Address = categories.Address;
-                categoryEntity.EmailAddress = categories.EmailAddress;
-                categoryEntity.PhoneNo = categories.PhoneNo;
-                categoryEntity.YearEstablished = categories.YearEstablished;
-                categoryEntity.Name = categories.Name;
-               // categoryEntity.LgId = categories.LgId;
-               // categoryEntity.OfficeId = categories.OfficeId;
-              //  categoryEntity.CategoryId = categories.CategoryId;
-                _context.Schools.Add(categoryEntity);
+                var schoolsEntity = _mapper.Map<Schools>(schools);
+                schoolsEntity.Id = Guid.NewGuid();
+              
+                _context.Schools.Add(schoolsEntity);
 
                 //call the save method
                 bool saveResult = await Save();
 
-                return _mapper.Map<SchoolsDto>(categoryEntity);
+                return _mapper.Map<SchoolsDto>(schoolsEntity);
             });
         }
 
@@ -118,7 +109,7 @@ namespace SchoolRecognition.Services
                     throw new ArgumentNullException(nameof(categories));
                 }
 
-                var user = await _context.Schools.FirstOrDefaultAsync(c => c.Id == id);
+                var user = await _context.Schools.Include(b => b.Category).Include(o => o.Office).Include(l => l.Lg).FirstOrDefaultAsync(c => c.Id == id);
 
                 if (user == null)
                 {
@@ -126,11 +117,7 @@ namespace SchoolRecognition.Services
                 }
                 var categoryEntity =   _mapper.Map(user, user);
 
-                categoryEntity.Address = categories.Address;
-                categoryEntity.EmailAddress = categories.EmailAddress;
-                categoryEntity.PhoneNo = categories.PhoneNo;
-                categoryEntity.Name = categories.Name;
-                categoryEntity.YearEstablished = categories.YearEstablished;
+                
 
 
                 _context.Schools.Update(categoryEntity);
@@ -160,13 +147,14 @@ namespace SchoolRecognition.Services
         {
             return await Task.Run(async () =>
             {
-                var user = await _context.Schools.FirstOrDefaultAsync(c => c.Id == schoolId);
+                var user = await GetSchoolsById(schoolId);
+              //  var user = await _context.Schools.FirstOrDefaultAsync(c => c.Id == schoolId);
                 if (user == null)
                 {
                     throw new ArgumentNullException(nameof(schoolId));
                 }
 
-                _context.Schools.Remove(user);
+                _context.Remove(user);
                 await Save();
 
                 return _mapper.Map<SchoolsDto>(user);

@@ -69,6 +69,7 @@ namespace SchoolRecognition
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson()

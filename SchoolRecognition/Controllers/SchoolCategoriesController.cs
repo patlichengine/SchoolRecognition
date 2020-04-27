@@ -143,7 +143,7 @@ namespace SchoolRecognition.Controllers
 
 
         //[HttpDelete]
-        public ActionResult Delete(Guid id)
+        public JsonResult Delete(Guid id)
         {
             if (!schoolCategories.SchoolCategoriesExists(id).Result)
             {
@@ -152,7 +152,7 @@ namespace SchoolRecognition.Controllers
             }
 
             schoolCategories.DeleteSchoolCategory(id);
-           // schoolCategories.Save();
+            schoolCategories.Save();
 
             return Json(new { success = true, message = "Success, Record Deleted " });
 

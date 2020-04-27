@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using SchoolRecognition.Entities;
+using SchoolRecognition.Models;
 
 namespace SchoolRecognition.Models
 {
@@ -448,10 +449,14 @@ namespace SchoolRecognition.Models
                 entity.Property(e => e.Surname).HasMaxLength(50);
             });
 
-            OnModelCreatingPartial(modelBuilder);
+           // OnModelCreatingPartial(modelBuilder);
         }
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        //public DbSet<SchoolRecognition.Models.SchoolsDto> SchoolsDto { get; set; }
+
+        //public DbSet<SchoolRecognition.Models.CreateSchoolsDto> CreateSchoolsDto { get; set; }
     }
 
 }

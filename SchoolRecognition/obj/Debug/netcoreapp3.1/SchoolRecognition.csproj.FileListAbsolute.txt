@@ -1068,3 +1068,6 @@ C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\bin\D
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\SchoolCategories\Result.cshtml.g.cs
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\School\Index.cshtml.g.cs
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\School\Create.cshtml.g.cs
+C:\Users\15N\Desktop\WAEC Program\repo\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\School\Edit.cshtml.g.cs
