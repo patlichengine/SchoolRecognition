@@ -62,7 +62,7 @@
 
                         <div class="form-group">
                             <label asp-for="NoOfPinToGenerate">Number of Pins</label>
-                            <input type="number" min="1" max="20" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate">
+                            <input type="number" min="1" max="600" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate">
                         </div>
 
 
@@ -120,7 +120,7 @@
                 NoOfPinToGenerate: {
                     required: true,
                     min: 1,
-                    max: 20
+                    max: 600
                 },
 
             },
@@ -132,7 +132,7 @@
                 NoOfPinToGenerate: {
                     required: "This field is required!",
                     min: "Select a valid value greater than 0!",
-                    max: "Select a valid value less than 20!",
+                    max: "Select a valid value less than 600!",
                 },
             }
         });

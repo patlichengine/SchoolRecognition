@@ -329,6 +329,7 @@ namespace SchoolRecognition.Services
                 //The strings below will combine with the TotalNumberOfPins to give the final generated pin
                 string strRecogntionTypeCode = null;
                 string strAlphanumericSecurityCode = null;
+                string strYearCode = null;
                 //
                 int intTotalNumberOfPins = 0;
 
@@ -351,9 +352,12 @@ namespace SchoolRecognition.Services
                         //Generate Random 3 character Alphanumeric suffix
                         var guid = Guid.NewGuid();
                         strAlphanumericSecurityCode = guid.ToString().Substring(0, 3);
+                        //Generate code for year of pin was generated
+                        string currentYear = DateTime.Now.Year.ToString();
+                        strYearCode = currentYear.Remove(0, 1); /*Remove the first digit of the year*/
                         //Combine components of the GeneratedSerialPin
-                        strGeneratedSerialPin = String.Format("{0}{1}{2,5:00000}{3}",
-                            WAECCODEPREFIX, strRecogntionTypeCode, intTotalNumberOfPins, strAlphanumericSecurityCode);
+                        strGeneratedSerialPin = String.Format("{0}{1}{2}{3,5:00000}{4}",
+                            WAECCODEPREFIX, strRecogntionTypeCode, strYearCode, intTotalNumberOfPins, strAlphanumericSecurityCode);
 
                     }
                 }
@@ -375,6 +379,7 @@ namespace SchoolRecognition.Services
                 //The strings below will combine with the TotalNumberOfPins to give the final generated pin
                 string strRecogntionTypeCode = null;
                 string strAlphanumericSecurityCode = null;
+                string strYearCode = null;
                 //
                 int intTotalNumberOfPins = 0;
 
@@ -395,14 +400,21 @@ namespace SchoolRecognition.Services
 
                         for (int i = 0; i < numberOfPins; i++)
                         {
+                            //Resolve RecognitionTypes Code
+                            strRecogntionTypeCode = _recognitionType.Code;
+                            //Resolve Current Total Number of Pins in DB
+                            intTotalNumberOfPins = _recognitionType.Pins.ToList().Count;
                             //Increment TotalNumber of PINs
                             intTotalNumberOfPins++;
                             //Generate Random 3 character Alphanumeric suffix
                             var guid = Guid.NewGuid();
                             strAlphanumericSecurityCode = guid.ToString().Substring(0, 3);
+                            //Generate code for year of pin was generated
+                            string currentYear = DateTime.Now.Year.ToString();
+                            strYearCode = currentYear.Remove(0, 1); /*Remove the first digit of the year*/
                             //Combine components of the GeneratedSerialPin
-                            string _strGeneratedSerialPin = String.Format("{0}{1}{2,5:00000}{3}",
-                                WAECCODEPREFIX, strRecogntionTypeCode, intTotalNumberOfPins, strAlphanumericSecurityCode);
+                            string _strGeneratedSerialPin = String.Format("{0}{1}{2}{3,5:00000}{4}",
+                                WAECCODEPREFIX, strRecogntionTypeCode, strYearCode, intTotalNumberOfPins, strAlphanumericSecurityCode);
 
                             //Add to list of strings
                             strGeneratedSerialPins.Add(_strGeneratedSerialPin.ToUpper());

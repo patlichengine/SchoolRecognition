@@ -296,6 +296,8 @@ namespace SchoolRecognition.Services
 
                 var count = await _context.Pins.Where(x => x.RecognitionTypeId == id).CountAsync();
 
+                var recognitionType = await _context.RecognitionTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
+
                 //Set Range of Row Based on rangeIndex parameter
                 if (rangeIndex != null && rangeIndex > 0)
                 {
@@ -320,11 +322,9 @@ namespace SchoolRecognition.Services
 
                     if (_result != null)
                     {
-                        var grouped = _result.GroupBy(x => x.RecognitionType)
-                            .Select(x => new PinsGroup { RecognitionType = x.Key, Pins = x.ToList() }).FirstOrDefault();
 
-                        result = _mapper.Map<RecognitionTypesViewPinsDto>(grouped.RecognitionType);
-                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(grouped.Pins);
+                        result = _mapper.Map<RecognitionTypesViewPinsDto>(recognitionType);
+                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(_result);
                     }
                 }
 
@@ -363,6 +363,7 @@ namespace SchoolRecognition.Services
                 var cstPageList = new CustomPagedList<PinsViewDto>();
 
                 var count = await _context.Pins.Where(x => x.RecognitionTypeId == id).CountAsync();
+                var recognitionType = await _context.RecognitionTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
                 if (rangeIndex != null && rangeIndex > 0)
@@ -398,15 +399,13 @@ namespace SchoolRecognition.Services
                     .Skip(_lowerLimit)
                     .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
-   
+
 
                     if (_result != null)
                     {
-                        var grouped = _result.GroupBy(x => x.RecognitionType)
-                            .Select(x => new PinsGroup { RecognitionType = x.Key, Pins = x.ToList() }).FirstOrDefault();
 
-                        result = _mapper.Map<RecognitionTypesViewPinsDto>(grouped.RecognitionType);
-                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(grouped.Pins);
+                        result = _mapper.Map<RecognitionTypesViewPinsDto>(recognitionType);
+                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(_result);
                     }
                 }
 
@@ -445,6 +444,7 @@ namespace SchoolRecognition.Services
                 var cstPageList = new CustomPagedList<PinsViewDto>();
 
                 var count = await _context.Pins.Where(x => x.RecognitionTypeId == id).CountAsync();
+                var recognitionType = await _context.RecognitionTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
                 if (rangeIndex != null && rangeIndex > 0)
@@ -485,15 +485,13 @@ namespace SchoolRecognition.Services
                     .Skip(_lowerLimit)
                     .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
-   
+
 
                     if (_result != null)
                     {
-                        var grouped = _result.GroupBy(x => x.RecognitionType)
-                            .Select(x => new PinsGroup { RecognitionType = x.Key, Pins = x.ToList() }).FirstOrDefault();
 
-                        result = _mapper.Map<RecognitionTypesViewPinsDto>(grouped.RecognitionType);
-                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(grouped.Pins);
+                        result = _mapper.Map<RecognitionTypesViewPinsDto>(recognitionType);
+                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(_result);
                     }
                 }
 
@@ -532,6 +530,7 @@ namespace SchoolRecognition.Services
                 var cstPageList = new CustomPagedList<PinsViewDto>();
 
                 var count = await _context.Pins.Where(x => x.RecognitionTypeId == id).CountAsync();
+                var recognitionType = await _context.RecognitionTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
 
                 //Set Range of Row Based on rangeIndex parameter
                 if (rangeIndex != null && rangeIndex > 0)
@@ -572,15 +571,13 @@ namespace SchoolRecognition.Services
                     .Skip(_lowerLimit)
                     .Take((_upperLimit - _lowerLimit))
                     .ToListAsync();
-   
+
 
                     if (_result != null)
                     {
-                        var grouped = _result.GroupBy(x => x.RecognitionType)
-                            .Select(x => new PinsGroup { RecognitionType = x.Key, Pins = x.ToList() }).FirstOrDefault();
 
-                        result = _mapper.Map<RecognitionTypesViewPinsDto>(grouped.RecognitionType);
-                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(grouped.Pins);
+                        result = _mapper.Map<RecognitionTypesViewPinsDto>(recognitionType);
+                        listOfPinsDtos = _mapper.Map<IList<PinsViewDto>>(_result);
                     }
                 }
 

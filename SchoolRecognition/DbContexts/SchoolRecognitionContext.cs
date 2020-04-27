@@ -73,6 +73,7 @@ namespace SchoolRecognition.DbContexts
                     .HasColumnType("ntext");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
+
             });
 
             modelBuilder.Entity<Centres>(entity =>
@@ -98,7 +99,8 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.SchoolCategory)
                     .WithMany(p => p.Centres)
                     .HasForeignKey(d => d.SchoolCategoryId)
-                    .HasConstraintName("FK_Centres_SchoolCategories");
+                    .HasConstraintName("FK_Centres_SchoolCategories")
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Dblogger>(entity =>
@@ -129,7 +131,8 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.State)
                     .WithMany(p => p.LocalGovernments)
                     .HasForeignKey(d => d.StateId)
-                    .HasConstraintName("FK_LocalGovernments_State");
+                    .HasConstraintName("FK_LocalGovernments_State")
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<LocationTypes>(entity =>
@@ -175,7 +178,8 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.OfficeType)
                     .WithMany(p => p.Offices)
                     .HasForeignKey(d => d.OfficeTypeId)
-                    .HasConstraintName("FK_Offices_OfficeTypes");
+                    .HasConstraintName("FK_Offices_OfficeTypes")
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<PinHistories>(entity =>
@@ -198,7 +202,8 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.School)
                     .WithMany(p => p.PinHistories)
                     .HasForeignKey(d => d.SchoolId)
-                    .HasConstraintName("FK_PinHistory_School");
+                    .HasConstraintName("FK_PinHistory_School")
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Pins>(entity =>
@@ -216,12 +221,14 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.Pins)
                     .HasForeignKey(d => d.CreatedBy)
-                    .HasConstraintName("FK_PIN_User");
+                    .HasConstraintName("FK_PIN_User")
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.RecognitionType)
                     .WithMany(p => p.Pins)
                     .HasForeignKey(d => d.RecognitionTypeId)
-                    .HasConstraintName("FK_PIN_RecognitionType");
+                    .HasConstraintName("FK_PIN_RecognitionType")
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Ranks>(entity =>
@@ -287,17 +294,20 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.SchoolPayments)
                     .HasForeignKey(d => d.CreatedBy)
-                    .HasConstraintName("FK_SchoolPayment_User");
+                    .HasConstraintName("FK_SchoolPayment_User")
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.Pin)
                     .WithMany(p => p.SchoolPayments)
                     .HasForeignKey(d => d.PinId)
-                    .HasConstraintName("FK_SchoolPayment_PIN");
+                    .HasConstraintName("FK_SchoolPayment_PIN")
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.School)
                     .WithMany(p => p.SchoolPayments)
                     .HasForeignKey(d => d.SchoolId)
-                    .HasConstraintName("FK_SchoolPayment_School");
+                    .HasConstraintName("FK_SchoolPayment_School")
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Schools>(entity =>
@@ -323,17 +333,20 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Schools)
                     .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK_School_SchoolCategory");
+                    .HasConstraintName("FK_School_SchoolCategory")
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.Lg)
                     .WithMany(p => p.Schools)
                     .HasForeignKey(d => d.LgId)
-                    .HasConstraintName("FK_School_LocalGovernment");
+                    .HasConstraintName("FK_School_LocalGovernment")
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.Office)
                     .WithMany(p => p.Schools)
                     .HasForeignKey(d => d.OfficeId)
-                    .HasConstraintName("FK_School_Office");
+                    .HasConstraintName("FK_School_Office")
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<SecurityConfig>(entity =>
@@ -415,12 +428,14 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.Rank)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RankId)
-                    .HasConstraintName("FK_User_Rank");
+                    .HasConstraintName("FK_User_Rank")
+                    .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_User_Role");
+                    .HasConstraintName("FK_User_Role")
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<VwUsers>(entity =>
