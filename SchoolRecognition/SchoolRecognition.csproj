@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,13 +17,158 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
     <PackageReference Include="Vereyon.Web.FlashMessage" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Shared\" />
     <Folder Include="Views\Users\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\waeclte.css.map" />
+    <None Include="wwwroot\css\waeclte.min.css.map" />
+    <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\js\waeclte.js" />
+    <None Include="wwwroot\js\waeclte.js.map" />
+    <None Include="wwwroot\js\waeclte.min.js" />
+    <None Include="wwwroot\js\waeclte.min.js.map" />
+    <None Include="wwwroot\js\waecltedemo.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\css\common.scss" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\css\mixins.scss" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.bootstrap.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.bootstrap.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.bootstrap4.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.bootstrap4.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.colVis.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.colVis.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.flash.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.flash.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.foundation.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.foundation.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.html5.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.html5.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.jqueryui.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.jqueryui.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.print.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.print.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.semanticui.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\buttons.semanticui.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\dataTables.buttons.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\js\dataTables.buttons.min.js" />
+    <None Include="wwwroot\lib\datatables\Buttons-1.6.1\swf\flashExport.swf" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.bootstrap.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.bootstrap.min.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.bootstrap4.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.bootstrap4.min.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.foundation.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.foundation.min.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.jqueryui.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.jqueryui.min.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.semanticui.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\dataTables.semanticui.min.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\jquery.dataTables.js" />
+    <None Include="wwwroot\lib\datatables\DataTables-1.10.20\js\jquery.dataTables.min.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\dataTables.responsive.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\dataTables.responsive.min.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.bootstrap.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.bootstrap.min.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.bootstrap4.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.bootstrap4.min.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.foundation.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.foundation.min.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.jqueryui.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.jqueryui.min.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.semanticui.js" />
+    <None Include="wwwroot\lib\datatables\Responsive-2.2.3\js\responsive.semanticui.min.js" />
+    <None Include="wwwroot\lib\fontawesome-free\webfonts\fa-brands-400.svg" />
+    <None Include="wwwroot\lib\fontawesome-free\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\lib\fontawesome-free\webfonts\fa-regular-400.svg" />
+    <None Include="wwwroot\lib\fontawesome-free\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\lib\fontawesome-free\webfonts\fa-solid-900.svg" />
+    <None Include="wwwroot\lib\fontawesome-free\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\lib\icheck-bootstrap\LICENSE" />
+    <None Include="wwwroot\lib\jquery-ui\external\jquery\jquery.js" />
+    <None Include="wwwroot\lib\jquery-ui\jquery-ui.js" />
+    <None Include="wwwroot\lib\jquery-ui\jquery-ui.min.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
+    <None Include="wwwroot\lib\select2\LICENSE" />
+    <None Include="wwwroot\lib\select2\README.md" />
+    <None Include="wwwroot\lib\select2\select2.js" />
+    <None Include="wwwroot\lib\select2\select2.min.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ar.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_az.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_bg.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ca.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_cs.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_da.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_de.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_el.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_en.js.template" />
+    <None Include="wwwroot\lib\select2\select2_locale_es.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_et.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_eu.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_fa.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_fi.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_fr.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_gl.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_he.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_hr.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_hu.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_id.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_is.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_it.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ja.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ka.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ko.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_lt.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_lv.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_mk.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ms.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_nl.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_no.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_pl.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_pt-BR.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_pt-PT.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ro.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_rs.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ru.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_sk.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_sv.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_th.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_tr.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_ug-CN.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_uk.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_vi.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_zh-CN.js" />
+    <None Include="wwwroot\lib\select2\select2_locale_zh-TW.js" />
   </ItemGroup>
 
 
