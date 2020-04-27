@@ -35,7 +35,14 @@ namespace SchoolRecognition.ApiControllers
                 {
                     return NotFound();
                 }
-                return Ok(result.Entitys);
+                var pinsApiListViewDto = new PinsApiListViewDto()
+                {
+                    RecognitionTypePins = result.Entitys,
+                    RangeFrom = (result.LowerLimit + 1),
+                    RangeTo = result.UpperLimit,
+                    RangeTotalPins = result.TotalDBEntitysCount
+                };
+                return Ok(pinsApiListViewDto);
             }
             catch (Exception ex)
             {
@@ -72,7 +79,14 @@ namespace SchoolRecognition.ApiControllers
                 {
                     return NotFound();
                 }
-                return Ok(result.Entitys);
+                var pinsApiListViewDto = new PinsApiListViewDto()
+                {
+                    RecognitionTypePins = result.Entitys,
+                    RangeFrom = (result.LowerLimit + 1),
+                    RangeTo = result.UpperLimit,
+                    RangeTotalPins = result.TotalDBEntitysCount
+                };
+                return Ok(pinsApiListViewDto);
             }
             catch (Exception ex)
             {

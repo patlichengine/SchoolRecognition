@@ -42,7 +42,8 @@ namespace SchoolRecognition.ApiControllers
         [Route("{recognitionTypeId}")]
         public async Task<IActionResult> Get(Guid recognitionTypeId)
         {
-            
+
+            int _pageNumber = 0;
             try
             {
                 if (recognitionTypeId == Guid.Empty)
@@ -50,13 +51,77 @@ namespace SchoolRecognition.ApiControllers
                     return NotFound();
                 }
 
-                var result = await _recognitionTypesRepository.Get(recognitionTypeId);
+                var result = await _recognitionTypesRepository.GetDetailsAndIncludePins(recognitionTypeId, _pageNumber);
                 if (result == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(result);
+                var recognitionTypesDto = new RecognitionTypeApiViewDto()
+                {
+                    Id = result.Id,
+                    RecognitionTypeCode = result.RecognitionTypeCode,
+                    RecognitionTypeName = result.RecognitionTypeName,
+                    RecognitionTypePins = (result.RecognitionTypePins != null ? result.RecognitionTypePins.Entitys : new List<PinsViewDto>()),
+                    RangeFrom = (result.RecognitionTypePins != null ? result.RecognitionTypePins.LowerLimit + 1 : 0),
+                    RangeTo = (result.RecognitionTypePins != null ? result.RecognitionTypePins.UpperLimit : 0),
+                    RangeTotalPins = (result.RecognitionTypePins != null ? result.RecognitionTypePins.TotalDBEntitysCount : 0),
+                };
+
+                return Ok(recognitionTypesDto);
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+        
+
+        // GET: api/RecognitionTypesApi/5
+        [HttpGet]
+        [Route("{recognitionTypeId}/pins/{pageNumber}")]
+        public async Task<IActionResult> Get(Guid recognitionTypeId, int? pageNumber)
+        {
+            
+            try
+            {
+                int _pageNumber = 0;
+
+                //Setting page number
+                if (pageNumber != null && pageNumber.Value >= 0)
+                {
+                    _pageNumber = pageNumber.Value;
+                }
+
+                if (_pageNumber > 0)
+                {
+                    _pageNumber = _pageNumber - 1;
+                }
+
+                if (recognitionTypeId == Guid.Empty)
+                {
+                    return NotFound();
+                }
+
+                var result = await _recognitionTypesRepository.GetDetailsAndIncludePins(recognitionTypeId, _pageNumber);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                var recognitionTypesDto = new RecognitionTypeApiViewDto()
+                {
+                    Id = result.Id,
+                    RecognitionTypeCode = result.RecognitionTypeCode,
+                    RecognitionTypeName = result.RecognitionTypeName,
+                    RecognitionTypePins = (result.RecognitionTypePins != null ? result.RecognitionTypePins.Entitys : new List<PinsViewDto>()),
+                    RangeFrom = (result.RecognitionTypePins != null ? result.RecognitionTypePins.LowerLimit + 1 : 0),
+                    RangeTo = (result.RecognitionTypePins != null ? result.RecognitionTypePins.UpperLimit : 0),
+                    RangeTotalPins = (result.RecognitionTypePins != null ? result.RecognitionTypePins.TotalDBEntitysCount : 0),
+                };
+
+                return Ok(recognitionTypesDto);
             }
             catch (Exception ex)
             {

@@ -7,8 +7,26 @@ namespace SchoolRecognition.Extensions
 {
     public class CustomPagedList<T> where T : class
     {
+        Int64 _lowerLimit;
         public Int64 LowerLimit { get; set; }
-        public Int64 UpperLimit { get; set; }
+        public Int64 UpperLimit
+        {
+            get
+            {
+                return this._lowerLimit;
+            }
+            set
+            {
+                if (value > this.TotalDBEntitysCount)
+                {
+                    this._lowerLimit = this.TotalDBEntitysCount;
+                }
+                else
+                {
+                    this._lowerLimit = value;
+                }
+            }
+        }
         public Int64 TotalDBEntitysCount { get; set; }
         public virtual List<T> Entitys { get; set; }
         public List<int> PaginationIndices
