@@ -1085,7 +1085,6 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\R
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Offices\Details.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Offices\Edit.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Offices\Index.cshtml.g.cs
-C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Payment\AddSchoolPayment.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Pins\Details.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Pins\GeneratePins.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Pins\Index.cshtml.g.cs
@@ -1120,3 +1119,4 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\s
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.pdb
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Payment\AddSchoolPayment.cshtml.g.cs

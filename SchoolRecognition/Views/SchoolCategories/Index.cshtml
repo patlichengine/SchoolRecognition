@@ -5,7 +5,10 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+@section styles{
+    <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
 
+}
 
 <br />
 <div class="row">
@@ -31,7 +34,9 @@
     </table>
 </div>
 
-@section Scripts{
+
+@section scripts{
+    <script src="~/lib/datatables/datatables.min.js"></script>
     <script src="~/js/category.js"></script>
 
 }

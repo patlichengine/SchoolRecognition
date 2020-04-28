@@ -1,9 +1,15 @@
-﻿@model SchoolRecognition.Models.SchoolPaymentViewModel
+﻿
+@{
+    ViewData["Title"] = "Add New Payment";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@model SchoolRecognition.Models.SchoolPaymentViewModel
 
 
 
 
-<div style="width: 800px; height: 600px; overflow: scroll;">
+<div  >
     <div class="col-md-12 py-4">
         <div class="card">
             <div class="card-header bg-primary ">
@@ -179,13 +185,13 @@
 
 
 @section Scripts
-{ 
-<script type="text/javascript">
-    
+{
+    <script type="text/javascript">
+
     $(function () {
          console.log("Check JS");
         loadGR();
-       
+
         $(".custom-file-input").on('change', function () {
             var filename = $(this).val().split('\\').pop();
             $(this).next(".custom-file-label").html(filename)
@@ -193,7 +199,7 @@
         //hide this section on loading but load #GR section
         $('#SR').hide();
 
-        
+
 
         function loadGR() {
             var options = {};
@@ -214,7 +220,9 @@
     });
 
     </script>
-    }
+}
+
+
 
 
 
