@@ -1,204 +1,220 @@
 ﻿@model SchoolRecognition.Models.SchoolPaymentViewModel
 
-@{
-    ViewData["Title"] = "New Payment";
-}
 
 
 
-
-
-
-<div class="col-md-6 mx-auto py-4">
-    <div class="card">
-        <div class="card-header bg-primary ">
-            <img src="~/images/bgLogo.png" height="60" width="60" />
-            <span>Add New Payment </span>
-        </div>
-        <div class="card-body">
-            <form enctype="multipart/form-data" asp-action="New">
-
-                @*<div class="col-md-10">
-            <div class="form-group">
-                <select asp-for="RecognitionTypeID" class="form-control" asp-items="ViewBag.RecognitionTypeID"></select>
+<div style="width: 800px; height: 600px; overflow: scroll;">
+    <div class="col-md-12 py-4">
+        <div class="card">
+            <div class="card-header bg-primary ">
+                <img src="~/images/bgLogo.png" height="60" width="60" />
+                <span>Add New Payment </span>
             </div>
-        </div>*@
-
-                <div class="col-md-10">
-                    <div class="form-group">
-                        <select data-val="true" data-val-required="" id="recognition" name="">
-                            <option value="">Select Type of Recognition</option>
-                            <option selected="selected" value="1">GENERAL RECOGNITION</option>
-                            <option value="2">SUBJECT RECOGNITION</option>
-
-                        </select>
-                        </div>
-                </div>
-
-                       
-
-                        <div id="GR">
-
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="SchoolName" class="control-label"></label>
-                                    <input asp-for="SchoolName" class="form-control" />
-                                    <span asp-validation-for="SchoolName" class="text-danger"></span>
-                                </div>
-                            </div>
+            <div class="card-body">
+                <form enctype="multipart/form-data" asp-action="AddSchoolPayment">
 
 
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="Amount" class="control-label"></label>
-                                    <input asp-for="Amount" class="form-control" />
-                                    <span asp-validation-for="Amount" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="ReceiptNo" class="control-label"></label>
-                                    <input asp-for="ReceiptNo" class="form-control" />
-                                    <span asp-validation-for="ReceiptNo" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="PhoneNo" class="control-label"></label>
-                                    <input asp-for="PhoneNo" class="form-control" />
-                                    <span asp-validation-for="PhoneNo" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="EmailAddress" class="control-label"></label>
-                                    <input asp-for="EmailAddress" class="form-control" />
-                                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="ReceiptImage" class="control-label"></label>
-                                    <div class="custom-file">
-                                        <input asp-for="ReceiptImage" class="custom-file-input" id="customFile">
-                                        <label class="custom-file-label" for="customFile">Choose file</label>
-                                    </div>
-                                    <span asp-validation-for="ReceiptImage" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-                        <div id="SR">
-
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="CenterNo" class="control-label"></label>
-                                    <input asp-for="CenterNo" class="form-control" />
-                                    <span asp-validation-for="CenterNo" class="text-danger"></span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="SchoolName" class="control-label"></label>
-                                    <input asp-for="SchoolName" class="form-control" />
-                                    <span asp-validation-for="SchoolName" class="text-danger"></span>
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="Amount" class="control-label"></label>
-                                    <input asp-for="Amount" class="form-control" />
-                                    <span asp-validation-for="Amount" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="ReceiptNo" class="control-label"></label>
-                                    <input asp-for="ReceiptNo" class="form-control" />
-                                    <span asp-validation-for="ReceiptNo" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="PhoneNo" class="control-label"></label>
-                                    <input asp-for="PhoneNo" class="form-control" />
-                                    <span asp-validation-for="PhoneNo" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="EmailAddress" class="control-label"></label>
-                                    <input asp-for="EmailAddress" class="form-control" />
-                                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="col-md-10">
-                                <div class="form-group">
-                                    <label asp-for="ReceiptImage" class="control-label"></label>
-                                    <div class="custom-file">
-                                        <input asp-for="ReceiptImage" class="custom-file-input" id="customFile">
-                                        <label class="custom-file-label" for="customFile">Choose file</label>
-                                    </div>
-                                    <span asp-validation-for="ReceiptImage" class="text-danger"></span>
-                                </div>
-                            </div>
-                        </div>
-
-
+                    <div class="col-md-10">
                         <div class="form-group">
-                            <input type="submit" value="submit" class="btn btn-sm btn-primary rounded-0 text-uppercase" />
-                            <a asp-action="Index" class="btn btn-sm btn-primary rounded-0 text-uppercase"><i class="fas fa-fast-backward"></i> Back to List</a>
+                            <label>Select Recognition Type</label>
+                            <select id="recids" asp-for="ID"
+                                    class="form-control"
+                                    asp-items="@(new SelectList(@ViewBag.RecognitionList,"Id", "Name"))">
+                            </select>
                         </div>
-            </form>
+                    </div>
+
+
+
+
+
+
+
+
+                    section for general recognition
+                    <div id="GR">
+
+
+                        <div class="col-md-10">
+                            <div class="form-group">
+
+                                <label>Select PIN</label>
+
+                                <select class="form-control" id="pinidsGR"></select>
+
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="Amount" class="control-label"></label>
+                                <input asp-for="Amount" class="form-control" />
+                                <span asp-validation-for="Amount" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="ReceiptNo" class="control-label"></label>
+                                <input asp-for="ReceiptNo" class="form-control" />
+                                <span asp-validation-for="ReceiptNo" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="PhoneNo" class="control-label"></label>
+                                <input asp-for="PhoneNo" class="form-control" />
+                                <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="EmailAddress" class="control-label"></label>
+                                <input asp-for="EmailAddress" class="form-control" />
+                                <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="ReceiptImage" class="control-label"></label>
+                                <div class="custom-file">
+                                    <input asp-for="ReceiptImage" class="custom-file-input" id="customFile">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                </div>
+                                @*<span asp-validation-for="ReceiptImage" class="text-danger"></span>*@
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div id="SR">
+
+                        <div class="col-md-10">
+                            <div class="form-group">
+
+                                <label>Select PIN</label>
+                                <select class="form-control" id="pinidsSR"></select>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="CenterNo" class="control-label"></label>
+                                <input asp-for="CenterNo" class="form-control" />
+                                <span asp-validation-for="CenterNo" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="SchoolName" class="control-label"></label>
+                                <input asp-for="SchoolName" class="form-control" disabled="disabled" autocomplete="off" id="schoolnamesr" />
+                                <span asp-validation-for="SchoolName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="Amount" class="control-label"></label>
+                                <input asp-for="Amount" class="form-control" />
+                                <span asp-validation-for="Amount" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="ReceiptNo" class="control-label"></label>
+                                <input asp-for="ReceiptNo" class="form-control" />
+                                <span asp-validation-for="ReceiptNo" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="PhoneNo" class="control-label"></label>
+                                <input asp-for="PhoneNo" class="form-control" />
+                                <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="EmailAddress" class="control-label"></label>
+                                <input asp-for="EmailAddress" class="form-control" />
+                                <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                <label asp-for="ReceiptImage" class="control-label"></label>
+                                <div class="custom-file">
+                                    <input asp-for="ReceiptImage" class="custom-file-input" id="customFile">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="submit" value="submit" class="btn btn-sm btn-primary rounded-0 text-uppercase" />
+                        <a asp-action="Index" class="btn btn-sm btn-primary rounded-0 text-uppercase"><i class="fas fa-fast-backward"></i> Back to List</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+
 </div>
 
 
 
-@section scripts
-{
 
-    <script type="text/javascript">
-    $(document).ready(function () {
-        //$('.showCreateReceiptModal').click(function () {
-        //    $('#myCreateReceiptModal').modal('show');
-        //});
 
-        // document.querySelector('#btnSaveee').removeAttribute('disabled');
-        //$('#StampDuty').attr('disabled', 'disabled');
-        //$('#StampDuty').prop('checked', false);
 
-        $('#SR').hide();
-        $('#recognition').on('change', function () {
-            if ($(this).val() == 1) {
-                $('#GR').show();
-                $('#SR').hide();
-            }
-            else  if ($(this).val() == 2) {
-                $('#GR').hide();
-                $('#SR').show();
-            }
-            //var recids = $(this).val();
-                @*$.getJSON('@Url.Action("GetAccountCodeByRecognition", "Schools")', { recid: recids }, function (response) {
-                        $('#AccountCodeID').val(response.accountcodeID);
-                        $('#AccountCodeIDCentre').val(response.accountcodeID);*@
 
-            @*$.getJSON('@Url.Action("GetAccountCodeByRecognition", "Schools")', { recid: recids }, function (response) {
-                $('#codetext').html(response.accountcode);
-                // $('#AccountCodeIDCentre').val(response.accountcode);
-            });*@
+
+@section Scripts
+{ 
+<script type="text/javascript">
+    
+    $(function () {
+         console.log("Check JS");
+        loadGR();
+       
+        $(".custom-file-input").on('change', function () {
+            var filename = $(this).val().split('\\').pop();
+            $(this).next(".custom-file-label").html(filename)
         });
-        $('#recognition').trigger('change');
+        //hide this section on loading but load #GR section
+        $('#SR').hide();
 
+        
 
+        function loadGR() {
+            var options = {};
+            const baseUrl =@Url.Content("~/api/recognitiontypes/");
+            var url = baseUrl + 'GetRecognitionTypes'
+            options.type = "GET";
+            options.dataType = "json";
+            options.success = function (data) {
+                data.forEach(function (element) {
+                    $("#recid").append("<option>"
+                        + element.RecognitionTypeID + "</option>");
+                });
+            };
+            options.error = function () {
+                $("#msg").html("Error while calling the Web API!");
+            };
+        }
     });
+
     </script>
-}
+    }
+
+
 
