@@ -19,7 +19,7 @@
                             <label>Select Recognition Type</label>
                             <select id="recids" asp-for="ID"
                                     class="form-control"
-                                    asp-items="@(new SelectList(@ViewBag.RecognitionList,"Id", "Name"))">
+                                    asp-items="@(new SelectList(@ViewBag.RecognitionList,"Id", "RecognitionTypeName"))">
                             </select>
                         </div>
                     </div>

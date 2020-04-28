@@ -131,7 +131,7 @@ namespace SchoolRecognition.Controllers
 
         public async Task<IActionResult> GeneratePins()
         {
-            var recognitionTypes = await _recognitionTypesRepository.Get();
+            var recognitionTypes = await _recognitionTypesRepository.GetAll();
 
             ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()
@@ -148,7 +148,7 @@ namespace SchoolRecognition.Controllers
         public async Task<IActionResult> GeneratePins(PinsCreateDto model)
         {
 
-            var recognitionTypes = await _recognitionTypesRepository.Get();
+            var recognitionTypes = await _recognitionTypesRepository.GetAll();
             //
             ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()

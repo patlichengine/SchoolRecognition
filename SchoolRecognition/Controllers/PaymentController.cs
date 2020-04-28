@@ -21,7 +21,7 @@ namespace SchoolRecognition.Controllers
     public class PaymentController : Controller
     {
        
-        private IWebHostEnvironment _env;
+        //private IWebHostEnvironment _env;
         ICentresRepository _centreRepository;
         IRecognitionTypesRepository _recognitionTypeRepository;
         IPinsRepository _pinRepository;
@@ -73,7 +73,7 @@ namespace SchoolRecognition.Controllers
         {
            List<RecognitionTypesDto> recognitionList = new List<RecognitionTypesDto>();
 
-            var recTypes = await _recognitionTypeRepository.GetAllRecognitionTypes();
+            var recTypes = await _recognitionTypeRepository.GetAll();
             recognitionList = (from c in recTypes select c).ToList();
             //re.Insert(0, new RecognitionTypes { Id = new Guid("00000000-0000-0000-0000-000000000000"), Name = "Select rec type" });
             // re.Insert(1, new RecognitionTypes {Id=recTypes.First().Id,Name=recTypes.First().Name });

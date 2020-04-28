@@ -16,7 +16,6 @@ using Newtonsoft.Json.Serialization;
 using SchoolRecognition.Classes;
 using SchoolRecognition.DbContexts;
 using SchoolRecognition.Models;
-using SchoolRecognition.Repository;
 using SchoolRecognition.Services;
 using Vereyon.Web;
 
@@ -66,7 +65,8 @@ namespace SchoolRecognition
             //services.AddTransient<IRecognitionTypesRepository, cRecognitionTypesRepository>(provider => new cRecognitionTypesRepository(connectionString));
 
             services.AddScoped<IAccountsRepository, cAccountsRepository>();
-            services.AddScoped<IPayment, clsPayment>();
+            services.AddScoped<ICentresRepository, cCentresRepository>();
+            services.AddScoped<ISchoolPaymentsRepository, cSchoolPaymentsRepository>();
             services.AddScoped<IPinsRepository, cPinsRepository>();
             services.AddScoped<IRecognitionTypesRepository, cRecognitionTypesRepository>();;
             services.AddScoped<ISchoolCategoryRepository, cSchoolCategoryRepository>();

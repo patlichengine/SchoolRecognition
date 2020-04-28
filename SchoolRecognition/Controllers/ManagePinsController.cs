@@ -30,7 +30,7 @@ namespace SchoolRecognition.Controllers
         //Get
         public async Task<IActionResult> Index()
         {
-            var recognitionTypes = await _recognitionTypesRepository.Get();
+            var recognitionTypes = await _recognitionTypesRepository.GetAll();
 
             return View(recognitionTypes);
         }
@@ -156,7 +156,7 @@ namespace SchoolRecognition.Controllers
         //Create
         public async Task<IActionResult> GeneratePins(Guid id)
         {
-            var recognitionTypes = await _recognitionTypesRepository.Get();
+            var recognitionTypes = await _recognitionTypesRepository.GetAll();
 
             ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()
@@ -176,7 +176,7 @@ namespace SchoolRecognition.Controllers
         public async Task<IActionResult> GeneratePins(PinsCreateDto model)
         {
 
-            var recognitionTypes = await _recognitionTypesRepository.Get();
+            var recognitionTypes = await _recognitionTypesRepository.GetAll();
             //
             ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using SchoolRecognition.DbContexts;
 using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
 using System;

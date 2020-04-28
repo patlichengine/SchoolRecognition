@@ -1119,3 +1119,4 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\s
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\staticwebassets\SchoolRecognition.StaticWebAssets.xml
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.pdb
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache

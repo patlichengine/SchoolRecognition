@@ -43,7 +43,7 @@ namespace SchoolRecognition.Services
         private const string WAECCODEPREFIX = "WC";
         //private const string CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        public  async Task<IEnumerable<PinsViewDto>> Get()
+        public  async Task<IEnumerable<PinsViewDto>> GetAll()
         {
             try
             {

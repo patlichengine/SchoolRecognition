@@ -39,7 +39,7 @@ namespace SchoolRecognition.Services
 
 
 
-        public async Task<IEnumerable<RecognitionTypesDto>> Get()
+        public async Task<IEnumerable<RecognitionTypesDto>> GetAll()
         {
             try
             {

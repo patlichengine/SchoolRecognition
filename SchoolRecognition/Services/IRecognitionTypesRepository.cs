@@ -11,7 +11,7 @@ namespace SchoolRecognition.Services
     public interface IRecognitionTypesRepository
     {
 
-        Task<IEnumerable<RecognitionTypesDto>> Get();
+        Task<IEnumerable<RecognitionTypesDto>> GetAll();
         Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex);
         Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex, string searchQuery);
         Task<CustomPagedList<RecognitionTypesDto>> GetAndOrderByName(int? rangeIndex, string searchQuery, bool reverseOrder);

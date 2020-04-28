@@ -1,5 +1,4 @@
-﻿using SchoolRecognition.ValidationAttributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.Models
 {
-    [SchoolNameMustBeDifferent(ErrorMessage = "The provided Surname should be different from the Other Names")]
     public abstract class SchoolsManipulationDto
     {
         [Required(ErrorMessage = "A School name is required")]

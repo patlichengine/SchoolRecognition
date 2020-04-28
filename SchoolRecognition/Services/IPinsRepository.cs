@@ -10,7 +10,7 @@ namespace SchoolRecognition.Services
 {
     public interface IPinsRepository
     {
-        Task<IEnumerable<PinsViewDto>> Get();
+        Task<IEnumerable<PinsViewDto>> GetAll();
         Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex);
         Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex, string searchQuery);
         Task<CustomPagedList<PinsViewDto>> GetAndOrderByDateCreated(int? rangeIndex, string searchQuery, bool reverseOrder);
