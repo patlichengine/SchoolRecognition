@@ -1,0 +1,101 @@
+﻿ public static string GenerateSchoolPins(Guid userID)
+        {
+            string resultMsg = "";
+            try
+            {
+                List<Pin> listOfPins = new List<Pin>();
+                List<vwPin> availableKeys = new List<vwPin>();
+                using (var _db = OpenConnection())
+                {//Load the School Number numbers
+                    //Transfer Country Centres to the School collection
+                    var AffectedRows = TransferCentresToSchool();
+
+                    //Delete all existing PINs for the Country that are not in use
+                    //var objDelUnused = DeleteInactivePins(userID);     //, commandType: CommandType.StoredProcedure);
+
+                    Random random = new Random();
+
+                    //Get all available centres for the country
+                    var allCentres = clsContent.GetAvailableCentres();
+                    int numberOfCentres = allCentres.Count();
+                    int CentrePos = 1;
+
+                    //Get existing active PINs for the Country
+                    availableKeys = clsContent.GetActivePins();
+
+                    if (numberOfCentres > 0)
+                    {
+                        //IList<SchoolUserVerifier> recordsToBeInserted = null;
+                        //recordsToBeInserted = new IList<SchoolUserVerifier>();
+
+                        string strQuery = "INSERT INTO dbo.Pins VALUES (@ID, @SchoolNo, @RegistrationPin, @isActive, @isInUse)";
+                        foreach (vwAvailableRegCentre myCentre in allCentres)
+                        {
+                            int keyValue = random.Next(CentrePos, (numberOfCentres + DateTime.Now.Year)) + DateTime.Now.Year;
+                            int codeValue = random.Next(CentrePos, (numberOfCentres + DateTime.Now.Year));
+                            string approvalCode = clsEncryption.GenerateUniqueKey(12).ToUpper();
+                            approvalCode = myCentre.CentreNo.Substring(0, 5) + approvalCode;
+                            string RegPin = string.Format("{0}{1,5:00000}{2,5:00000}", myCentre.CentreNo, keyValue, codeValue).Replace(" ", "");
+
+
+                            if (availableKeys.Count(c => c.SchoolNo == myCentre.CentreNo) <= 0)
+                            {
+                                listOfPins.Add(new Pin
+                                { ID = Guid.NewGuid(), SchoolNo = myCentre.CentreNo, RegistrationPin = RegPin, isActive = true, isInUse = false, DateModified = DateTime.Now });
+
+                            }
+                            CentrePos++;
+                        }
+                        //if (listOfPins.Count > 0)
+                        //{
+                        //    _db.Execute(strQuery, listOfPins);
+                        //}
+                        //CentrePos -= availableKeys.Count() + 1;
+                        resultMsg = ("A total number of " + CentrePos + " School Security Key(s) Generated");
+                    }
+                    else
+                    {
+                        resultMsg = ("There is no Schools Listing available for generating required entries");
+                    }
+                }
+                using (var db = new WAECCASSOnlineEntities())
+                {
+                    db.Configuration.AutoDetectChangesEnabled = false;
+                    foreach (var item in listOfPins)
+                    {
+                        //Add the PIN if not found in the collection
+                        db.Pins.Add(item);
+                    }
+                    if (listOfPins.Count > 0) db.SaveChanges();
+                    db.Configuration.AutoDetectChangesEnabled = true;
+                }
+            }
+            catch (Exception e)
+            {
+                resultMsg = e.Message;
+                //throw new FaultException<Exception>(e);
+            }
+            return resultMsg;
+
+        }
+
+
+
+
+
+        public static string GenerateUniqueKey(int maxSize)
+        {
+            char[] chars = new char[62];
+            chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@#%?".ToCharArray();
+            byte[] data = new byte[1];
+            RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider();
+            crypto.GetNonZeroBytes(data);
+            data = new byte[maxSize];
+            crypto.GetNonZeroBytes(data);
+            StringBuilder result = new StringBuilder(maxSize);
+            foreach (byte item in data)
+            {
+                result.Append(chars[item % (chars.Length)]);
+            }
+            return result.ToString();
+        }
