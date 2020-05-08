@@ -10,15 +10,10 @@
     <!-- icheck bootstrap -->
     <link rel="stylesheet" href="~/lib/icheck-bootstrap/icheck-bootstrap.min.css">
 
+    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css" />
+
     <!-- Theme style -->
     <link rel="stylesheet" href="~/css/waeclte.css">
-
-    <!-- DataTables-->
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/dataTables.bootstrap4.min.css" />
-    <link rel="stylesheet" href="~/lib/jquery-dataTables/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
-    <link rel="stylesheet" href="~/lib/jquery-dataTables/buttons.dataTables.min.css" />
 
 
 
@@ -52,12 +47,13 @@
     <!-- jQuery -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
     <!-- AdminLTE App -->
     <script src="~/js/waeclte.min.js" asp-append-version="true"></script>
     <script>
-        $(document).ready(function () {
-            $('#schoolCategory').DataTable();
-        });
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
     @RenderSection("Scripts", required: false)
 

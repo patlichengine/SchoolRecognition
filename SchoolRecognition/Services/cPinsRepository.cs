@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using SchoolRecognition.Classes;
 using SchoolRecognition.DbContexts;
 using SchoolRecognition.Entities;
-using SchoolRecognition.Extensions;
+using SchoolRecognition.Helpers;
 using SchoolRecognition.Models;
+using SchoolRecognition.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,308 +18,52 @@ namespace SchoolRecognition.Services
 {
     public class cPinsRepository : IPinsRepository, IDisposable
     {
-        //private readonly ConnectionString _connectionString;
-        //public cPinsRepository(ConnectionString connectionString)
-        //{
-        //    _connectionString = connectionString;
-        //}
-
-        private readonly SchoolRecognitionContext _context;
-        private readonly IMapper _mapper;
-
-        //public cRecognitionTypesRepository(ConnectionString connectionString)
-        //{
-        //    //_connectionString = connectionString;
-        //    //_pinService = new cPinsRepository(_connectionString);
-
-        //}
-
-        public cPinsRepository(SchoolRecognitionContext context, IMapper mapper)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        }
-
 
         private const string WAECCODEPREFIX = "WC";
         //private const string CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        public  async Task<IEnumerable<PinsViewDto>> GetAll()
+        private readonly SchoolRecognitionContext _context;
+        private readonly IMapper _mapper;
+        private readonly IPropertyMappingService _propertyMappingService;
+
+   
+        public cPinsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService)
         {
-            try
-            {
-                var _result = await _context.Pins
-                    .Include(x => x.RecognitionType)
-                    .Include(x => x.CreatedByNavigation)
-                    .ToListAsync();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
+        }
 
-                return _mapper.Map<IEnumerable<PinsViewDto>>(_result);
-            }
-            catch (Exception ex)
-            {
 
-                throw ex;
+
+        #region Base Methods
+
+
+        async Task<bool> Save()
+        {
+            return await Task.Run(async () => {
+                return (await _context.SaveChangesAsync() >= 0);
+            });
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // dispose resources when needed
             }
         }
-        public async Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex)
-        {
-            //Default Range Limit is 100 Rows
-            int _lowerLimit = 0;
-            int _upperLimit = 100;
-            try
-            {
-                //Instantiate Array objects
-                IList<PinsViewDto> listOfDtos = new List<PinsViewDto>();
-                var cstPageList = new CustomPagedList<PinsViewDto>();
 
-                var count = await _context.Pins.CountAsync();
 
-                //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex != null && rangeIndex > 0)
-                {
-                    _lowerLimit = (rangeIndex.Value) * 100;
-                    _upperLimit = (rangeIndex.Value + 1) * 100;
-                }
+        #endregion
 
-                var _result = await _context.Pins
-                    .Include(x => x.RecognitionType)
-                    .Include(x => x.CreatedByNavigation)
-                    .OrderByDescending(x => x.DateCreated)
-                    .Skip(_lowerLimit)
-                    .Take((_upperLimit - _lowerLimit))
-                    .ToListAsync();
-                //Assign count value
-                cstPageList.TotalDBEntitysCount = count;
-                //Map list of entities to list of dtos
-                listOfDtos = _mapper.Map<IList<PinsViewDto>>(_result);
-                //Assign list value
-                cstPageList.Entitys = listOfDtos.ToList();
-                //Return value of upper and lower limit
-                cstPageList.LowerLimit = _lowerLimit;
-                cstPageList.UpperLimit= _upperLimit;
-
-                return cstPageList;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-        public async Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex, string searchQuery)
-        {
-            //Default Range Limit is 100 Rows
-            int _lowerLimit = 0;
-            int _upperLimit = 100;
-            //Default search query
-            string _searchQuery = "";
-            try
-            {
-                //Instantiate Array objects
-                IList<PinsViewDto> listOfDtos = new List<PinsViewDto>();
-                var cstPageList = new CustomPagedList<PinsViewDto>();
-
-                var count = await _context.Pins.CountAsync();
-
-                //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex != null && rangeIndex > 0)
-                {
-                    _lowerLimit = (rangeIndex.Value) * 100;
-                    _upperLimit = (rangeIndex.Value + 1) * 100;
-                }
-
-                //Check searchQuery paramter is not null
-                if (searchQuery != null)
-                {
-                    _searchQuery = searchQuery;
-                }
-
-                var _result = await _context.Pins
-                    .Include(x => x.RecognitionType)
-                    .Include(x => x.CreatedByNavigation)
-                    .OrderByDescending(x => x.DateCreated)
-                    .Where(
-                    //Add all columns you wish to search
-                    x => x.SerialPin.ToUpper().Contains(_searchQuery.ToUpper())
-                    || (x.DateCreated != null ? x.DateCreated.Value.ToString().ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                    || (x.RecognitionType != null ? x.RecognitionType.Code.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                    || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Surname.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                    || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Othernames.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                    )
-                    .Skip(_lowerLimit)
-                    .Take((_upperLimit - _lowerLimit))
-                    .ToListAsync();
-                //Assign count value
-                cstPageList.TotalDBEntitysCount = count;
-                //Map list of entities to list of dtos
-                listOfDtos = _mapper.Map<IList<PinsViewDto>>(_result);
-                //Assign list value
-                cstPageList.Entitys = listOfDtos.ToList();
-                //Return value of upper and lower limit
-                cstPageList.LowerLimit = _lowerLimit;
-                cstPageList.UpperLimit= _upperLimit;
-
-                return cstPageList;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-        public async Task<CustomPagedList<PinsViewDto>> GetAndOrderByDateCreated(int? rangeIndex, string searchQuery, bool reverseOrder)
-        {
-            //Default Range Limit is 100 Rows
-            int _lowerLimit = 0;
-            int _upperLimit = 100;
-            //Default search query
-            string _searchQuery = "";
-            try
-            {
-                //Instantiate Array objects
-                IList<PinsViewDto> listOfDtos = new List<PinsViewDto>();
-                var cstPageList = new CustomPagedList<PinsViewDto>();
-
-                var count = await _context.Pins.CountAsync();
-
-                //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex != null && rangeIndex > 0)
-                {
-                    _lowerLimit = (rangeIndex.Value) * 100;
-                    _upperLimit = (rangeIndex.Value + 1) * 100;
-                }
-
-                //Check searchQuery paramter is not null
-                if (searchQuery != null)
-                {
-                    _searchQuery = searchQuery;
-                }
-
-                ///Order or reverse order  by a property
-                bool orderAscending = !reverseOrder;
-
-                var _result = await _context.Pins
-                   .Include(x => x.RecognitionType)
-                   .Include(x => x.CreatedByNavigation)
-                   //See extensions folder for how the following method was implemented
-                   .OrderByAscCustom(x => x.DateCreated, orderAscending)
-                   .Where(
-                   //Add all columns you wish to search
-                   x => x.SerialPin.ToUpper().Contains(_searchQuery.ToUpper())
-                   || (x.DateCreated != null ? x.DateCreated.Value.ToString().ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                   || (x.RecognitionType != null ? x.RecognitionType.Code.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                   || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Surname.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                   || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Othernames.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                   )
-                   .Skip(_lowerLimit)
-                   .Take((_upperLimit - _lowerLimit))
-                   .ToListAsync();
-
-                //Assign count value
-                cstPageList.TotalDBEntitysCount = count;
-                //Map list of entities to list of dtos
-                listOfDtos = _mapper.Map<IList<PinsViewDto>>(_result);
-                //Assign list value
-                cstPageList.Entitys = listOfDtos.ToList();
-                //Return value of upper and lower limit
-                cstPageList.LowerLimit = _lowerLimit;
-                cstPageList.UpperLimit= _upperLimit;
-
-                return cstPageList;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-        public async Task<CustomPagedList<PinsViewDto>> GetAndOrderBySerialPin(int? rangeIndex, string searchQuery, bool reverseOrder)
-        {
-            //Default Range Limit is 100 Rows
-            int _lowerLimit = 0;
-            int _upperLimit = 100;
-            //Default search query
-            string _searchQuery = "";
-            try
-            {
-                //Instantiate Array objects
-                IList<PinsViewDto> listOfDtos = new List<PinsViewDto>();
-                var cstPageList = new CustomPagedList<PinsViewDto>();
-
-                var count = await _context.Pins.CountAsync();
-
-                //Set Range of Row Based on rangeIndex parameter
-                if (rangeIndex != null && rangeIndex > 0)
-                {
-                    _lowerLimit = (rangeIndex.Value) * 100;
-                    _upperLimit = (rangeIndex.Value + 1) * 100;
-                }
-
-                //Check searchQuery paramter is not null
-                if (searchQuery != null)
-                {
-                    _searchQuery = searchQuery;
-                }
-
-                ///Order or reverse order  by a property
-                bool orderAscending = !reverseOrder;
-
-                var _result = await _context.Pins
-                   .Include(x => x.RecognitionType)
-                   .Include(x => x.CreatedByNavigation)
-                   //See extensions folder for how the following method was implemented
-                   .OrderByAscCustom(x => x.SerialPin, orderAscending)
-                   .Where(
-                   //Add all columns you wish to search
-                   x => x.SerialPin.ToUpper().Contains(_searchQuery.ToUpper())
-                   || (x.DateCreated != null ? x.DateCreated.Value.ToString().ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                   || (x.RecognitionType != null ? x.RecognitionType.Code.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                   || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Surname.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                   || (x.CreatedByNavigation != null ? x.CreatedByNavigation.Othernames.ToUpper().Contains(_searchQuery.ToUpper()) : false)
-                   )
-                   .Skip(_lowerLimit)
-                   .Take((_upperLimit - _lowerLimit))
-                   .ToListAsync();
-
-                //Assign count value
-                cstPageList.TotalDBEntitysCount = count;
-                //Map list of entities to list of dtos
-                listOfDtos = _mapper.Map<IList<PinsViewDto>>(_result);
-                //Assign list value
-                cstPageList.Entitys = listOfDtos.ToList();
-                //Return value of upper and lower limit
-                cstPageList.LowerLimit = _lowerLimit;
-                cstPageList.UpperLimit= _upperLimit;
-
-                return cstPageList;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-        public async Task<IEnumerable<PinsViewDto>> GetPinsByRecognitionTypeId(Guid recognitionTypeId)
-        {
-            try
-            {
-
-                var result = new List<PinsViewDto>();
-                if (recognitionTypeId != Guid.Empty)
-                {
-                    var _result = await _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Where(x => x.RecognitionTypeId == recognitionTypeId).ToListAsync();
-
-                    result = _mapper.Map<IEnumerable<PinsViewDto>>(_result).ToList();
-                }
-                return result;
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-        async Task <string> GenerateSerialPin(Guid recognitionTypeId)
+        private async Task<string> GenerateSerialPinAsync(Guid recognitionTypeId)
         {
             try
             {
@@ -370,7 +115,7 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-        async Task<List<string>> GenerateSerialPins(Guid recognitionTypeId, int numberOfPins)
+        private async Task<List<string>> GenerateMultipleSerialPinsAsync(Guid recognitionTypeId, int numberOfPins)
         {
             try
             {
@@ -431,27 +176,20 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-        public async Task<PinsViewDto> Get(Guid id)
+
+
+        public async Task<IEnumerable<PinsViewDto>> GetAllPinsAsync()
         {
+
+            //Instantiate Return Value
+            IEnumerable<PinsViewDto> returnValue = new List<PinsViewDto>();
             try
             {
-                PinsViewDto result = null;
+                var dbResult = await _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).ToListAsync();
 
-                if (id != Guid.Empty)
-                {
+                returnValue = _mapper.Map<IEnumerable<PinsViewDto>>(dbResult);
 
-                    var _result = await _context.Pins
-                        .Include(x => x.CreatedByNavigation)
-                        .ThenInclude(y => y.Role)
-                        .Include(y => y.RecognitionType)
-                        .Include(z => z.SchoolPayments)
-                        .Where(x => x.Id == id)
-                        .FirstOrDefaultAsync();
-
-                    result = _mapper.Map<PinsViewDto>(_result);
-                }
-
-                return result;
+                return returnValue;
             }
             catch (Exception ex)
             {
@@ -459,14 +197,178 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-        public async Task<Guid?> Create(PinsCreateDto _obj)
+
+
+        public async Task<CustomPagedList<PinsViewDto>> GetAllPinsAsPagedListAsync(PinsResourceParams resourceParams)
         {
+            //Instantiate Return Value
+            CustomPagedList<PinsViewDto> returnValue = CustomPagedList<PinsViewDto>
+                        .Create(Enumerable.Empty<PinsViewDto>().AsQueryable(),
+                            resourceParams.PageNumber,
+                            resourceParams.PageSize);
 
             try
             {
-                //ID Expected as the return type of the method
-                Guid? returnId = null;
+                if (resourceParams != null)
+                {
 
+                    var dbResult = _context.Pins as IQueryable<Pins>;
+                    //Search
+                    if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
+                    {
+
+                        var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
+
+                        dbResult = dbResult.Where(a => a.SerialPin.ToUpper().Contains(searchQuery)
+                            || (a.DateCreated != null ? a.DateCreated : null).ToString().ToUpper().Contains(searchQuery)
+                            || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Surname : null).ToUpper().Contains(searchQuery)
+                            || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Othernames : null).ToUpper().Contains(searchQuery)
+                            );
+                    }
+                    //Ordering
+                    if (!string.IsNullOrWhiteSpace(resourceParams.OrderBy))
+                    {
+                        // get property mapping dictionary
+                        var pinPropertyMappingDictionary =
+                            _propertyMappingService.GetPropertyMapping<PinsViewDto, Pins>();
+
+                        dbResult = dbResult.ApplySort(resourceParams.OrderBy,
+                            pinPropertyMappingDictionary);
+                    }
+
+                    var mappedResult = dbResult.Select(x => new PinsViewDto()
+                    {
+                        Id = x.Id,
+                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                        SerialNumber = x.SerialPin,
+                        IsActive = x.IsActive,
+                        IsInUse = x.IsInUse,
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated
+
+                    });
+
+                    returnValue = await CustomPagedList<PinsViewDto>.CreateAsync(mappedResult,
+                        resourceParams.PageNumber,
+                        resourceParams.PageSize);
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(resourceParams));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<PinsViewDto> GetPinsSingleOrDefaultAsync(Guid id)
+        {
+
+            //Instantiate Return Value
+            PinsViewDto returnValue = null;
+            try
+            {
+                if (id != Guid.Empty)
+                {
+                    var dbResult = await _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Where(x => x.Id == id).SingleOrDefaultAsync();
+
+
+                    returnValue = _mapper.Map<PinsViewDto>(dbResult);
+
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<PinsViewDto> GetPinsAllPinHistoriesAsync(Guid id)
+        {
+            //Instantiate Return Value
+            PinsViewDto returnValue = null;
+            try
+            {
+                if (id != Guid.Empty)
+                {
+                    var dbResult = await _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Include(x => x.PinHistories).Where(x => x.Id == id).SingleOrDefaultAsync();
+
+
+                    returnValue = _mapper.Map<PinsViewDto>(dbResult);
+
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<PinsViewDto> GetPinsAllSchoolPaymentsAsync(Guid id)
+        {
+            //Instantiate Return Value
+            PinsViewDto returnValue = null;
+            try
+            {
+                if (id != Guid.Empty)
+                {
+                    var dbResult = await _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Include(x => x.SchoolPayments).Where(x => x.Id == id).SingleOrDefaultAsync();
+
+
+                    returnValue = _mapper.Map<PinsViewDto>(dbResult);
+
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public Task<PinViewPagedListPinHistoriesDto> GetPinsPinHistoriesAsPagedListAsync(Guid id, PinHistoriesResourceParams resourceParams)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<PinViewPagedListPinHistoriesDto> GetPinsSchoolPaymentsAsPagedListAsync(Guid id, SchoolPaymentsResourceParams resourceParams)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<Guid?> CreatePinAsync(PinsCreateDto _obj)
+        {
+            //Instantiate Return Value
+            Guid? returnValue = null;
+            try
+            {
                 if (_obj != null)
                 {
                     //Variable to store the SerialPin to be generated
@@ -475,7 +377,7 @@ namespace SchoolRecognition.Services
                     if (_obj.RecognitionTypeId != Guid.Empty)
                     {
                         //Generate a SerialPin
-                        serialPin = await GenerateSerialPin(_obj.RecognitionTypeId);
+                        serialPin = await GenerateSerialPinAsync(_obj.RecognitionTypeId);
                     }
                     //Create a PINs Object to be stored in the db
                     var entity = new Pins()
@@ -487,13 +389,18 @@ namespace SchoolRecognition.Services
                         DateCreated = DateTime.Now
                     };
 
-                    returnId = entity.Id;
+                    returnValue = entity.Id;
 
                     await _context.Pins.AddAsync(entity);
                     await this.Save();
 
+                    return returnValue;
+
                 }
-                return returnId;
+                else
+                {
+                    throw new ArgumentNullException(nameof(_obj));
+                }
             }
             catch (Exception ex)
             {
@@ -502,82 +409,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        //public Task<bool> CreateSeveralPins(Pins _obj, int numberOfPinsToGenerate)
-        //{
-
-        //    return Task.Run(async () =>
-        //    {
-
-        //        try
-        //        {
-        //            using (IDbConnection _db = new SqlConnection(_connectionString.Value))
-        //            {
-
-        //                List<string> strGeneratedSerialPins = new List<string>();
-
-        //                List<Pins> listObjPins = new List<Pins>();
-
-        //                //string strQuery = "INSERT INTO dbo.PINs (Id, RecognitionTypeId, SerialPin, IsActive, IsInUse, CreatedBy, DateCreated)" +
-        //                //" VALUES (@Id, @RecognitionTypeId, @SerialPin, @IsActive, @IsInUse, @CreatedBy, @DateCreated);";
-
-        //                Guid? returnId = Guid.Empty;
-        //                if (_obj != null)
-        //                {
-        //                    //Generate a List of Custom SerialPin
-        //                    if (_obj.RecognitionTypeId != null && _obj.RecognitionTypeId != Guid.Empty)
-        //                    {
-        //                        strGeneratedSerialPins = await GenerateSerialPins(_obj.RecognitionTypeId.Value, numberOfPinsToGenerate);
-        //                    }
-
-        //                    //Assign Custom SerialPins to Pin objects
-        //                    for (int i = 0; i < numberOfPinsToGenerate; i++)
-        //                    {
-        //                        //Get string at position "i" in the string array
-        //                        string strGeneratedSerialPin = strGeneratedSerialPins[i];
-
-        //                        Pins pinObj = new Pins()
-        //                        {
-        //                            //Id = Guid.NewGuid(),
-        //                            //
-        //                            RecognitionTypeId = _obj.RecognitionTypeId,
-        //                            SerialPin = strGeneratedSerialPin,
-        //                            //IsActive = _obj.IsActive,
-        //                            //IsInUse = _obj.IsInUse,
-        //                            CreatedBy = _obj.CreatedBy,
-        //                            //DateCreated = DateTime.Now,
-        //                        };
-
-        //                        listObjPins.Add(pinObj);
-        //                    }
-
-        //                    var parameters = listObjPins.Select(x =>
-        //                    {
-        //                        var tempParams = new DynamicParameters();
-        //                        tempParams.Add("@RecognitionTypeID", x.RecognitionTypeId, DbType.Guid, ParameterDirection.Input);
-        //                        tempParams.Add("@SerialPin", x.SerialPin, DbType.String, ParameterDirection.Input);
-        //                        tempParams.Add("@CreatedBy", x.CreatedBy, DbType.Guid, ParameterDirection.Input);
-        //                        return tempParams;
-        //                    });
-
-        //                    var _result = await _db.ExecuteAsync("dbo.procPinsCreate", parameters, commandType: CommandType.StoredProcedure);
-
-        //                    return true;
-
-        //                }
-
-        //                return false;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-
-        //            throw ex;
-        //        }
-
-        //    });
-        //}
-
-        public async Task<bool> CreateSeveralPins(PinsCreateDto _obj)
+        public async Task<bool> CreateMultiplePinAsync(PinsCreateDto _obj)
         {
 
             try
@@ -594,7 +426,7 @@ namespace SchoolRecognition.Services
                     //Generate a List of Custom SerialPin
                     if (_obj.RecognitionTypeId != null && _obj.RecognitionTypeId != Guid.Empty)
                     {
-                        strGeneratedSerialPins = await GenerateSerialPins(_obj.RecognitionTypeId, numberOfPinsToGenerate);
+                        strGeneratedSerialPins = await GenerateMultipleSerialPinsAsync(_obj.RecognitionTypeId, numberOfPinsToGenerate);
                     }
 
                     //Assign Custom SerialPins to Pin objects
@@ -624,8 +456,10 @@ namespace SchoolRecognition.Services
                     return true;
 
                 }
-
-                return false;
+                else
+                {
+                    throw new ArgumentNullException(nameof(_obj));
+                }
             }
             catch (Exception ex)
             {
@@ -633,20 +467,29 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-        public async Task<PinsUpdateDto> Update(PinsUpdateDto _obj)
+
+        public async Task<PinsViewDto> UpdatePinAsync(PinsUpdateDto _obj)
         {
 
+            //Instantiate Return Value
+            PinsViewDto returnValue = null;
             try
             {
                 if (_obj != null && _obj.Id != Guid.Empty)
                 {
-                    Pins entity = _mapper.Map<Pins>(_obj);
+                    var entity = _mapper.Map<Pins>(_obj);
 
-                    _context.Pins.Update(entity);
+                    _context.Update(entity);
                     await this.Save();
-                }
 
-                return _obj;
+                    returnValue = _mapper.Map<PinsViewDto>(entity);
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(_obj));
+                }
             }
             catch (Exception ex)
             {
@@ -654,28 +497,23 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-        public async Task Delete(Guid id) //return type is void
-        {
 
+        public async Task DeletePinAsync(Guid id)
+        {
             try
             {
-                //using (IDbConnection _db = new SqlConnection(_connectionString.Value))
-                //{
-                //    //string strQuery = "DELETE FROM dbo.PINs WHERE Id = @Id";
-
-                //    if (id != Guid.Empty)
-                //    {
-                //        var _result = await _db.ExecuteAsync("dbo.procPinsDelete", commandType: CommandType.StoredProcedure);
-                //    }
-                //}
                 if (id != Guid.Empty)
                 {
                     var entity = await _context.Pins.Where(x => x.Id == id).FirstOrDefaultAsync();
                     if (entity != null)
                     {
                         _context.Remove(entity);
-                        await this.Save();
                     }
+
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
                 }
             }
             catch (Exception ex)
@@ -686,57 +524,5 @@ namespace SchoolRecognition.Services
         }
 
 
-        #region Base Methods
-
-
-        async Task<bool> Save()
-        {
-            return await Task.Run(async () => {
-                return (await _context.SaveChangesAsync() >= 0);
-            });
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // dispose resources when needed
-            }
-        }
-
-
-        #endregion
-
-        //Please use the method below as an example on how to write
-        // the above methods in synchronous mode
-        //public List<Pins> Get()
-        //{
-        //    try
-        //    {
-        //        using (IDbConnection _db = new SqlConnection(_connectionString.Value))
-        //        {
-        //            var result = new List<Pins>();
-
-        //            string strQuery = "Select * from dbo.PINs;";
-
-        //            var _result = _db.Query<Pins>(strQuery);
-
-        //            result = _result.ToList();
-
-        //            return result;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        throw ex;
-        //    }
-        //}
     }
 }

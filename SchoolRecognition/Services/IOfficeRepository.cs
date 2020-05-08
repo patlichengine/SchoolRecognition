@@ -8,9 +8,9 @@ namespace SchoolRecognition.Services
 {
     public interface IOfficeRepository
     {
-        public Task<OfficesDto> GetOffice(Guid id);
+        public Task<OfficesViewDto> GetOffice(Guid id);
 
-        public Task<IEnumerable<OfficesDto>> GetOffices();
+        public Task<IEnumerable<OfficesViewDto>> GetOffices();
 
         public Task<IEnumerable<RolesDto>> GetOfficeSchools(Guid officeId);
 

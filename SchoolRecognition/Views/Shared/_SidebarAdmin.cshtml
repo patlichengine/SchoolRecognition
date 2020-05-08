@@ -51,29 +51,84 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="ManagePins" asp-action="Index">
+                            <a class="nav-link" asp-area="" asp-controller="RecognitionTypes" asp-action="Index">
                                 <i class="fas fa-mail-bulk nav-icon"></i>
                                 <p>Manage PINs</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a asp-action="index" asp-controller="Offices" class="nav-link">
-                                <i class="fas fa-map nav-icon"></i>
-                                <p>Offices</p>
+                                <i class="fas fa-building nav-icon"></i>
+                                <p>Manage Offices</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="index" asp-controller="SchoolCategories" class="nav-link">
+                                <i class="fas fa-school nav-icon"></i>
+                                <p>Manage Schools</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="index" asp-controller="Offices" class="nav-link">
+                                <i class="fas fa-cubes nav-icon"></i>
+                                <p>Ranks</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="index" asp-controller="Offices" class="nav-link">
+                                <i class="fas fa-book nav-icon"></i>
+                                <p>Manage Subjects</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="index" asp-controller="Offices" class="nav-link">
+                                <i class="fas fa-vials nav-icon"></i>
+                                <p>Manage Facilities</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a asp-action="index" asp-controller="States" class="nav-link">
                                 <i class="fas fa-map-marked nav-icon"></i>
-                                <p>Office States</p>
+                                <p>Manage Locations</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a asp-action="index" asp-controller="SchoolCategories" class="nav-link">
-                                <i class="fas fa-th-large nav-icon"></i>
-                                <p>School Categories</p>
+                            <a asp-action="index" asp-controller="States" class="nav-link">
+                                <i class="fas fa-cogs nav-icon"></i>
+                                <p>Application Settings</p>
                             </a>
                         </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <!--<i class="nav-icon fas fa-copy"></i>-->
+                        <p>
+                            Payment Management
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="AddSchoolPayment" asp-controller="Payment">
+                                <i class="fas fa-file-invoice-dollar nav-icon"></i>
+                                <p>Manage Payments</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Index" asp-controller="SchoolCategories">
+                           
+                                <i class="fas fa-credit-card nav-icon"></i>
+                                <p>Make Payment</p>
+                            </a>
+                        </li>
+                        @*<li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-circle nav-icon"></i>
+                                <p>Functionality 3</p>
+                            </a>
+                        </li>*@
                     </ul>
                 </li>
 
@@ -88,23 +143,30 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a class="nav-link" asp-action="AddSchoolPayment" asp-controller="Payment">
-                                <i class="fas fa-file-invoice-dollar nav-icon"></i>
-                                <p>Payments</p>
+                                <i class="fas fa-school nav-icon"></i>
+                                <p>Schools</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="AddSchoolPayment" asp-controller="Payment">
+                                <i class="fas fa-chalkboard-teacher nav-icon"></i>
+                                <p>School Profiles</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-action="Index" asp-controller="SchoolCategories">
                            
-                                <i class="fas fa-school nav-icon"></i>
-                                <p>Manage Schools</p>
+                                <i class="fas fa-book nav-icon"></i>
+                                <p>School Subjects</p>
                             </a>
                         </li>
-                        @*<li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fas fa-circle nav-icon"></i>
-                                <p>Functionality 3</p>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Index" asp-controller="SchoolCategories">
+                           
+                                <i class="fas fa-boxes nav-icon"></i>
+                                <p>School Classes</p>
                             </a>
-                        </li>*@
+                        </li>
                     </ul>
                 </li>
 

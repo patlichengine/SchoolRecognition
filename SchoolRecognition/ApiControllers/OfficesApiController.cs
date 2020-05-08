@@ -23,7 +23,7 @@ namespace SchoolRecognition.ApiControllers
 
         // GET: api/offices
         [HttpGet]
-        public ActionResult<IEnumerable<OfficesDto>> GetOffices()
+        public ActionResult<IEnumerable<OfficesViewDto>> GetOffices()
         {
             var result = _officeRepository.GetOffices().Result;
             return Ok(result);

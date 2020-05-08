@@ -25,13 +25,13 @@ namespace SchoolRecognition.Profiles
             CreateMap<Models.UpdateSchoolsDto, Entities.Schools>();
 
 
-            CreateMap<Entities.Offices, Models.OfficesDto>();
+            CreateMap<Entities.Offices, Models.OfficesViewDto>();
             CreateMap<Entities.SchoolCategories, Models.SchoolCategoryDto>();
             CreateMap<Entities.LocalGovernments, Models.LocalGovernmentsDto>();
 
             CreateMap<Models.SchoolsDto, Entities.Schools>();
 
-            CreateMap<Models.OfficesDto, Entities.Offices>();
+            CreateMap<Models.OfficesViewDto, Entities.Offices>();
             CreateMap<Models.SchoolCategoryDto, Entities.SchoolCategories>();
             CreateMap<Models.LocalGovernmentsDto, Entities.LocalGovernments>();
 

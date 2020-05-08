@@ -72,6 +72,14 @@ namespace SchoolRecognition
             services.AddScoped<ISchoolCategoryRepository, cSchoolCategoryRepository>();
             services.AddScoped<ISchoolsRepository, cSchoolsRepository>();
 
+
+
+            // register PropertyMappingService
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+
+            // register PropertyCheckerService
+            services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
+
             services.AddControllersWithViews()
                 //Required By FlashMessage 
                 .AddNewtonsoftJson(options =>

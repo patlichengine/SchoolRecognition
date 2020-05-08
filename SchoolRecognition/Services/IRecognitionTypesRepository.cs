@@ -1,6 +1,7 @@
 ﻿using SchoolRecognition.Entities;
-using SchoolRecognition.Extensions;
+using SchoolRecognition.Helpers;
 using SchoolRecognition.Models;
+using SchoolRecognition.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +12,13 @@ namespace SchoolRecognition.Services
     public interface IRecognitionTypesRepository
     {
 
-        Task<IEnumerable<RecognitionTypesDto>> GetAll();
-        Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex);
-        Task<CustomPagedList<RecognitionTypesDto>> Get(int? rangeIndex, string searchQuery);
-        Task<CustomPagedList<RecognitionTypesDto>> GetAndOrderByName(int? rangeIndex, string searchQuery, bool reverseOrder);
-        Task<RecognitionTypesDto> Get(Guid id);
-        Task<RecognitionTypesViewPinsDto> GetDetailsAndIncludePins(Guid id, int? rangeIndex);
-        Task<RecognitionTypesViewPinsDto> GetDetailsAndIncludePins(Guid id, int? rangeIndex, string searchQuery);
-        Task<RecognitionTypesViewPinsDto> GetDetailsAndIncludePinsAndOrderByDateCreated(Guid id, int? rangeIndex, string searchQuery, bool reverseOrder);
-        Task<RecognitionTypesViewPinsDto> GetDetailsAndIncludePinsAndOrderBySerialPin(Guid id, int? rangeIndex, string searchQuery, bool reverseOrder);
-        Task<Guid?> Create(RecognitionTypesDto _obj);
-        Task<RecognitionTypesDto> Update(RecognitionTypesDto _obj);
-        Task Delete(Guid id); //return type is void
+        Task<IEnumerable<RecognitionTypesViewDto>> GetAllRecognitionTypesAsync();
+        Task<CustomPagedList<RecognitionTypesViewDto>> GetAllRecognitionTypesAsPagedListAsync(RecognitionTypesResourceParams resourceParams);
+        Task<RecognitionTypesViewDto> GetRecognitionTypesSingleOrDefaultAsync(Guid id);
+        Task<RecognitionTypesViewDto> GetRecognitionTypesAllPinsAsync(Guid id);
+        Task<RecognitionTypeViewPagedListPinsDto> GetRecognitionTypesPinsAsPagedListAsync(Guid id, PinsResourceParams resourceParams);
+        Task<Guid?> CreateRecognitionTypeAsync(RecognitionTypesCreateDto _obj);
+        Task<RecognitionTypesViewDto> UpdateRecognitionTypeAsync(RecognitionTypesCreateDto _obj);
+        Task DeleteRecognitionTypeAsync(Guid id); //return type is void
     }
 }

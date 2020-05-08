@@ -35,9 +35,9 @@ namespace SchoolRecognition.Services
         public Task<IEnumerable<SchoolCategoryDto>> GetAllCategory();
 
         //get offices
-        public Task<OfficesDto> GetOfficesById(Guid id);
+        public Task<OfficesViewDto> GetOfficesById(Guid id);
 
-        public Task<IEnumerable<OfficesDto>> GetAllOffices();
+        public Task<IEnumerable<OfficesViewDto>> GetAllOffices();
 
         //get lga
 

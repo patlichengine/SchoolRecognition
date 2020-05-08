@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using SchoolRecognition.Models;
 using SchoolRecognition.Services;
 
@@ -15,11 +16,13 @@ namespace SchoolRecognition.ApiControllers
     {
 
         private readonly IRecognitionTypesRepository _recognitionTypesRepository;
+        private readonly LinkGenerator _linkGenerator;
 
-        public RecognitionTypesApiController(IRecognitionTypesRepository recognitionTypesRepository)
+        public RecognitionTypesApiController(IRecognitionTypesRepository recognitionTypesRepository, LinkGenerator linkGenerator)
         {
             _recognitionTypesRepository = recognitionTypesRepository ??
                 throw new ArgumentNullException(nameof(recognitionTypesRepository));
+            _linkGenerator = linkGenerator;
         }
         // GET: api/RecognitionTypesApi
         [HttpGet]
@@ -27,7 +30,7 @@ namespace SchoolRecognition.ApiControllers
         {           
             try
             {
-                var result = await _recognitionTypesRepository.GetAll();
+                var result = await _recognitionTypesRepository.GetAllRecognitionTypesAsync();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -48,27 +51,17 @@ namespace SchoolRecognition.ApiControllers
             {
                 if (recognitionTypeId == Guid.Empty)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
 
-                var result = await _recognitionTypesRepository.GetDetailsAndIncludePins(recognitionTypeId, _pageNumber);
+                var result = await _recognitionTypesRepository.GetRecognitionTypesSingleOrDefaultAsync(recognitionTypeId);
+
                 if (result == null)
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, "The requested resource could not be found");
                 }
 
-                var recognitionTypesDto = new RecognitionTypeApiViewDto()
-                {
-                    Id = result.Id,
-                    RecognitionTypeCode = result.RecognitionTypeCode,
-                    RecognitionTypeName = result.RecognitionTypeName,
-                    RecognitionTypePins = (result.RecognitionTypePins != null ? result.RecognitionTypePins.Entitys : new List<PinsViewDto>()),
-                    RangeFrom = (result.RecognitionTypePins != null ? result.RecognitionTypePins.LowerLimit + 1 : 0),
-                    RangeTo = (result.RecognitionTypePins != null ? result.RecognitionTypePins.UpperLimit : 0),
-                    RangeTotalPins = (result.RecognitionTypePins != null ? result.RecognitionTypePins.TotalDBEntitysCount : 0),
-                };
-
-                return Ok(recognitionTypesDto);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -83,45 +76,22 @@ namespace SchoolRecognition.ApiControllers
         [Route("{recognitionTypeId}/pins/{pageNumber}")]
         public async Task<IActionResult> Get(Guid recognitionTypeId, int? pageNumber)
         {
-            
+            int _pageNumber = 0;
             try
             {
-                int _pageNumber = 0;
-
-                //Setting page number
-                if (pageNumber != null && pageNumber.Value >= 0)
-                {
-                    _pageNumber = pageNumber.Value;
-                }
-
-                if (_pageNumber > 0)
-                {
-                    _pageNumber = _pageNumber - 1;
-                }
-
                 if (recognitionTypeId == Guid.Empty)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
 
-                var result = await _recognitionTypesRepository.GetDetailsAndIncludePins(recognitionTypeId, _pageNumber);
+                var result = await _recognitionTypesRepository.GetRecognitionTypesSingleOrDefaultAsync(recognitionTypeId);
+
                 if (result == null)
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status404NotFound, "The requested resource could not be found");
                 }
 
-                var recognitionTypesDto = new RecognitionTypeApiViewDto()
-                {
-                    Id = result.Id,
-                    RecognitionTypeCode = result.RecognitionTypeCode,
-                    RecognitionTypeName = result.RecognitionTypeName,
-                    RecognitionTypePins = (result.RecognitionTypePins != null ? result.RecognitionTypePins.Entitys : new List<PinsViewDto>()),
-                    RangeFrom = (result.RecognitionTypePins != null ? result.RecognitionTypePins.LowerLimit + 1 : 0),
-                    RangeTo = (result.RecognitionTypePins != null ? result.RecognitionTypePins.UpperLimit : 0),
-                    RangeTotalPins = (result.RecognitionTypePins != null ? result.RecognitionTypePins.TotalDBEntitysCount : 0),
-                };
-
-                return Ok(recognitionTypesDto);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -132,7 +102,7 @@ namespace SchoolRecognition.ApiControllers
 
         // POST: api/RecognitionTypesApi
         [HttpPost]
-        public async Task<IActionResult> Post(RecognitionTypesDto model)
+        public async Task<IActionResult> Post(RecognitionTypesCreateDto model)
         {
             
             try
@@ -141,14 +111,14 @@ namespace SchoolRecognition.ApiControllers
                 {
                     return BadRequest();
                 }
-
-                var result = await _recognitionTypesRepository.Create(model);
+                var result = await _recognitionTypesRepository.CreateRecognitionTypeAsync(model);
                 if (result == null)
                 {
                     return BadRequest();
                 }
 
-                return Ok(result);
+                var location = _linkGenerator.GetPathByAction("Get", "RecognitionTypesApi", new { recognitionTypeId = result });
+                return Created(location, result);
             }
             catch (Exception ex)
             {
@@ -160,7 +130,7 @@ namespace SchoolRecognition.ApiControllers
 
         // PUT: api/RecognitionTypesApi
         [HttpPut]
-        public async Task<IActionResult> Put(RecognitionTypesDto model)
+        public async Task<IActionResult> Put(RecognitionTypesCreateDto model)
         {
             
             try
@@ -170,7 +140,7 @@ namespace SchoolRecognition.ApiControllers
                     return BadRequest();
                 }
 
-                var result = await _recognitionTypesRepository.Update(model);
+                var result = await _recognitionTypesRepository.UpdateRecognitionTypeAsync(model);
                 if (result == null)
                 {
                     return BadRequest();
@@ -197,7 +167,7 @@ namespace SchoolRecognition.ApiControllers
                     return NotFound();
                 }
 
-                await _recognitionTypesRepository.Delete(recognitionTypeId);
+                await _recognitionTypesRepository.DeleteRecognitionTypeAsync(recognitionTypeId);
 
                 return Ok();
             }

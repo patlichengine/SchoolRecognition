@@ -1,4 +1,4 @@
-﻿@model SchoolRecognition.Models.PinsCreateDto
+﻿@model PinsCreateDto
 @{
     var recognitionTypes = (IEnumerable<SelectListItem>)ViewData["RecognitionTypes"];
     ViewData["Title"] = "Generate Pins";
@@ -54,7 +54,7 @@
 
                         <div class="form-group">
                             <label asp-for="RecognitionTypeId">Recognition Type</label>
-                            <select asp-for="RecognitionTypeId" asp-items="@recognitionTypes.ToList()" class="form-control">
+                            <select asp-for="RecognitionTypeId" asp-items="@recognitionTypes.ToList()" class="form-control" required>
                                 <option value="">--Select Recogniton Type---</option>
                             </select>
                             <span asp-validation-for="RecognitionTypeId" class="text-danger"></span>
@@ -62,7 +62,7 @@
 
                         <div class="form-group">
                             <label asp-for="NoOfPinToGenerate">Number of Pins</label>
-                            <input type="number" min="1" max="20" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate">
+                            <input type="number" min="1" max="20" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate" required>
                             <span asp-validation-for="NoOfPinToGenerate" class="text-danger"></span>
                         </div>
 

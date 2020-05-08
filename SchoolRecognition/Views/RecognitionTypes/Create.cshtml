@@ -1,14 +1,13 @@
-﻿@model SchoolRecognition.Models.PinsCreateDto
+﻿@model RecognitionTypesCreateDto
 @{
-    var recognitionTypes = (IEnumerable<SelectListItem>)ViewData["RecognitionTypes"];
-    ViewData["Title"] = "Generate Pins";
+    ViewData["Title"] = "New Recognition Type";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 @section styles{
 
     @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
         <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
-    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+    @*<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />*@
 
 }
 
@@ -45,25 +44,27 @@
                 </div>
                 <div class="card-body">
 
+                    <small class="text-muted mt-1 mb-2">All fields marked <b class="text-dark">*</b> are required!</small>
 
-                    <form asp-action="GeneratePins" method="post">
+                    <form asp-action="Create" method="post">
 
                         @Html.AntiForgeryToken()
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+                
+
                         <div class="form-group">
-                            <label asp-for="RecognitionTypeId">Recognition Type</label>
-                            <select asp-for="RecognitionTypeId" asp-items="@recognitionTypes.ToList()" class="form-control">
-                                <option>--Select Recogniton Type---</option>
-                            </select>
-                            <span asp-validation-for="RecognitionTypeId" class="text-danger"></span>
+                            <label asp-for="RecognitionTypeName">*Recognition Type:</label>
+                            <input minlength="5" maxlength="60" asp-for="RecognitionTypeName" class="form-control" placeholder="Enter Recognition Type" required>
                         </div>
 
                         <div class="form-group">
-                            <label asp-for="NoOfPinToGenerate">Number of Pins</label>
-                            <input type="number" min="1" max="600" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate">
+                            <label asp-for="RecognitionTypeCode">*Code:</label>
+                            <input minlength="1" maxlength="2" asp-for="RecognitionTypeCode" class="form-control" placeholder="Enter Code" required>
                         </div>
+                
+
 
 
                         <!-- /.col -->
@@ -94,46 +95,48 @@
 @section scripts{
     <script src="~/js/loading_icon.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
-    <script src="~/lib/select2/dist/js/select2.min.js"></script>
+    @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
     @*<script src="~/lib/select2/dist/js/select2.full.min.js"></script>*@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
-    <script>
+    @*<script>
         $(document).ready(function () {
             $('select.form-control').select2({
                 theme: "classic"
             });
             //$('.select2me').select2();
         });
-    </script>
+    </script>*@
     <script>
         // add the rule here
-        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-            return arg !== value;
-        }, "Select a valid value!");
+        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        //    return arg !== value;
+        //}, "Select a valid value!");
         $("form").validate({
             rules: {
-                RecognitionTypeId: {
+                RecognitionTypeName: {
                     required: true,
-                    //min: 1
+                    minlength: 5,
+                    maxlength: 60
                 },
-                NoOfPinToGenerate: {
+                RecognitionTypeCode: {
                     required: true,
-                    min: 1,
-                    max: 600
+                    minlength: 1,
+                    maxlength: 2
                 },
 
             },
             messages: {
-                RecognitionTypeId: {
+                RecognitionTypeName: {
                     required: "This field is required!",
-                    valueNotEquals: ""
+                    minlength: "This field must have at least 5 characters!",
+                    maxlength: "This field must have less than 60 characters!",
                 },
-                NoOfPinToGenerate: {
+                RecognitionTypeCode: {
                     required: "This field is required!",
-                    min: "Select a valid value greater than 0!",
-                    max: "Select a valid value less than 600!",
-                },
+                    minlength: "This field must have at least 1 characters!",
+                    maxlength: "This field must have less than 2 characters!",
+                }
             }
         });
     </script>

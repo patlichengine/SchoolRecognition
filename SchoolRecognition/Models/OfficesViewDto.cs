@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.Models
 {
-    public class OfficesDto
+    public class OfficesViewDto
     {
         public Guid Id { get; set; }
         public string OfficeName { get; set; }

@@ -11,6 +11,7 @@ using SchoolRecognition.Models;
 
 namespace SchoolRecognition.Controllers
 {
+    [Route("manage_offices")]
     public class OfficesController : Controller
     {
         private readonly SchoolRecognitionContext _context;
@@ -21,11 +22,13 @@ namespace SchoolRecognition.Controllers
         }
 
         // GET: Offices
+        [Route("")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Offices.ToListAsync());
+            return View();
         }
 
+        [Route("details/{id?}")]
         // GET: Offices/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -34,25 +37,26 @@ namespace SchoolRecognition.Controllers
                 return NotFound();
             }
 
-            var offices = await _context.Offices
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (offices == null)
+            var office = new OfficesViewDto()
             {
-                return NotFound();
-            }
+                Id = new Guid("9c338b95-d8b1-479f-8104-54e23de90283"),
+                OfficeName = "Yaba Office",
+                OfficeAddress = "21 Hussey Rd, Yaba 100001, Lagos",
 
-            return View(offices);
+            };
+
+            return View(office);
         }
 
         // GET: Offices/Create
+        [Route("create")]
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Offices/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Address,StateId,DateCreated,CreatedBy")] Offices offices)
@@ -68,24 +72,31 @@ namespace SchoolRecognition.Controllers
         }
 
         // GET: Offices/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+
+        [Route("update/{id?}")]
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var offices = await _context.Offices.FindAsync(id);
-            if (offices == null)
+            var office = new OfficesCreateDto()
             {
-                return NotFound();
-            }
-            return View(offices);
+                Id = new Guid("9c338b95-d8b1-479f-8104-54e23de90283"),
+                OfficeName = "Yaba Office",
+                OfficeAddress = "21 Hussey Rd, Yaba 100001, Lagos",
+
+            };
+            return View(office);
         }
 
         // POST: Offices/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        [Route("update/{id?}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Address,StateId,DateCreated,CreatedBy")] Offices offices)
@@ -119,6 +130,8 @@ namespace SchoolRecognition.Controllers
         }
 
         // GET: Offices/Delete/5
+        [Route("delete/{id?}")]
+        [HttpGet]
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -126,18 +139,20 @@ namespace SchoolRecognition.Controllers
                 return NotFound();
             }
 
-            var offices = await _context.Offices
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (offices == null)
+            var office = new OfficesViewDto()
             {
-                return NotFound();
-            }
+                Id = new Guid("9c338b95-d8b1-479f-8104-54e23de90283"),
+                OfficeName = "Yaba Office",
+                OfficeAddress = "21 Hussey Rd, Yaba 100001, Lagos",
 
-            return View(offices);
+            };
+
+            return View(office);
         }
 
         // POST: Offices/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [Route("delete/{id?}")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {

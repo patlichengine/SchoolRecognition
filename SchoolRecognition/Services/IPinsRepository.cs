@@ -1,6 +1,7 @@
 ﻿using SchoolRecognition.Entities;
-using SchoolRecognition.Extensions;
+using SchoolRecognition.Helpers;
 using SchoolRecognition.Models;
+using SchoolRecognition.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +11,17 @@ namespace SchoolRecognition.Services
 {
     public interface IPinsRepository
     {
-        Task<IEnumerable<PinsViewDto>> GetAll();
-        Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex);
-        Task<CustomPagedList<PinsViewDto>> Get(int? rangeIndex, string searchQuery);
-        Task<CustomPagedList<PinsViewDto>> GetAndOrderByDateCreated(int? rangeIndex, string searchQuery, bool reverseOrder);
-        Task<CustomPagedList<PinsViewDto>> GetAndOrderBySerialPin(int? rangeIndex, string searchQuery, bool reverseOrder);
-        Task<IEnumerable<PinsViewDto>> GetPinsByRecognitionTypeId(Guid recognitionTypeId);
-        Task<PinsViewDto> Get(Guid id);
-        Task<Guid?> Create(PinsCreateDto _obj);
-        Task<bool> CreateSeveralPins(PinsCreateDto _obj);
-        Task<PinsUpdateDto> Update(PinsUpdateDto _obj);
-        Task Delete(Guid id); //return type is void
+
+        Task<IEnumerable<PinsViewDto>> GetAllPinsAsync();
+        Task<CustomPagedList<PinsViewDto>> GetAllPinsAsPagedListAsync(PinsResourceParams resourceParams);
+        Task<PinsViewDto> GetPinsSingleOrDefaultAsync(Guid id);
+        Task<PinsViewDto> GetPinsAllPinHistoriesAsync(Guid id);
+        Task<PinsViewDto> GetPinsAllSchoolPaymentsAsync(Guid id);
+        Task<PinViewPagedListPinHistoriesDto> GetPinsPinHistoriesAsPagedListAsync(Guid id, PinHistoriesResourceParams resourceParams);
+        Task<PinViewPagedListPinHistoriesDto> GetPinsSchoolPaymentsAsPagedListAsync(Guid id, SchoolPaymentsResourceParams resourceParams);
+        Task<Guid?> CreatePinAsync(PinsCreateDto _obj);
+        Task<bool> CreateMultiplePinAsync(PinsCreateDto _obj);
+        Task<PinsViewDto> UpdatePinAsync(PinsUpdateDto _obj);
+        Task DeletePinAsync(Guid id); //return type is void
     }
 }

@@ -187,7 +187,7 @@ namespace SchoolRecognition.Services
             });
         }
 
-        public async Task<OfficesDto> GetOfficesById(Guid id)
+        public async Task<OfficesViewDto> GetOfficesById(Guid id)
         {
             return await Task.Run(async () =>
             {
@@ -198,16 +198,16 @@ namespace SchoolRecognition.Services
 
                 var result = await _context.Offices.FirstOrDefaultAsync(c => c.Id == id);
                 //return the mapped object
-                return _mapper.Map<OfficesDto>(result);
+                return _mapper.Map<OfficesViewDto>(result);
             });
         }
 
-        public async Task<IEnumerable<OfficesDto>> GetAllOffices()
+        public async Task<IEnumerable<OfficesViewDto>> GetAllOffices()
         {
             return await Task.Run(async () =>
             {
                 var result = await _context.Offices.ToListAsync();
-                return _mapper.Map<IEnumerable<OfficesDto>>(result);
+                return _mapper.Map<IEnumerable<OfficesViewDto>>(result);
 
             });
         }

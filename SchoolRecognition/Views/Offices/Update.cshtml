@@ -1,0 +1,206 @@
+﻿@model OfficesCreateDto
+@{
+    ViewData["Title"] = "Update Office";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section styles{
+
+    <link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
+    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Offices" asp-action="Index">Manage Offices</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Update/Edit Office</h3>
+                </div>
+                <div class="card-body">
+
+                    <small class="text-muted mt-1 mb-2">All fields marked <b class="text-dark">*</b> are required!</small>
+
+                    <form asp-action="Create" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                        <input type="hidden" asp-for="Id">
+
+                        <div class="form-group">
+                            <label asp-for="OfficeName">*Name:</label>
+                            <input minlength="5" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="OfficeAddress">*Address:</label>
+                            <input minlength="5" maxlength="200" asp-for="OfficeAddress" class="form-control" placeholder="Enter Address" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="StateId">*State</label>
+                            @*<select asp-for="StateId" asp-items="@recognitionTypes.ToList()" class="form-control" required>
+                <option>--Select Recogniton Type---</option>
+            </select>*@
+                            <select asp-for="StateId" class="form-control" required>
+                                <option value="" selected="selected">-- Select State --</option>
+                                <option value="Abia">Abia</option>
+                                <option value="Adamawa">Adamawa</option>
+                                <option value="AkwaIbom">AkwaIbom</option>
+                                <option value="Anambra">Anambra</option>
+                                <option value="Bauchi">Bauchi</option>
+                                <option value="Bayelsa">Bayelsa</option>
+                                <option value="Benue">Benue</option>
+                                <option value="Borno">Borno</option>
+                                <option value="Cross River">Cross River</option>
+                                <option value="Delta">Delta</option>
+                                <option value="Ebonyi">Ebonyi</option>
+                                <option value="Edo">Edo</option>
+                                <option value="Ekiti">Ekiti</option>
+                                <option value="Enugu">Enugu</option>
+                                <option value="FCT">FCT</option>
+                                <option value="Gombe">Gombe</option>
+                                <option value="Imo">Imo</option>
+                                <option value="Jigawa">Jigawa</option>
+                                <option value="Kaduna">Kaduna</option>
+                                <option value="Kano">Kano</option>
+                                <option value="Katsina">Katsina</option>
+                                <option value="Kebbi">Kebbi</option>
+                                <option value="Kogi">Kogi</option>
+                                <option value="Kwara">Kwara</option>
+                                <option value="Lagos">Lagos</option>
+                                <option value="Nasarawa">Nasarawa</option>
+                                <option value="Niger">Niger</option>
+                                <option value="Ogun">Ogun</option>
+                                <option value="Ondo">Ondo</option>
+                                <option value="Osun">Osun</option>
+                                <option value="Oyo">Oyo</option>
+                                <option value="Plateau">Plateau</option>
+                                <option value="Rivers">Rivers</option>
+                                <option value="Sokoto">Sokoto</option>
+                                <option value="Taraba">Taraba</option>
+                                <option value="Yobe">Yobe</option>
+                                <option value="Zamfara">Zamafara</option>
+                            </select>
+                            <span asp-validation-for="StateId" class="text-danger"></span>
+                        </div>
+
+
+                        <!-- /.col -->
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-spinner fa-spin" id="loading_icon" style="display:none"></i>
+                            Save
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-lg"> Reset</button>
+
+                        <!-- /.col -->
+
+                    </form>
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    <script src="~/js/loading_icon.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
+    <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+    <script>
+            $(document).ready(function () {
+                $('select.form-control').select2({
+                    theme: "classic"
+                });
+                //$('.select2me').select2();
+            });
+    </script>
+    <script>
+        // add the rule here
+        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        //    return arg !== value;
+        //}, "Select a valid value!");
+        // add the rule here
+        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+            return arg !== value;
+        }, "Select a valid value!");
+        $("form").validate({
+            rules: {
+                OfficeName: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 60
+                },
+                OfficeAddress: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 150
+                },
+                StateId: {
+                    required: true,
+                    valueNotEquals: ""
+                    //min: 1
+                },
+
+            },
+            messages: {
+                OfficeName: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 5 characters!",
+                    maxlength: "This field must have less than 60 characters!",
+                },
+                OfficeAddress: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 5 characters!",
+                    maxlength: "This field must have less than 150 characters!",
+                },
+                StateId: {
+                    required: "This field is required!",
+                    valueNotEquals: "Select a valid value!"
+                },
+            }
+        });
+    </script>
+
+}
+
+

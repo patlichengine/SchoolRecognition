@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SchoolRecognition.Models.RecognitionTypesDto>
+﻿@model IEnumerable<RecognitionTypesViewDto>
 @{
     ViewData["Title"] = "Manage Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -41,19 +41,26 @@
                 <!-- /.card-header -->
                 <div class="card-body clearfix">
                     <div class="float-right">
-                        <a asp-area="" asp-controller="Pins" asp-action="Index" class="btn btn-secondary text-white">
+                        <a asp-area="" asp-controller="Pins" asp-action="Index" class="btn btn-light">
                             <i class="fas fa-desktop"></i>
                             View All Pins
+                        </a>
+                        <a asp-area="" asp-controller="RecognitionTypes" asp-action="Create" class="btn btn-light">
+                            <i class="fas fa-plus"></i>
+                            New Recognition Type
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
 
-                    <table id="datatable-1" class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                    <table id="datatable-1" class="table table-bordered table-striped table-responsive-md" role="grid" aria-describedby="example1_info">
                         <thead>
                             <tr role="row">
                                 <td>Recognition Type</td>
                                 <td>Code</td>
+                                <td>Active Pins</td>
+                                <td>Assigned Pins</td>
+                                <td>Total Pins</td>
                                 <td></td>
                             </tr>
                         </thead>
@@ -63,14 +70,17 @@
                                 <tr role="row">
                                     <td>@item.RecognitionTypeName</td>
                                     <td>@item.RecognitionTypeCode</td>
+                                    <td>@item.IsActivePinsCount.ToString("#,##0")</td>
+                                    <td>@item.IsInUsePinsCount.ToString("#,##0")</td>
+                                    <td>@item.PinsCount.ToString("#,##0")</td>
                                     <td class="text-center">
-                                        <a asp-action="ViewPins" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">
+                                        <a asp-action="ViewPins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="View Pins">
                                             <i class="fas fa-desktop"></i>
-                                            View Pins
+                                            @*View Pins*@
                                         </a>
-                                        <a asp-action="GeneratePins" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">
+                                        <a asp-action="GeneratePins" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Generate New Pins">
                                             <i class="fas fa-receipt"></i>
-                                            Generate Pins
+                                            @*Generate Pins*@
                                         </a>
                                     </td>
                                 </tr>
@@ -97,6 +107,7 @@
         $(document).ready( function () {
             $('#datatable-1').DataTable({
                 //"order": [[ 0, "desc" ]]
+                responsive: true
             });
         } );
     </script>

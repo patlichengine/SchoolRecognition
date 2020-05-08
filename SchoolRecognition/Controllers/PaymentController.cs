@@ -71,9 +71,9 @@ namespace SchoolRecognition.Controllers
 
         public async Task<IActionResult> AddSchoolPayment()
         {
-           List<RecognitionTypesDto> recognitionList = new List<RecognitionTypesDto>();
+           List<RecognitionTypesViewDto> recognitionList = new List<RecognitionTypesViewDto>();
 
-            var recTypes = await _recognitionTypeRepository.GetAll();
+            var recTypes = await _recognitionTypeRepository.GetAllRecognitionTypesAsync();
             recognitionList = (from c in recTypes select c).ToList();
             //re.Insert(0, new RecognitionTypes { Id = new Guid("00000000-0000-0000-0000-000000000000"), Name = "Select rec type" });
             // re.Insert(1, new RecognitionTypes {Id=recTypes.First().Id,Name=recTypes.First().Name });

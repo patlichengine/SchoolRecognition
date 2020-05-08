@@ -28,21 +28,10 @@ namespace SchoolRecognition.ApiControllers
             
             try
             {
-                int _pageNumber = 0;
 
-                var result = await _pinsRepository.Get(_pageNumber);
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                var pinsApiListViewDto = new PinsApiListViewDto()
-                {
-                    RecognitionTypePins = result.Entitys,
-                    RangeFrom = (result.LowerLimit + 1),
-                    RangeTo = result.UpperLimit,
-                    RangeTotalPins = result.TotalDBEntitysCount
-                };
-                return Ok(pinsApiListViewDto);
+                var result = await _pinsRepository.GetAllPinsAsync();
+       
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -51,50 +40,7 @@ namespace SchoolRecognition.ApiControllers
             }
         }
 
-
-        // GET: api/PinsApi/5
-        [HttpGet]
-        [Route("{pageNumber}")]
-        public async Task<IActionResult> Get(int? pageNumber)
-        {            
-
-            try
-            {
-                int _pageNumber = 0;
-
-                //Setting page number
-                if (pageNumber != null && pageNumber.Value >= 0)
-                {
-                    _pageNumber = pageNumber.Value;
-                }
-
-                if (_pageNumber > 0)
-                {
-                    _pageNumber = _pageNumber - 1;
-                }
-
-                var result = await _pinsRepository.Get(_pageNumber);
-
-                if (result == null)
-                {
-                    return NotFound();
-                }
-                var pinsApiListViewDto = new PinsApiListViewDto()
-                {
-                    RecognitionTypePins = result.Entitys,
-                    RangeFrom = (result.LowerLimit + 1),
-                    RangeTo = result.UpperLimit,
-                    RangeTotalPins = result.TotalDBEntitysCount
-                };
-                return Ok(pinsApiListViewDto);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
-            }
-        }
-        
+                
 
         // GET: api/PinsApi/5/details
         [HttpGet]
@@ -106,10 +52,10 @@ namespace SchoolRecognition.ApiControllers
             {
                 if (pinId == Guid.Empty)
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status400BadRequest, "Invalid request parameters!");
                 }
 
-                var result = await _pinsRepository.Get(pinId);
+                var result = await _pinsRepository.GetPinsSingleOrDefaultAsync(pinId);
                 if (result == null)
                 {
                     return NotFound();
@@ -137,10 +83,10 @@ namespace SchoolRecognition.ApiControllers
                     return BadRequest();
                 }
 
-                var result = await _pinsRepository.CreateSeveralPins(model);
+                var result = await _pinsRepository.CreateMultiplePinAsync(model);
                 if (result == false)
                 {
-                    return BadRequest();
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
 
                 return Ok(result);
@@ -165,10 +111,10 @@ namespace SchoolRecognition.ApiControllers
                     return BadRequest();
                 }
 
-                var result = await _pinsRepository.Update(model);
+                var result = await _pinsRepository.UpdatePinAsync(model);
                 if (result == null)
                 {
-                    return BadRequest();
+                    return StatusCode(StatusCodes.Status500InternalServerError);
                 }
 
                 return Ok(result);
@@ -191,10 +137,10 @@ namespace SchoolRecognition.ApiControllers
             {
                 if (pinId == Guid.Empty)
                 {
-                    return NotFound();
+                    return StatusCode(StatusCodes.Status400BadRequest, "Invalid request parameters!");
                 }
 
-                await _pinsRepository.Delete(pinId);
+                await _pinsRepository.DeletePinAsync(pinId);
 
                 return Ok();
             }

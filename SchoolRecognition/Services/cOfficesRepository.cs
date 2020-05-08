@@ -8,7 +8,7 @@ namespace SchoolRecognition.Services
 {
     public class cOfficesRepository : IOfficeRepository, IDisposable
     {
-        public Task<OfficesDto> GetOffice(Guid id)
+        public Task<OfficesViewDto> GetOffice(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -18,7 +18,7 @@ namespace SchoolRecognition.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<OfficesDto>> GetOffices()
+        public Task<IEnumerable<OfficesViewDto>> GetOffices()
         {
             throw new NotImplementedException();
         }

@@ -10,7 +10,7 @@ namespace SchoolRecognition.Profiles
     {
         public OfficesProfile()
         {
-            CreateMap<Entities.Offices, Models.OfficesDto>()
+            CreateMap<Entities.Offices, Models.OfficesViewDto>()
                 .ForMember(
                     dest => dest.OfficeName,
                     opt => opt.MapFrom(src => $"{src.Name}"))

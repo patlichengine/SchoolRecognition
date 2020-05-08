@@ -1,6 +1,6 @@
-﻿@model IEnumerable<SchoolRecognition.Models.PinsViewDto>
+﻿@model IEnumerable<PinsViewDto>
 @{
-    var recognitionType = (RecognitionTypesViewPinsDto)ViewData["RecognitionType"];
+    var recognitionType = (RecognitionTypesViewDto)ViewData["RecognitionType"];
     ViewData["Title"] = recognitionType.RecognitionTypeName + " Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
