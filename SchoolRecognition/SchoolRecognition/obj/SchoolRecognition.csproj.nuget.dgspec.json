@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hp\\Desktop\\Abdul\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {}
+    "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hp\\Desktop\\Abdul\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {
+    "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hp\\Desktop\\Abdul\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+        "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
         "projectName": "SchoolRecognition",
-        "projectPath": "C:\\Users\\hp\\Desktop\\Abdul\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+        "projectPath": "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hp\\Desktop\\Abdul\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\obj\\",
+        "outputPath": "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -75,7 +75,7 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[3.1.1, )"
+              "version": "[3.1.2, )"
             },
             "MySql.Data.EntityFrameworkCore": {
               "target": "Package",

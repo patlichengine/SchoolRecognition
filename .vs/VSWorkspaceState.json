@@ -1,7 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\SchoolRecognition"
+    "\\SchoolRecognition",
+    "\\SchoolRecognition\\ApiControllers",
+    "\\SchoolRecognition\\Classes",
+    "\\SchoolRecognition\\Controllers",
+    "\\SchoolRecognition\\Migrations",
+    "\\SchoolRecognition\\SchoolRecognition",
+    "\\SchoolRecognition\\SchoolRecognition\\ApiControllers",
+    "\\SchoolRecognition\\Services",
+    "\\SchoolRecognition\\Views"
   ],
   "SelectedNode": "\\SchoolRecognition.sln",
   "PreviewInSolutionExplorer": false
