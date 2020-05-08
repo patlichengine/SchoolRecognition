@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {}
+    "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {}
   },
   "projects": {
-    "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {
+    "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+        "projectUniqueName": "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
         "projectName": "SchoolRecognition",
-        "projectPath": "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
-        "packagesPath": "C:\\Users\\waec\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\waec\\Documents\\Abdullahi\\WAEC Projects\\SchoolRecognition\\SchoolRecognition\\obj\\",
+        "projectPath": "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+        "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hp\\source\\repos\\SchoolRecognition\\SchoolRecognition\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\waec\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -98,7 +98,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
