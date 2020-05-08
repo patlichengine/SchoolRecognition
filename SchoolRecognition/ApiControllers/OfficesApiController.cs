@@ -1,109 +1,135 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SchoolRecognition.Models;
+using SchoolRecognition.Services;
 
 namespace SchoolRecognition.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/offices")]
     [ApiController]
     public class OfficesApiController : ControllerBase
     {
-        private readonly SchoolRecognitionContext _context;
+        private readonly IOfficeRepository _officeRepository;
+        private readonly ILogger<OfficesApiController> _logger;
 
-        public OfficesApiController(SchoolRecognitionContext context)
+        public OfficesApiController(IOfficeRepository officeRepository, ILogger<OfficesApiController> logger)
         {
-            _context = context;
+            _officeRepository = officeRepository ?? throw new ArgumentNullException(nameof(officeRepository));
         }
 
-        // GET: api/OfficesApi
+        // GET: api/offices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Offices>>> GetOffices()
+        public ActionResult<IEnumerable<OfficesDto>> GetOffices()
         {
-            return await _context.Offices.ToListAsync();
+            var result = _officeRepository.GetOffices().Result;
+            return Ok(result);
         }
 
-        // GET: api/OfficesApi/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Offices>> GetOffices(Guid id)
+        // GET: api/offices/5
+        [HttpGet("{officeId:guid}")]
+        public IActionResult GetOffice(Guid officeId)
         {
-            var offices = await _context.Offices.FindAsync(id);
-
-            if (offices == null)
+            if(officeId == Guid.Empty)
             {
                 return NotFound();
             }
 
-            return offices;
-        }
+            var result = _officeRepository.GetOffice(officeId).Result;
 
-        // PUT: api/OfficesApi/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutOffices(Guid id, Offices offices)
-        {
-            if (id != offices.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(offices).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OfficesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/OfficesApi
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Offices>> PostOffices(Offices offices)
-        {
-            _context.Offices.Add(offices);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOffices", new { id = offices.Id }, offices);
-        }
-
-        // DELETE: api/OfficesApi/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Offices>> DeleteOffices(Guid id)
-        {
-            var offices = await _context.Offices.FindAsync(id);
-            if (offices == null)
+            if (result == null)
             {
                 return NotFound();
             }
 
-            _context.Offices.Remove(offices);
-            await _context.SaveChangesAsync();
-
-            return offices;
+            return Ok(result);
         }
 
-        private bool OfficesExists(Guid id)
+        // GET: api/offices/5
+        [HttpGet("{officeId:guid}/schools")]
+        public IActionResult GetOfficeSchools(Guid officeId)
         {
-            return _context.Offices.Any(e => e.Id == id);
+            if (officeId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var result = _officeRepository.GetOfficeSchools(officeId).Result;
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
         }
+
+        [HttpGet("{officeId:guid}/schools/{centreId:guid}")]
+        public IActionResult GetOfficeCentres(Guid officeId, Guid centreId)
+        {
+            if (officeId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            if (centreId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var result = _officeRepository.GetOfficeSchools(officeId, centreId).Result;
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("{officeId:guid}/schools/{schoolId:guid}")]
+        public IActionResult GetOfficeSchools(Guid officeId, Guid schoolId)
+        {
+            if (officeId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            if (schoolId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var result = _officeRepository.GetOfficeSchools(officeId, schoolId).Result;
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        // GET: api/offices/5
+        [HttpGet("{officeId}/centres")]
+        public IActionResult GetOfficeCentres(Guid officeId)
+        {
+            if (officeId == Guid.Empty)
+            {
+                return NotFound();
+            }
+
+            var result = _officeRepository.GetOfficeCentres(officeId).Result;
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SchoolRecognition.Classes;
 using SchoolRecognition.Models;
-using SchoolRecognition.Repository;
+using SchoolRecognition.Services;
 
 namespace SchoolRecognition
 {
@@ -27,15 +28,27 @@ namespace SchoolRecognition
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //use th addController to configure what you want to configure
+            services.AddControllers(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters();
+
+            //Add the AutoMapper extension
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
-            services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
+            //services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
 
             var connectionString = new ConnectionString(Configuration.GetConnectionString("SchoolRecognitionConnection"));
             services.AddSingleton(connectionString);
 
-            services.AddTransient<IAccount, clsAccount>(provider => new clsAccount(connectionString));
+            //services.AddTransient<IAccountsRepository, clsAccounts>(provider => new clsAccounts(connectionString));
+            services.AddScoped<IAccountsRepository, cAccountsRepository>();
 
             services.AddControllersWithViews();
+
 
         }
 
@@ -64,6 +77,8 @@ namespace SchoolRecognition
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllers();
             });
         }
     }

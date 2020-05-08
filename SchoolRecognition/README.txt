@@ -25,7 +25,11 @@ Generate code for create, read, update, and delete (CRUD) operations of the data
 Connect application with database
 Run the following scaffold command in Package Manager Console to reverse engineer the database to create database context and entity POCO classes from tables. The scaffold command will create POCO class only for the tables that have a primary key.
 
-Scaffold-DbContext “Server=LAPTOP-IFRMU6GH\MSSQLSERVER19;Database=SchoolRecognition;User Id=sa;Password=sa@123;” Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Scaffold-DbContext “Server=DESKTOP-VDEN9VA;Database=SchoolRecognition;User Id=sa;Password=sa@123;” Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities
+
+Scaffold-DbContext "Server=LAPTOP-IFRMU6GH\MSSQLSERVER19;Database=SchoolRecognition;User Id=sa;Password=sa@123;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir test -Tables Offices -f
+
+
 
 Connection—Sets connection string of the database.
 Provider—Sets which provider to use to connect database.
