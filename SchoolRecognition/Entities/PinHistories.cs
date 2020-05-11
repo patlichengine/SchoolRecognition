@@ -11,6 +11,7 @@ namespace SchoolRecognition.Entities
         public DateTime? DateActive { get; set; }
         public Guid? CreatedBy { get; set; }
 
+        public virtual ApplicationUsers CreatedByNavigation { get; set; }
         public virtual Pins Pin { get; set; }
         public virtual Schools School { get; set; }
     }

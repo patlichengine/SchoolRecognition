@@ -1122,3 +1122,7 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\S
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.MvcApplicationPartsAssemblyInfo.cache
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\RecognitionTypes\Create.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Offices\Update.cshtml.g.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\RecognitionTypes\Update.cshtml.g.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\RecognitionTypes\Delete.cshtml.g.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Pins\PinHistories.cshtml.g.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Pins\Delete.cshtml.g.cs

@@ -21,13 +21,20 @@ using SchoolRecognition;
 #nullable disable
 #nullable restore
 #line 2 "C:\csharp_projects\SchoolRecognition\SchoolRecognition\Views\_ViewImports.cshtml"
+using SchoolRecognition.Helpers;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 3 "C:\csharp_projects\SchoolRecognition\SchoolRecognition\Views\_ViewImports.cshtml"
 using SchoolRecognition.Models;
 
 #line default
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"f95005c97188f41cd63c1468244fe74ca490d6b8", @"/Views/Shared/_NavigationAdmin.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"57d0266bbca735634eabe717bec472dc819d6d99", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"99db7b73c51d84dd15942319281775a6f70cf22f", @"/Views/_ViewImports.cshtml")]
     public class Views_Shared__NavigationAdmin : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("asp-area", "", global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -71,7 +78,7 @@ using SchoolRecognition.Models;
         </li>
         <li class=""nav-item d-none d-sm-inline-block"">
             ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f95005c97188f41cd63c1468244fe74ca490d6b86008", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f95005c97188f41cd63c1468244fe74ca490d6b86203", async() => {
                 WriteLiteral("Dashboard");
             }
             );
@@ -100,7 +107,7 @@ using SchoolRecognition.Models;
             <div class=""dropdown-menu dropdown-menu-right dropdown-info"" aria-labelledby=""navbarDropdownMenuLink-4"">
                 <a class=""dropdown-item"" href=""#"">My account</a>
                 ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f95005c97188f41cd63c1468244fe74ca490d6b88437", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f95005c97188f41cd63c1468244fe74ca490d6b88632", async() => {
                 WriteLiteral("Register");
             }
             );
@@ -121,7 +128,7 @@ using SchoolRecognition.Models;
             Write(__tagHelperExecutionContext.Output);
             __tagHelperExecutionContext = __tagHelperScopeManager.End();
             WriteLiteral("\r\n                ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f95005c97188f41cd63c1468244fe74ca490d6b810099", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f95005c97188f41cd63c1468244fe74ca490d6b810294", async() => {
                 WriteLiteral("Login");
             }
             );

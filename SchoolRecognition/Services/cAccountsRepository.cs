@@ -29,7 +29,7 @@ namespace SchoolRecognition.Services
         {
             return await Task.Run(async () =>
             {
-                bool result = await _context.Users.AnyAsync();
+                bool result = await _context.ApplicationUsers.AnyAsync();
                 return result;
             });
            
@@ -43,7 +43,7 @@ namespace SchoolRecognition.Services
                     throw new ArgumentNullException(nameof(userId));
                 }
 
-                return await _context.Users.AnyAsync(a => a.Id == userId);
+                return await _context.ApplicationUsers.AnyAsync(a => a.Id == userId);
             });
             
         }
@@ -59,7 +59,7 @@ namespace SchoolRecognition.Services
                 }
                 var mPassword = Encryption.EncryptPassword(_obj.Password);
                 //Add the user details
-                await _context.Users.AddAsync(new Users
+                await _context.ApplicationUsers.AddAsync(new ApplicationUsers
                 {
                     Id = Guid.NewGuid(),
                     Surname = _obj.Surname,
@@ -85,7 +85,7 @@ namespace SchoolRecognition.Services
                     throw new ArgumentNullException(nameof(id));
                 }
 
-                var result = await _context.Users.FirstOrDefaultAsync(c => c.Id == id);
+                var result = await _context.ApplicationUsers.FirstOrDefaultAsync(c => c.Id == id);
                 //return the mapped object
                 return _mapper.Map<AccountsDto>(result);
             });
@@ -109,7 +109,7 @@ namespace SchoolRecognition.Services
                 //get password in byte
                 var pwd = Encryption.EncryptPassword(password);
 
-                var result = await _context.Users.FirstOrDefaultAsync(c => c.EmailAddress == emailAddress && c.Password == pwd);
+                var result = await _context.ApplicationUsers.FirstOrDefaultAsync(c => c.EmailAddress == emailAddress && c.Password == pwd);
                 //return the mapped object
                 return _mapper.Map<AccountsDto>(result);
             });
@@ -119,7 +119,7 @@ namespace SchoolRecognition.Services
         {
             return await Task.Run(async () =>
             {
-                var result = await _context.Users.ToListAsync<Users>();
+                var result = await _context.ApplicationUsers.ToListAsync<ApplicationUsers>();
                 return _mapper.Map<IEnumerable<AccountsDto>>(result);
 
             });
@@ -129,7 +129,7 @@ namespace SchoolRecognition.Services
         {
             return await Task.Run(async () =>
             {
-                var result = await _context.Users.Where(c => c.RoleId == roleId).ToListAsync<Users>();
+                var result = await _context.ApplicationUsers.Where(c => c.RoleId == roleId).ToListAsync<ApplicationUsers>();
                 return _mapper.Map<IEnumerable<AccountsDto>>(result);
             });
         }

@@ -169,10 +169,14 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = await _context.RecognitionTypes.Include(x => x.Pins.Count()).Where(x => x.Id == id).SingleOrDefaultAsync();
+                    var dbResult = _context.RecognitionTypes as IQueryable<RecognitionTypes>;
 
-
-                    returnValue = _mapper.Map<RecognitionTypesViewDto>(dbResult);
+                    var recognitionTypes = await dbResult.Where(x => x.Id == id).SingleOrDefaultAsync();
+                    returnValue = _mapper.Map<RecognitionTypesViewDto>(recognitionTypes);
+                    //
+                    returnValue.PinsCount = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).CountAsync();
+                    returnValue.IsActivePinsCount = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).Where(x => x.IsActive == true).CountAsync();
+                    returnValue.IsInUsePinsCount = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).Where(x => x.IsInUse == true).CountAsync();
 
 
                     return returnValue;
@@ -195,15 +199,21 @@ namespace SchoolRecognition.Services
 
             //Instantiate Return Value
             RecognitionTypesViewDto returnValue = null;
+            IEnumerable<PinsViewDto> returnValuePins = new List<PinsViewDto>();
             try
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = await _context.RecognitionTypes.Include(x => x.Pins).Where(x => x.Id == id).SingleOrDefaultAsync();
+                    var dbResult = _context.RecognitionTypes.Include(x => x.Pins).Where(x => x.Id == id) as IQueryable<RecognitionTypes>;
 
 
-                    returnValue = _mapper.Map<RecognitionTypesViewDto>(dbResult);
+                    returnValue = _mapper.Map<RecognitionTypesViewDto>(await dbResult.SingleOrDefaultAsync());
 
+                    List<Pins> pins = await dbResult.SelectMany(x => x.Pins).ToListAsync();
+
+                    returnValuePins = _mapper.Map<IEnumerable<PinsViewDto>>(pins);
+
+                    returnValue.RecognitionTypePins = returnValuePins;
 
                     return returnValue;
                 }
@@ -240,7 +250,9 @@ namespace SchoolRecognition.Services
 
                     RecognitionTypes recognitionType = await dbResult.FirstOrDefaultAsync();
                     //
-                    var queryablePins = dbResult.Select(x => x.Pins) as IQueryable<Pins>;
+                    var queryablePins = dbResult.SelectMany(x => x.Pins) as IQueryable<Pins>;
+
+
 
                     //Search
                     if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
@@ -258,11 +270,11 @@ namespace SchoolRecognition.Services
                     if (!string.IsNullOrWhiteSpace(resourceParams.OrderBy))
                     {
                         // get property mapping dictionary
-                        var recognitionTypePropertyMappingDictionary =
-                            _propertyMappingService.GetPropertyMapping<RecognitionTypesViewDto, RecognitionTypes>();
+                        var pinsPropertyMappingDictionary =
+                            _propertyMappingService.GetPropertyMapping<PinsViewDto, Pins>();
 
                         queryablePins = queryablePins.ApplySort(resourceParams.OrderBy,
-                            recognitionTypePropertyMappingDictionary);
+                            pinsPropertyMappingDictionary);
                     }
                     ///Use LINQ to map pins to pinsviewdto
                     var mappedResult = queryablePins.Select(x => new PinsViewDto()
@@ -282,7 +294,12 @@ namespace SchoolRecognition.Services
                         resourceParams.PageSize);
 
 
-                    returnValue = _mapper.Map<RecognitionTypeViewPagedListPinsDto>(dbResult);
+                    returnValue = _mapper.Map<RecognitionTypeViewPagedListPinsDto>(recognitionType);
+                    //
+                    returnValue.PinsCount = await queryablePins.CountAsync();
+                    returnValue.IsActivePinsCount = await queryablePins.Where(x => x.IsActive == true).CountAsync();
+                    returnValue.IsInUsePinsCount = await queryablePins.Where(x => x.IsInUse == true).CountAsync();
+                    //
                     returnValue.RecognitionTypePins = returnValuePins;
 
 
@@ -364,10 +381,12 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var entity = await _context.RecognitionTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    var entity = await _context.RecognitionTypes.Where(x => x.Id == id).SingleOrDefaultAsync();
                     if (entity != null)
                     {
                         _context.Remove(entity);
+                        await this.Save();
+
                     }
 
                 }

@@ -7,15 +7,16 @@ namespace SchoolRecognition.Models
 {
     public class OfficesCreateDto
     {
+
         public Guid Id { get; set; }
         public string OfficeName { get; set; }
         public string OfficeAddress { get; set; }
-        public Guid? StateId { get; set; }
+        public string StateName { get; set; }
         public DateTime? DateCreated { get; set; }
-        public Guid? CreatedBy { get; set; }
+        public string CreatedByUser { get; set; }
         public byte[] OfficeImage { get; set; }
-        public float? Longitude { get; set; }
-        public float? Latitude { get; set; }
-        public Guid? OfficeTypeID { get; set; }
+        public double? Longitute { get; set; }
+        public double? Latitude { get; set; }
+        public Guid? OfficeTypeId { get; set; }
     }
 }

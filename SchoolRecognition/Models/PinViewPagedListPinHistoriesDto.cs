@@ -15,7 +15,7 @@ namespace SchoolRecognition.Models
         public bool IsInUse { get; set; }
         public String CreatedByUser { get; set; }
         public DateTime? DateCreated { get; set; }
-        //public virtual CustomPagedList<PinHistoriesViewDto> PinHistories { get; set; }
+        public CustomPagedList<PinHistoriesViewDto> Histories { get; set; }
         //public virtual ICollection<SchoolPayments> SchoolPayments { get; set; }
     }
 }

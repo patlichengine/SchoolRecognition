@@ -14,5 +14,7 @@ namespace SchoolRecognition.Models
         public bool IsInUse { get; set; }
         public String CreatedByUser { get; set; }
         public DateTime? DateCreated { get; set; }
+        public IEnumerable<PinHistoriesViewDto> Histories { get; set; }
+        public IEnumerable<SchoolPaymentsViewDto> Payments { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace SchoolRecognition.Profiles
     {
         public AccountsProfile()
         {
-            CreateMap<Entities.Users, Models.AccountsDto>()
+            CreateMap<Entities.ApplicationUsers, Models.AccountsDto>()
                 .ForMember(
                     dest => dest.Fullname,
                     opt => opt.MapFrom(src => $"{src.Surname } {src.Othernames}"));

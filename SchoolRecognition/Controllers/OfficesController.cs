@@ -99,7 +99,7 @@ namespace SchoolRecognition.Controllers
         [Route("update/{id?}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Address,StateId,DateCreated,CreatedBy")] Offices offices)
+        public async Task<IActionResult> Update(Guid id, [Bind("Id,Name,Address,StateId,DateCreated,CreatedBy")] Offices offices)
         {
             if (id != offices.Id)
             {

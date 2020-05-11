@@ -18,14 +18,7 @@ namespace SchoolRecognition.Profiles
                 opt => opt.MapFrom(src => $"{src.Name}"))
                 .ForMember(
                 dest => dest.RecognitionTypeCode,
-                opt => opt.MapFrom(src => $"{src.Code}"))
-                .ForMember(
-                dest => dest.RecognitionTypePins,
-                opt =>
-                {
-                    opt.PreCondition(src => (src.Pins.Count() > 0));
-                    opt.MapFrom(src => $"{ src.Pins}");
-                });
+                opt => opt.MapFrom(src => $"{src.Code}"));
 
             CreateMap<RecognitionTypes, RecognitionTypeViewPagedListPinsDto>()
                 .ForMember(
@@ -42,6 +35,8 @@ namespace SchoolRecognition.Profiles
                 .ForMember(
                 dest => dest.Code,
                 opt => opt.MapFrom(src => $"{src.RecognitionTypeCode}"));
+
+            CreateMap<RecognitionTypesViewDto, RecognitionTypesCreateDto>();
 
         }
     }

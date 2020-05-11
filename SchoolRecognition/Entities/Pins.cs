@@ -19,7 +19,7 @@ namespace SchoolRecognition.Entities
         public Guid? CreatedBy { get; set; }
         public DateTime? DateCreated { get; set; }
 
-        public virtual Users CreatedByNavigation { get; set; }
+        public virtual ApplicationUsers CreatedByNavigation { get; set; }
         public virtual RecognitionTypes RecognitionType { get; set; }
         public virtual ICollection<PinHistories> PinHistories { get; set; }
         public virtual ICollection<SchoolPayments> SchoolPayments { get; set; }

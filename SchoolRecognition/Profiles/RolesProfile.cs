@@ -10,7 +10,7 @@ namespace SchoolRecognition.Profiles
     {
         public RolesProfile()
         {
-            CreateMap<Entities.Roles, Models.RolesDto>()
+            CreateMap<Entities.ApplicationRoles, Models.ApplicationRolesDto>()
                 .ForMember(
                 dest => dest.RoleName,
                 opt => opt.MapFrom(src => $"{src.Name}")

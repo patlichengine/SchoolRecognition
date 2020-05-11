@@ -14,9 +14,9 @@ namespace SchoolRecognition.ApiControllers
     [ApiController]
     public class OfficesApiController : ControllerBase
     {
-        private readonly IOfficeRepository _officeRepository;
+        private readonly IOfficesRepository _officeRepository;
 
-        public OfficesApiController(IOfficeRepository officeRepository)
+        public OfficesApiController(IOfficesRepository officeRepository)
         {
             _officeRepository = officeRepository ?? throw new ArgumentNullException(nameof(officeRepository));
         }

@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SchoolRecognition.Helpers;
 using SchoolRecognition.Models;
+using SchoolRecognition.ResourceParameters;
 using SchoolRecognition.Services;
 using Vereyon.Web;
 
 namespace SchoolRecognition.Controllers
 {
+    [Route("manage_pins/view_all_pins")]
     public class PinsController : Controller
     {
         private IFlashMessage _flashMessage;
@@ -25,68 +29,308 @@ namespace SchoolRecognition.Controllers
                throw new ArgumentNullException(nameof(pinsRepository));
         }
 
-        public async Task<IActionResult> Index(string sortOrder, string searchQuery, int? pageNumber)
+        [Route("")]
+        public async Task<IActionResult> Index(string orderBy, string searchQuery, int? pageNumber)
         {
-            List<PinsViewDto> pins = new List<PinsViewDto>();
+            try
+            {
 
-            //Setting page number
-            //var dbResult = await _c
 
-            //Handling search queries
-            //
-            return View(pins);
+
+                IEnumerable<int> pages = new List<int>();
+
+                var resourceParams = new PinsResourceParams()
+                {
+                    PageNumber = pageNumber != null ? pageNumber.Value : 1,
+                    SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
+                    OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "DateCreated",
+                };
+                //Instantiate CustomPagedList
+                CustomPagedList<PinsViewDto> pins = CustomPagedList<PinsViewDto>
+                         .Create(Enumerable.Empty<PinsViewDto>().AsQueryable(),
+                             resourceParams.PageNumber,
+                             resourceParams.PageSize);
+                switch (orderBy)
+                {
+                    case "date_desc":
+                        resourceParams.OrderBy = "DateCreatedDesc";
+                        break;
+                    case "date":
+                        resourceParams.OrderBy = "DateCreated";
+                        break;
+                    case "serial_number_desc":
+                        resourceParams.OrderBy = "SerialNumberDesc";
+                        break;
+                    case "serial_number":
+                        resourceParams.OrderBy = "SerialNumber";
+                        break;
+                    default:
+                        resourceParams.OrderBy = "DateCreated";
+                        break;
+                }
+
+                var result = await _pinsRepository.GetAllPinsAsPagedListAsync(resourceParams);
+
+                if (result != null)
+                {
+                    var totalPages = result.TotalPages;
+
+                    pages = Enumerable.Range(1, totalPages);
+
+                    if (totalPages > 5)
+                    {
+
+                        if ((resourceParams.PageNumber + 2) >= totalPages)
+                        {
+                            pages = pages.Skip(totalPages - 5).Take(5).ToList();
+                        }
+                        else if ((resourceParams.PageNumber - 2) <= 1)
+                        {
+                            pages = pages.Take(5).ToList();
+                        }
+                        else
+                        {
+                            pages = pages.Skip(resourceParams.PageNumber - 2).Take(5).ToList();
+                        }
+                    }
+                }
+
+                pins = result;
+
+                ViewData["Pages"] = pages;
+                ViewData["OrderBy"] = orderBy;
+                ViewData["SearchQuery"] = searchQuery;
+
+
+                return View(pins);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
+
+        [Route("pin_details/{id?}")]
         public async Task<IActionResult> Details(Guid? id)
         {
-            return View();
+            try
+            {
+                if (id == null ||  id.Value == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+                var result = await _pinsRepository.GetPinsAllSchoolPaymentsAsync(id.Value);
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                return View(result);
+
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+        
+        [Route("pin_user_tracker/{id?}")]
+        public async Task<IActionResult> PinHistories(Guid id, string orderBy, string searchQuery, int? pageNumber)
+        {
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+                IEnumerable<int> pages = new List<int>();
+
+                var resourceParams = new PinHistoriesResourceParams()
+                {
+                    PageNumber = pageNumber != null ? pageNumber.Value : 1,
+                    SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
+                    OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "DateActive",
+                };
+                //Instantiate CustomPagedList
+                CustomPagedList<PinHistoriesViewDto> pins = CustomPagedList<PinHistoriesViewDto>
+                         .Create(Enumerable.Empty<PinHistoriesViewDto>().AsQueryable(),
+                             resourceParams.PageNumber,
+                             resourceParams.PageSize);
+                switch (orderBy)
+                {
+                    case "date_desc":
+                        resourceParams.OrderBy = "DateActiveDesc";
+                        break;
+                    case "date":
+                        resourceParams.OrderBy = "DateActive";
+                        break;
+                    default:
+                        resourceParams.OrderBy = "DateActive";
+                        break;
+                }
+
+                var result = await _pinsRepository.GetPinsPinHistoriesAsPagedListAsync(id, resourceParams);
+
+                if (result != null)
+                {
+                    var totalPages = result.Histories.TotalPages;
+
+                    pages = Enumerable.Range(1, totalPages);
+
+                    if (totalPages > 5)
+                    {
+
+                        if ((resourceParams.PageNumber + 2) >= totalPages)
+                        {
+                            pages = pages.Skip(totalPages - 5).Take(5).ToList();
+                        }
+                        else if ((resourceParams.PageNumber - 2) <= 1)
+                        {
+                            pages = pages.Take(5).ToList();
+                        }
+                        else
+                        {
+                            pages = pages.Skip(resourceParams.PageNumber - 2).Take(5).ToList();
+                        }
+                    }
+                }
+
+                ViewData["Pages"] = pages;
+                ViewData["Pin"] = result;
+                ViewData["OrderBy"] = orderBy;
+                ViewData["SearchQuery"] = searchQuery;
+
+                pins = result.Histories;
+
+                return View(pins);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
+
+        [Route("generate_pins")]
+        [HttpGet]
         public async Task<IActionResult> GeneratePins()
         {
-            var recognitionTypes = await _recognitionTypesRepository.GetAllRecognitionTypesAsync();
+            try
+            {
+                var recognitionTypes = await _recognitionTypesRepository.GetAllRecognitionTypesAsync();
 
-            ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
-             new SelectListItem()
-             {
-                 Text = x.RecognitionTypeName,
-                 Value = x.Id.ToString(),
-             }).ToList();
+                ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
+                 new SelectListItem()
+                 {
+                     Text = x.RecognitionTypeName,
+                     Value = x.Id.ToString(),
+                 }).ToList();
 
-            return View();
+                return View();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
+
+        [Route("generate_pins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GeneratePins(PinsCreateDto model)
         {
 
-            var recognitionTypes = await _recognitionTypesRepository.GetAllRecognitionTypesAsync();
-            //
-            ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
-             new SelectListItem()
-             {
-                 Text = x.RecognitionTypeName,
-                 Value = x.Id.ToString(),
-             }).ToList();
-
-            if (ModelState.IsValid)
+            try
             {
-                model.IsActive = true;
-                var result = await _pinsRepository.CreateMultiplePinAsync(model);
+                var recognitionTypes = await _recognitionTypesRepository.GetAllRecognitionTypesAsync();
+                //
+                ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
+                 new SelectListItem()
+                 {
+                     Text = x.RecognitionTypeName,
+                     Value = x.Id.ToString(),
+                 }).ToList();
 
-                if (result)
+                if (ModelState.IsValid)
                 {
-                    _flashMessage.Confirmation("Operation Completed", String.Format("{0} PINs generated", model.NoOfPinToGenerate));
-                    return RedirectToAction("Index", "Pins");
+                    model.IsActive = true;
+                    var result = await _pinsRepository.CreateMultiplePinAsync(model);
+
+                    if (result)
+                    {
+                        _flashMessage.Confirmation("Operation Completed", String.Format("{0} PINs generated", model.NoOfPinToGenerate));
+                        return RedirectToAction("Index", "Pins");
+                    }
+                    else
+                    {
+                        _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
+                        return View(model);
+                    }
                 }
-                else
-                {
-                    _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                    return View(model);
-                }
+                _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
+                return View(model);
             }
-            _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-            return View(model);
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        // GET: Offices/Delete/5
+        [Route("delete_pin/{id?}")]
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var recognitionType = await _pinsRepository.GetPinsSingleOrDefaultAsync(id.Value);
+
+                if (recognitionType == null)
+                {
+                    return NotFound();
+                }
+
+
+
+
+                return View(recognitionType);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        // POST: Offices/Delete/5
+        [Route("delete_pin/{id?}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(PinsViewDto model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _pinsRepository.DeletePinAsync(model.Id);
+
+                    _flashMessage.Info("Delete Successful", "Pin removed from system!");
+                    return RedirectToAction("Index", "RecognitionTypes");
+                }
+                _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

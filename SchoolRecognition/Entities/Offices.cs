@@ -7,6 +7,7 @@ namespace SchoolRecognition.Entities
     {
         public Offices()
         {
+            OfficeStates = new HashSet<OfficeStates>();
             Schools = new HashSet<Schools>();
         }
 
@@ -21,7 +22,10 @@ namespace SchoolRecognition.Entities
         public double? Latitude { get; set; }
         public Guid? OfficeTypeId { get; set; }
 
+        public virtual ApplicationUsers CreatedByNavigation { get; set; }
         public virtual OfficeTypes OfficeType { get; set; }
+        public virtual States State { get; set; }
+        public virtual ICollection<OfficeStates> OfficeStates { get; set; }
         public virtual ICollection<Schools> Schools { get; set; }
     }
 }

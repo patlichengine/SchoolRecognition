@@ -1,6 +1,7 @@
-﻿@model IEnumerable<PinsViewDto>
+﻿@model CustomPagedList<PinsViewDto>
 @{
-    var recognitionType = (RecognitionTypesViewDto)ViewData["RecognitionType"];
+    var recognitionType = (RecognitionTypeViewPagedListPinsDto)ViewData["RecognitionType"];
+    var pages = (IEnumerable<int>)ViewData["Pages"];
     ViewData["Title"] = recognitionType.RecognitionTypeName + " Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -20,7 +21,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="ManagePins" asp-action="Index">Manage Pins</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="RecognitionTypes" asp-action="Index">Manage Pins</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -53,7 +54,7 @@
 
                             <div class="clearfix mb-3">
                                 <div class="float-right">
-                                    <a asp-area="" asp-action="GeneratePins" asp-route-id="@recognitionType.Id" class="btn btn-secondary text-white">
+                                    <a asp-area="" asp-action="GeneratePins" asp-route-id="@recognitionType.Id" class="btn btn-light">
                                         <i class="fas fa-receipt"></i>
                                         Generate Pins
                                     </a>
@@ -66,17 +67,17 @@
                                 </div>
                                 <div class="col-8">
 
-                                    <form asp-action="ViewPins"asp-route-id="@recognitionType.Id" method="get" class="md-form mb-3" id="searchForm">
+                                    <form asp-action="ViewPins" asp-route-id="@recognitionType.Id" method="get" class="md-form mb-3" id="searchForm">
 
                                         <div class="input-group">
-                                            <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewBag.SearchQuery" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
+                                            <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewData["SearchQuery"]" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
                                             @*<div class="input-group-prepend">
-                            <span class="input-group-text md-addon" id="material-addon1">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>*@
+                                        <span class="input-group-text md-addon" id="material-addon1">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </div>*@
                                             <div class="input-group-prepend">
-                                                <button class="btn btn-md btn-outline-primary" type="submit">
+                                                <button class="btn btn-md btn-light" type="submit">
                                                     <i class="fas fa-search"></i>
                                                     Search
                                                 </button>
@@ -89,23 +90,23 @@
 
                                 </div>
 
-                                <div class="col-md-12 mb-1">
+                                <div class="col-md-12 mb-1 ">
 
 
-                                    <a href="@Url.Action("ViewPins", "ManagePins", new { id  = recognitionType.Id , sortOrder = "serial_number", searchQuery = ViewBag.SearchQuery,  pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
-                                        Name Ascending
+                                    <a href="@Url.Action("ViewPins", "RecognitionTypes", new { id  = recognitionType.Id , orderBy = "serial_number", searchQuery = ViewData["SearchQuery"],  pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                        Serial Number Ascending
                                         <i class="fas fa-sort-up"></i>
                                     </a>
 
-                                    <a href="@Url.Action("ViewPins", "ManagePins", new { id  = recognitionType.Id , sortOrder = "serial_number_desc", searchQuery = ViewBag.SearchQuery,  pageNumber = ViewBag.CurrentPage})" class="btn btn-light btn-xs">
-                                        Name Descending
+                                    <a href="@Url.Action("ViewPins", "RecognitionTypes", new { id  = recognitionType.Id , orderBy = "serial_number_desc", searchQuery = ViewData["SearchQuery"],  pageNumber = Model.CurrentPage})" class="btn btn-light btn-xs">
+                                        Serial Number Descending
                                         <i class="fas fa-sort-down"></i>
                                     </a>
-                                    <a href="@Url.Action("ViewPins", "ManagePins", new { id  = recognitionType.Id , sortOrder = "date", searchQuery = ViewBag.SearchQuery, pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
+                                    <a href="@Url.Action("ViewPins", "RecognitionTypes", new { id  = recognitionType.Id , orderBy = "date", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
                                         Date Generated Ascending
                                         <i class="fas fa-sort-up"></i>
                                     </a>
-                                    <a href="@Url.Action("ViewPins", "ManagePins", new { id  = recognitionType.Id ,  sortOrder = "date_desc", searchQuery = ViewBag.SearchQuery, pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
+                                    <a href="@Url.Action("ViewPins", "RecognitionTypes", new { id  = recognitionType.Id ,  orderBy = "date_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
                                         Date Generated Descending
                                         <i class="fas fa-sort-down"></i>
                                     </a>
@@ -114,6 +115,35 @@
                             </div>
 
                             <table class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                                <caption class="bg-light" style="caption-side: top">
+
+                                    <ul class="nav nav-pills nav-fill">
+                                        <li class="nav-item">
+                                            <a class="nav-link disabled text-center" href="#">
+                                                Total Pins
+                                                <div class="text-muted">
+                                                    @Model.TotalCount
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item border-left border-right">
+                                            <a class="nav-link disabled text-center" href="#">
+                                                Active Pins
+                                                <div class="text-muted">
+                                                    @recognitionType.IsActivePinsCount
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link disabled text-center" href="#">
+                                                Used Pins
+                                                <div class="text-muted">
+                                                    @recognitionType.IsInUsePinsCount
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </caption>
                                 <thead>
                                     <tr role="row">
                                         <td>Date Generated</td>
@@ -121,6 +151,7 @@
                                         <td>Created By</td>
                                         <td>Active</td>
                                         <td>In Use</td>
+                                        <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -131,99 +162,123 @@
                                             <td>@item.SerialNumber</td>
                                             <td>@item.CreatedByUser</td>
                                             <td>
-                                                <a href="#" class="btn btn-xs disabled @(item.IsActive ? "btn-success" : "btn-danger")">
-                                                    <i class="fas fa-check"></i>
-                                                </a>
+                                                @if (item.IsActive)
+                                                {
+                                                    <i class="fas fa-check text-success"></i>
+                                                }
+                                                else
+                                                {
+
+                                                    <i class="fas fa-times text-danger"></i>
+                                                }
                                             </td>
                                             <td>
-                                                <a href="#" class="btn btn-xs disabled @(item.IsInUse ? "btn-success" : "btn-danger")">
-                                                    <i class="fas fa-check"></i>
+                                                @if (item.IsInUse)
+                                                {
+                                                    <i class="fas fa-check text-success"></i>
+                                                }
+                                                else
+                                                {
+
+                                                    <i class="fas fa-times text-danger"></i>
+                                                }
+                                            </td>
+                                            <td class="text-center p-1">
+                                                <a asp-action="Details" asp-controller="Pins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
+                                                    <i class="fas fa-desktop"></i>
+                                                    @*View Pins*@
+                                                </a>
+                                                <a asp-action="Delete" asp-controller="Pins" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                    @*Generate Pins*@
                                                 </a>
                                             </td>
                                         </tr>
                                     }
-
+                                    @if (Model.TotalCount < 1)
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="5">
+                                                No data available in table
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
 
 
-
                             @{
-                                var prevDisabled = ViewBag.CurrentPage <= 1 ? "disabled" : "";
-                                var nextDisabled = ViewBag.CurrentPage >= ViewBag.FinalPage ? "disabled" : "";
+                                var prevDisabled = Model.HasPrevious ? "" : "disabled";
+                                var nextDisabled = Model.HasNext ? "" : "disabled";
                                 //var disableAll =
                             }
-                            <div class="row mt-2">
-                                <div class="col">
-                                    @String.Format("Showing {0} to {1} of {2} ", (ViewBag.LowerLimit + 1), ViewBag.UpperLimit, ViewBag.Count)
-                                </div>
-                                <div class="col-8">
+                            @if (Model.TotalCount > 0)
+                            {
+                                int range = Model.PageSize > Model.TotalCount ? Model.TotalCount : Model.PageSize;
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        @String.Format("Showing {0} to {1} of {2} ", (((Model.CurrentPage - 1) * range) + 1), (Model.CurrentPage * range), Model.TotalCount)
+                                    </div>
+                                    <div class="col-8">
 
-                                    <ul class="pagination">
-                                        <li class="page-item @prevDisabled">
-                                            <a asp-controller="ManagePins" asp-action="ViewPins"
-                                               asp-route-id="@recognitionType.Id"
-                                               asp-route-sortOrder="@ViewBag.SortOrder"
-                                               asp-route-searchQuery="@ViewBag.SearchQuery"
-                                               asp-route-pageNumber=""
-                                               class="page-link">
-                                                <i class="fas fa-angle-double-left"></i>
-                                            </a>
-                                        </li>
-                                        <li class="page-item @prevDisabled">
-                                            <a asp-controller="ManagePins" asp-action="ViewPins"
-                                               asp-route-id="@recognitionType.Id"
-                                               asp-route-sortOrder="@ViewBag.SortOrder"
-                                               asp-route-searchQuery="@ViewBag.SearchQuery"
-                                               asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
-                                               class="page-link">
-                                                <i class="fas fa-angle-left"></i>
-                                            </a>
-                                        </li>
-                                        @foreach (var item in ViewBag.PaginationIndices)
-                                        {
-                                            <li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
-                                                <a asp-controller="ManagePins" asp-action="ViewPins"
+                                        <ul class="pagination">
+                                            <li class="page-item @prevDisabled">
+                                                <a asp-controller="RecognitionTypes" asp-action="ViewPins"
                                                    asp-route-id="@recognitionType.Id"
-                                                   asp-route-sortOrder="@ViewBag.SortOrder"
-                                                   asp-route-searchQuery="@ViewBag.SearchQuery"
-                                                   asp-route-pageNumber="@item"
+                                                   asp-route-orderBy="@ViewData["OrderBy"]"
+                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                   asp-route-pageNumber=""
                                                    class="page-link">
-                                                    @item
+                                                    <i class="fas fa-angle-double-left"></i>
                                                 </a>
                                             </li>
-
-                                            @*<li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
-                            <a href="@Url.Action("Index", "Pins", new { sortOrder = ViewBag.SortOrder, searchQuery = ViewBag.SearchQuery, pageNumber = item })"
-                               class="page-link">
-                                @item
-                            </a>
-                        </li>*@
-
-                                        }
-                                        <li class="page-item @nextDisabled">
-                                            <a asp-controller="ManagePins" asp-action="ViewPins"
-                                               asp-route-id="@recognitionType.Id"
-                                               asp-route-sortOrder="@ViewBag.SortOrder"
-                                               asp-route-searchQuery="@ViewBag.SearchQuery"
-                                               asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
-                                               class="page-link">
-                                                <i class="fas fa-angle-right"></i>
-                                            </a>
-                                        </li>
-                                        <li class="page-item @nextDisabled">
-                                            <a asp-controller="ManagePins" asp-action="ViewPins"
-                                               asp-route-id="@recognitionType.Id"
-                                               asp-route-sortOrder="@ViewBag.SortOrder"
-                                               asp-route-searchQuery="@ViewBag.SearchQuery"
-                                               asp-route-pageNumber="@ViewBag.FinalPage"
-                                               class="page-link">
-                                                <i class="fas fa-angle-double-right"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                            <li class="page-item @prevDisabled">
+                                                <a asp-controller="RecognitionTypes" asp-action="ViewPins"
+                                                   asp-route-id="@recognitionType.Id"
+                                                   asp-route-orderBy="@ViewData["OrderBy"]"
+                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                   asp-route-pageNumber="@(Model.CurrentPage - 1)"
+                                                   class="page-link">
+                                                    <i class="fas fa-angle-left"></i>
+                                                </a>
+                                            </li>
+                                            @foreach (var item in pages)
+                                            {
+                                                <li class="@(item == Model.CurrentPage ? "page-item active" : "page-item")">
+                                                    <a asp-controller="RecognitionTypes" asp-action="ViewPins"
+                                                       asp-route-id="@recognitionType.Id"
+                                                       asp-route-orderBy="@ViewData["OrderBy"]"
+                                                       asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                       asp-route-pageNumber="@item"
+                                                       class="page-link">
+                                                        @item
+                                                    </a>
+                                                </li>
+                                            }
+                                            <li class="page-item @nextDisabled">
+                                                <a asp-controller="RecognitionTypes" asp-action="ViewPins"
+                                                   asp-route-id="@recognitionType.Id"
+                                                   asp-route-orderBy="@ViewData["OrderBy"]"
+                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                   asp-route-pageNumber="@(Model.CurrentPage + 1)"
+                                                   class="page-link">
+                                                    <i class="fas fa-angle-right"></i>
+                                                </a>
+                                            </li>
+                                            <li class="page-item @nextDisabled">
+                                                <a asp-controller="RecognitionTypes" asp-action="ViewPins"
+                                                   asp-route-id="@recognitionType.Id"
+                                                   asp-route-orderBy="@ViewData["OrderBy"]"
+                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                   asp-route-pageNumber="@Model.TotalPages"
+                                                   class="page-link">
+                                                    <i class="fas fa-angle-double-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
+                            }
 
                         </div>
                     </div>

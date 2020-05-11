@@ -9,24 +9,49 @@ namespace SchoolRecognition.Services
 {
     public class PropertyMappingService : IPropertyMappingService
     {
+
+
+        private Dictionary<string, PropertyMappingValue> _pinHistoriesPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "DateActive", new PropertyMappingValue(new List<string>() { "DateActive" } )},
+               { "DateActiveDesc", new PropertyMappingValue(new List<string>() { "DateActive" } , true)},
+               //{ "Name", new PropertyMappingValue(new List<string>() { "FirstName", "LastName" }) }
+          };
+
+        private Dictionary<string, PropertyMappingValue> _pinsPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "SerialNumber", new PropertyMappingValue(new List<string>() { "SerialPin" } )},
+               { "SerialNumberDesc", new PropertyMappingValue(new List<string>() { "SerialPin" } , true)},
+               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" } ) },
+               { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" }, true ) },
+               { "RecognitionTypeName", new PropertyMappingValue(new List<string>() { "RecognitionType" } ) },
+               //{ "Age", new PropertyMappingValue(new List<string>() { "DateOfBirth" } , true) },
+               //{ "Name", new PropertyMappingValue(new List<string>() { "FirstName", "LastName" }) }
+          };
+
         private Dictionary<string, PropertyMappingValue> _recognitionTypesPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {
                //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
                { "RecognitionTypeName", new PropertyMappingValue(new List<string>() { "Name" } )},
+               { "RecognitionTypeNameDesc", new PropertyMappingValue(new List<string>() { "Name" }, true )},
                { "RecognitionTypeCode", new PropertyMappingValue(new List<string>() { "Code" } ) },
                //{ "Age", new PropertyMappingValue(new List<string>() { "DateOfBirth" } , true) },
                //{ "Name", new PropertyMappingValue(new List<string>() { "FirstName", "LastName" }) }
           };
-        
-        private Dictionary<string, PropertyMappingValue> _pinsPropertyMapping =
+
+        private Dictionary<string, PropertyMappingValue> _schoolPaymentsPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {
                //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
-               { "SerialNumber", new PropertyMappingValue(new List<string>() { "Name" } )},
-               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" }, true ) },
-               { "RecognitionTypeName", new PropertyMappingValue(new List<string>() { "RecognitionType" } ) },
-               //{ "Age", new PropertyMappingValue(new List<string>() { "DateOfBirth" } , true) },
+               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" } )},
+               { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" } , true)},
+               { "AmountPaid", new PropertyMappingValue(new List<string>() { "AmountPaid" } )},
+               { "AmountPaidDesc", new PropertyMappingValue(new List<string>() { "AmountPaid" } , true)},
                //{ "Name", new PropertyMappingValue(new List<string>() { "FirstName", "LastName" }) }
           };
 
@@ -34,8 +59,10 @@ namespace SchoolRecognition.Services
 
         public PropertyMappingService()
         {
+            _propertyMappings.Add(new PropertyMapping<PinHistoriesViewDto, PinHistories>(_pinHistoriesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<PinsViewDto, Pins>(_pinsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<RecognitionTypesViewDto, RecognitionTypes>(_recognitionTypesPropertyMapping));
-            _propertyMappings.Add(new PropertyMapping<PinsViewDto, Pins>(_recognitionTypesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<SchoolPaymentsViewDto, SchoolPayments>(_schoolPaymentsPropertyMapping));
         }
 
         public bool ValidMappingExistsFor<TSource, TDestination>(string fields)

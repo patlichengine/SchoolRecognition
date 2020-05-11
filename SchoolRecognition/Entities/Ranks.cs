@@ -7,13 +7,13 @@ namespace SchoolRecognition.Entities
     {
         public Ranks()
         {
-            Users = new HashSet<Users>();
+            ApplicationUsers = new HashSet<ApplicationUsers>();
         }
 
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
 
-        public virtual ICollection<Users> Users { get; set; }
+        public virtual ICollection<ApplicationUsers> ApplicationUsers { get; set; }
     }
 }

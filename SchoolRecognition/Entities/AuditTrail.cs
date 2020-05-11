@@ -10,5 +10,7 @@ namespace SchoolRecognition.Entities
         public string Action { get; set; }
         public string Description { get; set; }
         public DateTime DateCreated { get; set; }
+
+        public virtual ApplicationUsers User { get; set; }
     }
 }

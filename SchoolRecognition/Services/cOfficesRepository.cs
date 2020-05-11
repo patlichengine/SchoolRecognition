@@ -6,51 +6,8 @@ using System.Threading.Tasks;
 
 namespace SchoolRecognition.Services
 {
-    public class cOfficesRepository : IOfficeRepository, IDisposable
+    public class cOfficesRepository : IOfficesRepository, IDisposable
     {
-        public Task<OfficesViewDto> GetOffice(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<RolesDto>> GetOfficeCentres(Guid officeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<OfficesViewDto>> GetOffices()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<RolesDto>> GetOfficeSchools(Guid officeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<RolesDto>> GetOfficeSchools(Guid officeId, Guid schoolId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<RolesDto>> GetOfficeCentres(Guid officeId, Guid centreId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // dispose resources when needed
-            }
-        }
 
         
     }

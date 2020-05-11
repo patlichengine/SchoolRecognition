@@ -11,24 +11,24 @@ namespace SchoolRecognition.ApiControllers
 {
     [Route("api/roles")]
     [ApiController]
-    public class RolesApiController : ControllerBase
+    public class ApplicationRolesApiController : ControllerBase
     {
-        private readonly IRolesRepository _rolesRepository;
+        private readonly IApplicationRolesRepository _rolesRepository;
 
-        public RolesApiController(IRolesRepository rolesRepository)
+        public ApplicationRolesApiController(IApplicationRolesRepository rolesRepository)
         {
             _rolesRepository = rolesRepository ??
                 throw new ArgumentNullException(nameof(rolesRepository));
         }
-        // GET: api/RolesApi
+        // GET: api/ApplicationRolesApi
         [HttpGet]
-        public ActionResult<IEnumerable<RolesDto>> Get()
+        public ActionResult<IEnumerable<ApplicationRolesDto>> Get()
         {
-            var result = _rolesRepository.GetRoles().Result;
+            var result = _rolesRepository.GetApplicationRoles().Result;
             return Ok(result);
         }
 
-        // GET: api/RolesApi/5
+        // GET: api/ApplicationRolesApi/5
         [HttpGet]
         [Route("{roleId}")]
         public IActionResult Get(Guid roleId)
@@ -38,7 +38,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _rolesRepository.GetRole(roleId);
+            var result = _rolesRepository.GetApplicationRole(roleId);
             if(result == null)
             {
                 return NotFound();
@@ -47,13 +47,13 @@ namespace SchoolRecognition.ApiControllers
             return Ok(result);
         }
 
-        // POST: api/RolesApi
+        // POST: api/ApplicationRolesApi
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT: api/RolesApi/5
+        // PUT: api/ApplicationRolesApi/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {

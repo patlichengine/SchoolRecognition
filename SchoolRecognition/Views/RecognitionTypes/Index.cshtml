@@ -45,6 +45,10 @@
                             <i class="fas fa-desktop"></i>
                             View All Pins
                         </a>
+                        <a asp-area="" asp-controller="Pins" asp-action="GeneratePins" class="btn btn-light">
+                            <i class="fas fa-receipt"></i>
+                            Generate Pins
+                        </a>
                         <a asp-area="" asp-controller="RecognitionTypes" asp-action="Create" class="btn btn-light">
                             <i class="fas fa-plus"></i>
                             New Recognition Type
@@ -59,7 +63,7 @@
                                 <td>Recognition Type</td>
                                 <td>Code</td>
                                 <td>Active Pins</td>
-                                <td>Assigned Pins</td>
+                                <td>Used Pins</td>
                                 <td>Total Pins</td>
                                 <td></td>
                             </tr>
@@ -73,13 +77,17 @@
                                     <td>@item.IsActivePinsCount.ToString("#,##0")</td>
                                     <td>@item.IsInUsePinsCount.ToString("#,##0")</td>
                                     <td>@item.PinsCount.ToString("#,##0")</td>
-                                    <td class="text-center">
+                                    <td class="text-center p-1">
                                         <a asp-action="ViewPins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="View Pins">
                                             <i class="fas fa-desktop"></i>
                                             @*View Pins*@
                                         </a>
-                                        <a asp-action="GeneratePins" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Generate New Pins">
-                                            <i class="fas fa-receipt"></i>
+                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Update">
+                                            <i class="fas fa-edit"></i>
+                                            @*Generate Pins*@
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                            <i class="fas fa-trash"></i>
                                             @*Generate Pins*@
                                         </a>
                                     </td>
