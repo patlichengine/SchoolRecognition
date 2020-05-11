@@ -83,7 +83,7 @@ namespace SchoolRecognition.ApiControllers
                     return BadRequest();
                 }
 
-                var result = await _pinsRepository.CreateMultiplePinAsync(model);
+                var result = await _pinsRepository.CreateMultiplePinsAsync(model);
                 if (result == false)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError);

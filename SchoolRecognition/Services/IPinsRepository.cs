@@ -19,8 +19,8 @@ namespace SchoolRecognition.Services
         Task<PinsViewDto> GetPinsAllSchoolPaymentsAsync(Guid id);
         Task<PinViewPagedListPinHistoriesDto> GetPinsPinHistoriesAsPagedListAsync(Guid id, PinHistoriesResourceParams resourceParams);
         Task<PinViewPagedListSchoolPaymentsDto> GetPinsSchoolPaymentsAsPagedListAsync(Guid id, SchoolPaymentsResourceParams resourceParams);
-        Task<Guid?> CreatePinAsync(PinsCreateDto _obj);
-        Task<bool> CreateMultiplePinAsync(PinsCreateDto _obj);
+        Task<Guid?> CreatePinsAsync(PinsCreateDto _obj);
+        Task<bool> CreateMultiplePinsAsync(PinsCreateDto _obj);
         Task<PinsViewDto> UpdatePinAsync(PinsUpdateDto _obj);
         Task DeletePinAsync(Guid id); //return type is void
         //

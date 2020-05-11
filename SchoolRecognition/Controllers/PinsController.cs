@@ -256,7 +256,7 @@ namespace SchoolRecognition.Controllers
                 if (ModelState.IsValid)
                 {
                     model.IsActive = true;
-                    var result = await _pinsRepository.CreateMultiplePinAsync(model);
+                    var result = await _pinsRepository.CreateMultiplePinsAsync(model);
 
                     if (result)
                     {

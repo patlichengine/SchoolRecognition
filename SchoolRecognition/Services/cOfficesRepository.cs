@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SchoolRecognition.DbContexts;
+using SchoolRecognition.Entities;
 using SchoolRecognition.Helpers;
 using SchoolRecognition.Models;
 using SchoolRecognition.ResourceParameters;
@@ -24,7 +26,6 @@ namespace SchoolRecognition.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
         }
-
 
 
         #region Base Methods
@@ -54,52 +55,156 @@ namespace SchoolRecognition.Services
 
         #endregion
 
-        public Task<bool> CreateMultipleOfficeAsync(OfficesCreateDto _obj)
+
+        public async Task<IEnumerable<OfficesViewDto>> GetAllOfficesAsync()
+        {
+
+            //Instantiate Return Value
+            IEnumerable<OfficesViewDto> returnValue = new List<OfficesViewDto>();
+            try
+            {
+                var dbResult = await _context.Offices.Include(x => x.OfficeType).Include(x => x.State).Include(x => x.CreatedByNavigation).ToListAsync();
+
+                returnValue = _mapper.Map<IEnumerable<OfficesViewDto>>(dbResult);
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<CustomPagedList<OfficesViewDto>> GetAllOfficesAsPagedListAsync(OfficesResourceParams resourceParams)
+        {
+            //Instantiate Return Value
+            CustomPagedList<OfficesViewDto> returnValue = CustomPagedList<OfficesViewDto>
+                        .Create(Enumerable.Empty<OfficesViewDto>().AsQueryable(),
+                            resourceParams.PageNumber,
+                            resourceParams.PageSize);
+
+            try
+            {
+                if (resourceParams != null)
+                {
+
+                    var dbResult = _context.Offices.Include(x => x.State).Include(x => x.OfficeType) as IQueryable<Offices>;
+                    //Search
+                    if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
+                    {
+
+                        var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
+
+                        dbResult = dbResult.Where(a => a.Name.ToUpper().Contains(searchQuery)
+                            || a.Address.ToUpper().Contains(searchQuery)
+                            || (a.DateCreated != null ? a.DateCreated : null).ToString().ToUpper().Contains(searchQuery)
+                            || (a.State != null ? a.State.Name : null).ToUpper().Contains(searchQuery)
+                            || (a.OfficeType != null ? a.OfficeType.Description : null).ToUpper().Contains(searchQuery)
+                            || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Surname : null).ToUpper().Contains(searchQuery)
+                            || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Othernames : null).ToUpper().Contains(searchQuery)
+                            );
+                    }
+                    //Ordering
+                    if (!string.IsNullOrWhiteSpace(resourceParams.OrderBy))
+                    {
+                        // get property mapping dictionary
+                        var pinPropertyMappingDictionary =
+                            _propertyMappingService.GetPropertyMapping<OfficesViewDto, Offices>();
+
+                        dbResult = dbResult.ApplySort(resourceParams.OrderBy,
+                            pinPropertyMappingDictionary);
+                    }
+
+                    var mappedResult = dbResult.Select(x => new OfficesViewDto()
+                    {
+                        Id = x.Id,
+                        OfficeName = x.Name,
+                        OfficeAddress = x.Address,
+                        StateName = x.State != null ? x.State.Name : null,
+                        OfficeImage = x.OfficeImage,
+                        Longitude = x.Longitute,
+                        Latitude = x.Latitude,
+                        OfficeTypeDescription = x.OfficeType != null ? x.OfficeType.Description : null,
+                        //
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated
+
+                    });
+
+                    returnValue = await CustomPagedList<OfficesViewDto>.CreateAsync(mappedResult,
+                        resourceParams.PageNumber,
+                        resourceParams.PageSize);
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(resourceParams));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<Guid?> CreateOfficesAsync(OfficesCreateDto _obj)
+        {
+            //Instantiate Return Value
+            Guid? returnValue = null;
+            try
+            {
+                if (_obj != null)
+                {
+                    //Create a PINs Object to be stored in the db
+                    var entity = _mapper.Map<Offices>(_obj);
+
+                    returnValue = entity.Id;
+
+                    await _context.Offices.AddAsync(entity);
+                    await this.Save();
+
+                    return returnValue;
+
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(_obj));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task DeleteOfficeAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Guid?> CreateOfficeAsync(OfficesCreateDto _obj)
+
+        public async Task<OfficesViewDto> GetOfficesAllOfficeStatesAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteOfficeAsync(Guid id)
+        public async Task<OfficeViewPagedListOfficeStatesDto> GetOfficesOfficeStatesAsPagedListAsync(Guid id, OfficeStatesResourceParams resourceParams)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CustomPagedList<OfficesViewDto>> GetAllOfficesAsPagedListAsync(OfficesResourceParams resourceParams)
+        public async Task<OfficesViewDto> GetOfficesSingleOrDefaultAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<OfficesViewDto>> GetAllOfficesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OfficesViewDto> GetOfficesAllOfficeHistoriesAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OfficesViewDto> GetOfficesAllOfficeStatesAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OfficeViewPagedListOfficeStatesDto> GetOfficesOfficeStatesAsPagedListAsync(Guid id, OfficeStatesResourceParams resourceParams)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OfficesViewDto> GetOfficesSingleOrDefaultAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<OfficesViewDto> UpdateOfficeAsync(OfficesCreateDto _obj)
+        public async Task<OfficesViewDto> UpdateOfficeAsync(OfficesCreateDto _obj)
         {
             throw new NotImplementedException();
         }

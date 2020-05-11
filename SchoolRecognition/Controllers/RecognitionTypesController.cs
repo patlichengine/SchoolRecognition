@@ -229,7 +229,7 @@ namespace SchoolRecognition.Controllers
                 {
                     //Set Pins as active 
                     model.IsActive = true;
-                    var result = await _pinsRepository.CreateMultiplePinAsync(model);
+                    var result = await _pinsRepository.CreateMultiplePinsAsync(model);
 
                     if (result)
                     {

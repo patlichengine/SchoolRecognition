@@ -540,7 +540,7 @@ namespace SchoolRecognition.Services
         
 
 
-        public async Task<Guid?> CreatePinAsync(PinsCreateDto _obj)
+        public async Task<Guid?> CreatePinsAsync(PinsCreateDto _obj)
         {
             //Instantiate Return Value
             Guid? returnValue = null;
@@ -586,7 +586,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<bool> CreateMultiplePinAsync(PinsCreateDto _obj)
+        public async Task<bool> CreateMultiplePinsAsync(PinsCreateDto _obj)
         {
 
             try
