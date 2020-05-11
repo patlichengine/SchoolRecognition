@@ -23,9 +23,9 @@ namespace SchoolRecognition.ApiControllers
 
         // GET: api/offices
         [HttpGet]
-        public ActionResult<IEnumerable<OfficesViewDto>> GetOffices()
+        public async Task<ActionResult<IEnumerable<OfficesViewDto>>> GetOffices()
         {
-            var result = _officeRepository.GetOffices().Result;
+            var result = await _officeRepository.GetAllOfficesAsync();
             return Ok(result);
         }
 
@@ -38,7 +38,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _officeRepository.GetOffice(officeId).Result;
+            var result = _officeRepository.GetOfficesSingleOrDefaultAsync(officeId).Result;
 
             if (result == null)
             {
@@ -57,7 +57,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _officeRepository.GetOfficeSchools(officeId).Result;
+            var result = _officeRepository.GetOfficesAllSchoolsAsync(officeId).Result;
 
             if (result == null)
             {
@@ -80,8 +80,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _officeRepository.GetOfficeSchools(officeId, centreId).Result;
-
+            var result = _officeRepository.GetOfficesAllSchoolsAsync(officeId).Result;
             if (result == null)
             {
                 return NotFound();
@@ -103,7 +102,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _officeRepository.GetOfficeSchools(officeId, schoolId).Result;
+            var result = _officeRepository.GetOfficesAllSchoolsAsync(officeId).Result;
 
             if (result == null)
             {
@@ -122,7 +121,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _officeRepository.GetOfficeCentres(officeId).Result;
+            var result = _officeRepository.GetOfficesAllSchoolsAsync(officeId).Result;
 
             if (result == null)
             {

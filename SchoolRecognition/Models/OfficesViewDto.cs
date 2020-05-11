@@ -18,6 +18,6 @@ namespace SchoolRecognition.Models
         public double? Latitude { get; set; }
         public string OfficeTypeDescription { get; set; }
         public virtual IEnumerable<OfficeStatesViewDto> StateOffices { get; set; }
-        public virtual ICollection<SchoolsViewDto> OfficeSchools { get; set; }
+        public virtual IEnumerable<SchoolsViewDto> OfficeSchools { get; set; }
     }
 }

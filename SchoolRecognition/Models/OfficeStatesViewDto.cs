@@ -10,5 +10,6 @@ namespace SchoolRecognition.Models
         public Guid Id { get; set; }
         public string StateName { get; set; }
         public string OfficeName { get; set; }
+        public string OfficeAddress{ get; set; }
     }
 }

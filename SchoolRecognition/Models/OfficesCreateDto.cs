@@ -11,9 +11,9 @@ namespace SchoolRecognition.Models
         public Guid Id { get; set; }
         public string OfficeName { get; set; }
         public string OfficeAddress { get; set; }
-        public string StateName { get; set; }
+        public Guid? StateId { get; set; }
         public DateTime? DateCreated { get; set; }
-        public string CreatedByUser { get; set; }
+        public Guid? CreatedBy { get; set; }
         public byte[] OfficeImage { get; set; }
         public double? Longitute { get; set; }
         public double? Latitude { get; set; }

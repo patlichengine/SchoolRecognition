@@ -23,7 +23,7 @@ namespace SchoolRecognition.Profiles
 
 
 
-            CreateMap<Entities.OfficeTypes, Models.OfficeTypeViewPagedListOfficeDto>()
+            CreateMap<Entities.OfficeTypes, Models.OfficeTypeViewPagedListOfficesDto>()
                 .ForMember(
                 dest => dest.TypeDescription,
                 opt => opt.MapFrom(src => $"{src.Description}"));

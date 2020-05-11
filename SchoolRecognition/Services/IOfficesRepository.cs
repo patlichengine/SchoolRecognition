@@ -16,7 +16,9 @@ namespace SchoolRecognition.Services
         Task<OfficesViewDto> GetOfficesSingleOrDefaultAsync(Guid id);
         Task<OfficesViewDto> GetOfficesAllOfficeStatesAsync(Guid id);
         Task<OfficeViewPagedListOfficeStatesDto> GetOfficesOfficeStatesAsPagedListAsync(Guid id, OfficeStatesResourceParams resourceParams);
-        Task<Guid?> CreateOfficesAsync(OfficesCreateDto _obj);
+        Task<OfficesViewDto> GetOfficesAllSchoolsAsync(Guid id);
+        Task<OfficeViewPagedListSchoolsDto> GetOfficesSchoolsAsPagedListAsync(Guid id, SchoolsResourceParams resourceParams);
+        Task<Guid?> CreateOfficeAsync(OfficesCreateDto _obj);
         Task<OfficesViewDto> UpdateOfficeAsync(OfficesCreateDto _obj);
         Task DeleteOfficeAsync(Guid id); //return type is void
     }
