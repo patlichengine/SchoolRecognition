@@ -39,11 +39,11 @@ namespace SchoolRecognition
                 setupAction.ReturnHttpNotAcceptable = true;
             })
             //Enable For JSON endpoint data
-            //.AddNewtonsoftJson(options =>
-            //{
-            //    //Fixing JSON Self Referencing Loop Exceptions
-            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            //})
+            .AddNewtonsoftJson(options =>
+            {
+                //Fixing JSON Self Referencing Loop Exceptions
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+            })
             .AddXmlDataContractSerializerFormatters();
 
             //Add the AutoMapper extension

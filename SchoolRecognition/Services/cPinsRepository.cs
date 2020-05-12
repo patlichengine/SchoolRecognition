@@ -478,7 +478,7 @@ namespace SchoolRecognition.Services
 
                         var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
 
-                        queryablePins = queryablePins.Where(a => a.Amount.ToString().Contains(searchQuery)
+                        queryablePins = queryablePins.Where(a => a.Amount.ToString().ToUpper().Contains(searchQuery)
                             || a.ReceiptNo.ToUpper().ToString().ToUpper().Contains(searchQuery)
                             || (a.DateCreated != null ? a.DateCreated : null).ToString().ToUpper().Contains(searchQuery)
                             || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Surname : null).ToUpper().Contains(searchQuery)

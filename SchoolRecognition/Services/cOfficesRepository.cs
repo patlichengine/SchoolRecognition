@@ -216,7 +216,7 @@ namespace SchoolRecognition.Services
 
                         var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
 
-                        queryableOfficeStates = queryableOfficeStates.Where(a => (a.State != null ? a.State.Name : null).ToString().Contains(searchQuery)
+                        queryableOfficeStates = queryableOfficeStates.Where(a => (a.State != null ? a.State.Name : null).ToUpper().ToString().Contains(searchQuery)
                             || (a.Office != null ? a.Office.Name : null).ToUpper().Contains(searchQuery)
                             || (a.Office != null ? a.Office.Address : null).ToUpper().Contains(searchQuery)
                             );
@@ -330,12 +330,12 @@ namespace SchoolRecognition.Services
 
                         var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
 
-                        queryableSchools = queryableSchools.Where(a => a.Name.ToString().Contains(searchQuery)
-                            || a.Address.ToString().Contains(searchQuery)
-                            || a.EmailAddress.ToString().Contains(searchQuery)
-                            || a.PhoneNo.ToString().Contains(searchQuery)
-                            || (a.YearEstablished != null ? a.YearEstablished : null).ToString().Contains(searchQuery)
-                            || (a.Category != null ? a.Category.Name : null).ToString().Contains(searchQuery)
+                        queryableSchools = queryableSchools.Where(a => a.Name.ToString().ToUpper().Contains(searchQuery)
+                            || a.Address.ToString().ToUpper().Contains(searchQuery)
+                            || a.EmailAddress.ToString().ToUpper().Contains(searchQuery)
+                            || a.PhoneNo.ToString().ToUpper().Contains(searchQuery)
+                            || (a.YearEstablished != null ? a.YearEstablished : null).ToString().ToUpper().Contains(searchQuery)
+                            || (a.Category != null ? a.Category.Name : null).ToString().ToUpper().Contains(searchQuery)
                             || (a.Office != null ? a.Office.Name : null).ToUpper().Contains(searchQuery)
                             || (a.Office != null ? a.Office.Address : null).ToUpper().Contains(searchQuery)
                             || (a.Lg != null ? a.Lg.Name : null).ToUpper().Contains(searchQuery)
