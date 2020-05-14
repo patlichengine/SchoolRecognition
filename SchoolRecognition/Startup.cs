@@ -45,6 +45,8 @@ namespace SchoolRecognition
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             })
             .AddXmlDataContractSerializerFormatters();
+            //Caching
+            services.AddResponseCaching();
 
             //Add the AutoMapper extension
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -52,7 +54,14 @@ namespace SchoolRecognition
             //
 
             var connection = Configuration.GetConnectionString("SchoolRecognitionConnection");
-            services.AddDbContext<SchoolRecognitionContext>(options => options.UseSqlServer(connection));
+            //install the Microsoft.EntityFrameworkCore.Proxies to enable lazy-loading
+            services.AddDbContext<SchoolRecognitionContext>
+                (options =>
+                options
+                //Enabling lazy-loading
+                .UseLazyLoadingProxies()
+                .UseSqlServer(connection)
+                );
 
             var connectionString = new ConnectionString(Configuration.GetConnectionString("SchoolRecognitionConnection"));
             services.AddSingleton(connectionString);
@@ -65,12 +74,18 @@ namespace SchoolRecognition
             //services.AddTransient<IRecognitionTypesRepository, cRecognitionTypesRepository>(provider => new cRecognitionTypesRepository(connectionString));
 
             services.AddScoped<IAccountsRepository, cAccountsRepository>();
+            services.AddScoped<IApplicationSettingsRepository, cApplicationSettingsRepository>();
             services.AddScoped<ICentresRepository, cCentresRepository>();
             services.AddScoped<ISchoolPaymentsRepository, cSchoolPaymentsRepository>();
+            services.AddScoped<IStatesRepository, cStatesRepository>();
+            services.AddScoped<IOfficesRepository, cOfficesRepository>();
+            services.AddScoped<IOfficeTypesRepository, cOfficeTypesRepository>();
+            services.AddScoped<IOfficeStatesRepository, cOfficeStatesRepository>();
             services.AddScoped<IPinsRepository, cPinsRepository>();
-            services.AddScoped<IRecognitionTypesRepository, cRecognitionTypesRepository>();;
+            services.AddScoped<IRecognitionTypesRepository, cRecognitionTypesRepository>();
             services.AddScoped<ISchoolCategoryRepository, cSchoolCategoryRepository>();
             services.AddScoped<ISchoolsRepository, cSchoolsRepository>();
+            services.AddScoped<ISubjectsRepository, cSubjectsRepository>();
 
 
 
@@ -111,6 +126,9 @@ namespace SchoolRecognition
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            //Enable caching
+            app.UseResponseCaching();
+            //
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

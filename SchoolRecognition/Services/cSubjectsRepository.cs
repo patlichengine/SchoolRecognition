@@ -342,7 +342,7 @@ namespace SchoolRecognition.Services
             Guid? returnValue = null;
             try
             {
-                if (_obj != null)
+                if (_obj != null && _obj.Id == Guid.Empty)
                 {
                     Subjects entity = _mapper.Map<Subjects>(_obj);
                     //
@@ -412,6 +412,77 @@ namespace SchoolRecognition.Services
                 else
                 {
                     throw new ArgumentNullException(nameof(id));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<bool> CheckIfSubjectExists(string subjectCode, string longName, string shortName)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (!String.IsNullOrWhiteSpace(subjectCode) && !String.IsNullOrWhiteSpace(longName) && !String.IsNullOrWhiteSpace(shortName))
+                {
+
+                    subjectCode = subjectCode.Trim().ToUpper();
+                    longName = longName.Trim().ToUpper();
+                    shortName = shortName.Trim().ToUpper();
+                    var dbResult = await _context.Subjects.AnyAsync(x => x.SubjectCode.Trim().ToUpper() == subjectCode
+                        || x.LongName.Trim().ToUpper() == longName
+                        || x.ShortName.Trim().ToUpper() == shortName
+                        );
+
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(subjectCode));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<bool> CheckIfSubjectExists(Guid id, string subjectCode, string longName, string shortName)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (id != Guid.Empty && !String.IsNullOrWhiteSpace(subjectCode) && !String.IsNullOrWhiteSpace(longName) && !String.IsNullOrWhiteSpace(shortName))
+                {
+
+                    subjectCode = subjectCode.Trim().ToUpper();
+                    longName = longName.Trim().ToUpper();
+                    shortName = shortName.Trim().ToUpper();
+                    var dbResult = await _context.Subjects.Where(x => x.Id != id).AnyAsync(x => x.SubjectCode.Trim().ToUpper() == subjectCode
+                        || x.LongName.Trim().ToUpper() == longName
+                        || x.ShortName.Trim().ToUpper() == shortName
+                        );
+
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(subjectCode));
+
                 }
             }
             catch (Exception ex)

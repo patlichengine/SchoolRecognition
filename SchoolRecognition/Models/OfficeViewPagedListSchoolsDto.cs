@@ -19,6 +19,25 @@ namespace SchoolRecognition.Models
         public double? Latitude { get; set; }
         public string OfficeTypeDescription { get; set; }
         //public virtual IEnumerable<OfficeStatesViewDto> StateOffices { get; set; }
+        public string StateAssigned
+        {
+            get
+            {
+                string stateAssigned = null;
+
+                if (OfficeStateOffices != null && OfficeStateOffices.Count() > 0)
+                {
+                    var officeState = OfficeStateOffices.SingleOrDefault();
+                    if (officeState != null)
+                    {
+                        stateAssigned = $"{officeState.StateCode} {officeState.StateName}";
+                    }
+                }
+
+                return stateAssigned;
+            }
+        }
+        public virtual IEnumerable<OfficeStatesViewDto> OfficeStateOffices { get; set; }
         public virtual CustomPagedList<SchoolsViewDto> OfficeSchools { get; set; }
     }
 }

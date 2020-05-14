@@ -168,12 +168,21 @@ namespace SchoolRecognition.Services
                 {
                     var dbResult = _context.OfficeStates as IQueryable<OfficeStates>;
 
-                    var officeStates = await dbResult.Include(x => x.Office).Include(x => x.State).Where(x => x.Id == id).SingleOrDefaultAsync();
-                    returnValue = _mapper.Map<OfficeStatesViewDto>(officeStates);
+                    var officeStates = await dbResult.Include(x => x.Office).Include(x => x.State)
+                        .Select(x => new OfficeStatesViewDto()
+                        {
+                            Id = x.Id,
+                            OfficeId = x.OfficeId != null ? x.OfficeId.Value : Guid.Empty,
+                            OfficeName = x.Office != null ? x.Office.Name : null,
+                            OfficeAddress = x.Office != null ? x.Office.Address : null,
+                            StateId = x.StateId != null ? x.StateId.Value : Guid.Empty,
+
+                        })
+                        .Where(x => x.Id == id).SingleOrDefaultAsync();
                     //
 
 
-                    return returnValue;
+                    return returnValue = officeStates;
                 }
                 else
                 {
@@ -186,14 +195,52 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-               
+
+        public async Task<OfficeStatesViewDto> GetOfficeStatesByOfficeIdSingleOrDefaultAsync(Guid officeId)
+        {
+
+            //Instantiate Return Value
+            OfficeStatesViewDto returnValue = null;
+            try
+            {
+                if (officeId != Guid.Empty)
+                {
+                    var dbResult = _context.OfficeStates as IQueryable<OfficeStates>;
+
+                    var officeStates = await dbResult.Include(x => x.Office).Include(x => x.State)
+                        .Select(x => new OfficeStatesViewDto() {
+                            Id = x.Id,
+                            OfficeId = x.OfficeId != null ? x.OfficeId.Value : Guid.Empty,
+                            OfficeName = x.Office != null ? x.Office.Name : null,
+                            OfficeAddress = x.Office != null ? x.Office.Address: null,
+                            StateId = x.StateId  != null ? x.StateId.Value : Guid.Empty,
+
+                        })
+                        .Where(x => x.OfficeId == officeId).SingleOrDefaultAsync();
+                    //
+
+
+                    return returnValue = officeStates;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(officeId));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<Guid?> CreateOfficeStateAsync(OfficeStatesCreateDto _obj)
         {
             //Instantiate Return Value
             Guid? returnValue = null;
             try
             {
-                if (_obj != null)
+                if (_obj != null && _obj.Id == Guid.Empty)
                 {
                     OfficeStates entity = _mapper.Map<OfficeStates>(_obj);
                     //
@@ -271,6 +318,59 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+        ///
 
+        public async Task<bool> CheckIfOfficeStateExists(Guid statedId, Guid officeId)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (statedId != Guid.Empty && officeId != Guid.Empty)
+                {
+                    var dbResult = await _context.OfficeStates.AnyAsync(x => x.StateId == statedId && x.OfficeId == officeId);
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(officeId));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<bool> CheckIfOfficeStateExists(Guid id, Guid statedId, Guid officeId)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (id != Guid.Empty && statedId != Guid.Empty && officeId != Guid.Empty)
+                {
+                    var dbResult = await _context.OfficeStates.Where(x => x.Id != id).AnyAsync(x => x.StateId == statedId && x.OfficeId == officeId);
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

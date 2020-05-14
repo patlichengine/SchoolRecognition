@@ -1,0 +1,197 @@
+﻿@model SubjectsCreateDto
+@{
+    ViewData["Title"] = "Update Subject";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section styles{
+
+    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
+        <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+        <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />*@
+
+}
+
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Subjects" asp-action="Index">Manage Subjects</a></li>
+                    @*<li class="breadcrumb-item"><a asp-area="" asp-controller="Subjects" asp-action="Details" asp-route-id="@Model.Id">@Model.ShortName</a></li>*@
+                    <li class="breadcrumb-item">@Model.ShortName</li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Update Subject</h3>
+                </div>
+                <div class="card-body">
+
+                    <small class="text-muted mt-1 mb-2">All fields marked <b class="text-dark">*</b> are required!</small>
+
+                    <form asp-action="Update" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="LongName">*Long Name:</label>
+                            <input minlength="5" maxlength="200" asp-for="LongName" class="form-control" placeholder="Enter Long Name" required>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-8">
+
+                                <div class="form-group">
+                                    <label asp-for="ShortName">*Short Name:</label>
+                                    <input minlength="5" maxlength="100" asp-for="ShortName" class="form-control" placeholder="Enter Short Name" required>
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-4">
+
+
+                                <div class="form-group">
+                                    <label asp-for="SubjectCode">*Subject Code:</label>
+                                    <input minlength="3" maxlength="50" asp-for="SubjectCode" class="form-control" placeholder="Enter Subject Code" required>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group mb-5 mt-3">
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" asp-for="IsCoreSubject">
+                                <label class="form-check-label" asp-for="IsCoreSubject">Is a Core Subject</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" asp-for="IsTradeSubject">
+                                <label class="form-check-label" asp-for="IsTradeSubject">Is a Trade Subject</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" asp-for="HasItem">
+                                <label class="form-check-label" asp-for="HasItem">Has Item</label>
+                            </div>
+
+                        </div>
+
+
+                        <!-- /.col -->
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-spinner fa-spin" id="loading_icon" style="display:none"></i>
+                            Save
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-lg"> Reset</button>
+
+                        <!-- /.col -->
+
+                    </form>
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    <script src="~/js/loading_icon.js"></script>
+    @*<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
+    @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
+    @*<script src="~/lib/select2/dist/js/select2.full.min.js"></script>*@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('select.form-control').select2({
+                theme: 'bootstrap4'
+            });
+            //$('.select2me').select2();
+        });
+    </script>
+    <script>
+        // add the rule here
+        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        //    return arg !== value;
+        //}, "Select a valid value!");
+        // add the rule here
+        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+            return arg !== value;
+        }, "Select a valid value!");
+        $("form").validate({
+            rules: {
+                LongName: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 200
+                },
+                ShortName: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 100
+                },
+                SubjectCode: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 50
+                }
+
+            },
+            messages: {
+                LongName: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 5 characters!",
+                    maxlength: "This field must have less than 200 characters!",
+                },
+                ShortName: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 5 characters!",
+                    maxlength: "This field must have less than 100 characters!",
+                },
+                SubjectCode: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 3 characters!",
+                    maxlength: "This field must have less than 50 characters!",
+                }
+            }
+        });
+    </script>
+
+
+}
+
+

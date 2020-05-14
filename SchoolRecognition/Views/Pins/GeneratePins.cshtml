@@ -39,6 +39,7 @@
     <div class="row">
         <div class="col-12">
             <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
 
             <div class="card">
                 <div class="card-header">
@@ -56,7 +57,7 @@
                         <div class="form-group">
                             <label asp-for="RecognitionTypeId">Recognition Type</label>
                             <select asp-for="RecognitionTypeId" asp-items="@recognitionTypes.ToList()" class="form-control" required>
-                                <option value="">--Select Recogniton Type---</option>
+                                <option value="">--Select Recognition Type---</option>
                             </select>
                             <span asp-validation-for="RecognitionTypeId" class="text-danger"></span>
                         </div>

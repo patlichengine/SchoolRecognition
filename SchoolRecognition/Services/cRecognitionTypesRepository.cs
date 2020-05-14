@@ -323,7 +323,7 @@ namespace SchoolRecognition.Services
             Guid? returnValue = null;
             try
             {
-                if (_obj != null)
+                if (_obj != null && _obj.Id == Guid.Empty)
                 {
                     RecognitionTypes entity = _mapper.Map<RecognitionTypes>(_obj);
                     //
@@ -401,7 +401,70 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+        ///
+        public async Task<bool> CheckIfRecognitionTypeExists(string name, string code)
+        {
+            //Instantiate Return Value
+            bool returnValue = true;
+            try
+            {
 
+                if (!String.IsNullOrWhiteSpace(name) && !String.IsNullOrWhiteSpace(code))
+                {
+
+                    name = name.Trim().ToUpper();
+                    code = code.Trim().ToUpper();
+                    var dbResult = await _context.RecognitionTypes.AnyAsync(x => x.Name.Trim().ToUpper() == name
+                    || x.Code.Trim().ToUpper() == code
+                    );
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(name));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<bool> CheckIfRecognitionTypeExists(Guid id, string name, string code)
+        {
+            //Instantiate Return Value
+            bool returnValue = true;
+            try
+            {
+
+                if (id != Guid.Empty && !String.IsNullOrWhiteSpace(name) && !String.IsNullOrWhiteSpace(code))
+                {
+
+                    name = name.Trim().ToUpper();
+                    code = code.Trim().ToUpper();
+                    var dbResult = await _context.RecognitionTypes.Where(x => x.Id != id).AnyAsync(x => x.Name.Trim().ToUpper() == name
+                    || x.Code.Trim().ToUpper() == code
+                    );
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(name));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
     }
 }

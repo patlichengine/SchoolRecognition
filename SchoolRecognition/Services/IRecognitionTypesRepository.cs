@@ -20,5 +20,10 @@ namespace SchoolRecognition.Services
         Task<Guid?> CreateRecognitionTypeAsync(RecognitionTypesCreateDto _obj);
         Task<RecognitionTypesViewDto> UpdateRecognitionTypeAsync(RecognitionTypesCreateDto _obj);
         Task DeleteRecognitionTypeAsync(Guid id); //return type is void
+        ///
+
+        Task<bool> CheckIfRecognitionTypeExists(string name, string code);
+        Task<bool> CheckIfRecognitionTypeExists(Guid id, string name, string code);
+
     }
 }

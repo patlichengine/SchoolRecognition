@@ -27,6 +27,11 @@ namespace SchoolRecognition.Profiles
                 .ForMember(
                 dest => dest.TypeDescription,
                 opt => opt.MapFrom(src => $"{src.Description}"));
+
+            CreateMap<Models.OfficeTypesViewDto, Models.OfficeTypesCreateDto>()
+                .ForMember(
+                dest => dest.IsActive,
+                opt => opt.NullSubstitute(false));
         }
     }
 }

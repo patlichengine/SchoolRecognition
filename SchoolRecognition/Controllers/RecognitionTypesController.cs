@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -37,6 +38,8 @@ namespace SchoolRecognition.Controllers
 
         //Get
         [Route("")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Index()
         {
             try
@@ -52,7 +55,9 @@ namespace SchoolRecognition.Controllers
             }
         }
         //Get id
-        [Route("recognition_type_pins/{id?}")]
+        [Route("recognition_type/{id:guid}/pins")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> ViewPins(Guid id, string orderBy, string searchQuery, int? pageNumber)
         {
             try
@@ -140,6 +145,8 @@ namespace SchoolRecognition.Controllers
 
         [Route("create")]
         [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Create()
         {
             return View();
@@ -155,6 +162,14 @@ namespace SchoolRecognition.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
+                    //Check if entry with similar data already exists
+                    if (await _recognitionTypesRepository.CheckIfRecognitionTypeExists(model.RecognitionTypeCode, model.RecognitionTypeName))
+                    {
+
+                        _flashMessage.Danger("Duplicate Data Entry!", "A Recognition Type with the same values already exists in the system...");
+                        return View(model);
+                    }
                     var result = await _recognitionTypesRepository.CreateRecognitionTypeAsync(model);
 
                     if (result != null)
@@ -181,8 +196,10 @@ namespace SchoolRecognition.Controllers
 
 
         //CreatePins
-        [Route("generate_pins/{id?}")]
+        [Route("generate_pins")]
         [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GeneratePins(Guid id)
         {
             try
@@ -208,7 +225,7 @@ namespace SchoolRecognition.Controllers
         }
 
 
-        [Route("generate_pins/{id?}")]
+        [Route("generate_pins")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> GeneratePins(PinsCreateDto model)
@@ -254,6 +271,8 @@ namespace SchoolRecognition.Controllers
 
         [Route("update/{id?}")]
         [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Update(Guid? id)
         {
             try
@@ -273,10 +292,6 @@ namespace SchoolRecognition.Controllers
             }
         }
 
-        // POST: Offices/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-
         [Route("update/{id?}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -287,6 +302,12 @@ namespace SchoolRecognition.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //Check if entry with similar data already exists
+                    if (await _recognitionTypesRepository.CheckIfRecognitionTypeExists(model.Id, model.RecognitionTypeCode, model.RecognitionTypeName))
+                    {
+                        _flashMessage.Danger("Duplicate Data Entry!", "A Recognition Type with the same values already exists in the system...");
+                        return View(model);
+                    }
                     //Set Pins as active 
                     var result = await _recognitionTypesRepository.UpdateRecognitionTypeAsync(model);
 
@@ -313,6 +334,8 @@ namespace SchoolRecognition.Controllers
         // GET: Offices/Delete/5
         [Route("delete/{id?}")]
         [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Delete(Guid? id)
         {
             try

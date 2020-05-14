@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using SchoolRecognition.Entities;
+using SchoolRecognition.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +15,16 @@ namespace SchoolRecognition.Profiles
             CreateMap<Entities.Offices, Models.OfficesViewDto>()
                 .ForMember(
                     dest => dest.OfficeName,
-                    opt => opt.MapFrom(src => $"{src.Name}"))
+                    opt => opt.MapFrom(src => src.Name))
                 .ForMember(
                     dest => dest.OfficeAddress,
-                    opt => opt.MapFrom(src => $"{src.Address}"))
+                    opt => opt.MapFrom(src => src.Address))
                 .ForMember(
                     dest => dest.StateName,
                     opt =>
                     {
                         opt.PreCondition(src => (src.State != null));
-                        opt.MapFrom(src => $"{ src.State.Name}");
+                        opt.MapFrom(src => src.State.Name);
                     })
                 .ForMember(
                     dest => dest.OfficeTypeDescription,
@@ -47,6 +49,7 @@ namespace SchoolRecognition.Profiles
                 .ForMember(
                     dest => dest.Address,
                     opt => opt.MapFrom(src => $"{src.OfficeAddress}"));
+
 
 
 

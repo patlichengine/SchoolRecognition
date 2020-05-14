@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,7 +14,7 @@ using Vereyon.Web;
 
 namespace SchoolRecognition.Controllers
 {
-    [Route("manage_pins/view_all_pins")]
+    [Route("manage_pins/recognition_pins")]
     public class PinsController : Controller
     {
         private IFlashMessage _flashMessage;
@@ -30,6 +31,8 @@ namespace SchoolRecognition.Controllers
         }
 
         [Route("")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Index(string orderBy, string searchQuery, int? pageNumber)
         {
             try
@@ -111,6 +114,8 @@ namespace SchoolRecognition.Controllers
         }
 
         [Route("pin_details/{id?}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Details(Guid? id)
         {
             try
@@ -134,6 +139,8 @@ namespace SchoolRecognition.Controllers
         }
         
         [Route("pin_user_tracker/{id?}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> PinHistories(Guid id, string orderBy, string searchQuery, int? pageNumber)
         {
             try
@@ -214,6 +221,8 @@ namespace SchoolRecognition.Controllers
 
         [Route("generate_pins")]
         [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> GeneratePins()
         {
             try
@@ -282,6 +291,8 @@ namespace SchoolRecognition.Controllers
         // GET: Offices/Delete/5
         [Route("delete_pin/{id?}")]
         [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Delete(Guid? id)
         {
             try

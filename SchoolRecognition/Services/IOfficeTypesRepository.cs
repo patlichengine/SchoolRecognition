@@ -19,5 +19,10 @@ namespace SchoolRecognition.Services
         Task<Guid?> CreateOfficeTypeAsync(OfficeTypesCreateDto _obj);
         Task<OfficeTypesViewDto> UpdateOfficeTypeAsync(OfficeTypesCreateDto _obj);
         Task DeleteOfficeTypeAsync(Guid id); //return type is void
+        ///
+
+        Task<bool> CheckIfOfficeTypeExists(string officeTypeDescription);
+        Task<bool> CheckIfOfficeTypeExists(Guid id, string officeTypeDescription);
+
     }
 }

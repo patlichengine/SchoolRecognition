@@ -11,6 +11,33 @@ namespace SchoolRecognition.Services
     {
 
 
+        private Dictionary<string, PropertyMappingValue> _officesPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "OfficeName", new PropertyMappingValue(new List<string>() { "Name" } )},
+               { "OfficeNameDesc", new PropertyMappingValue(new List<string>() { "Name" } , true)},
+               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" } ) },
+               { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" }, true ) },
+          };
+
+        private Dictionary<string, PropertyMappingValue> _officeTypesPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "OfficeTypeName", new PropertyMappingValue(new List<string>() { "Name" } )},
+               { "OfficeTypeNameDesc", new PropertyMappingValue(new List<string>() { "Name" }, true )}
+          };
+
+
+        private Dictionary<string, PropertyMappingValue> _officeStatesPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "Id", new PropertyMappingValue(new List<string>() { "Id" } )},
+               { "IdDesc", new PropertyMappingValue(new List<string>() { "Id" }, true )},
+          };
+
         private Dictionary<string, PropertyMappingValue> _pinHistoriesPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {
@@ -44,25 +71,50 @@ namespace SchoolRecognition.Services
                //{ "Name", new PropertyMappingValue(new List<string>() { "FirstName", "LastName" }) }
           };
 
+        private Dictionary<string, PropertyMappingValue> _schoolsPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "SchoolName", new PropertyMappingValue(new List<string>() { "Name" } )},
+               { "SchoolNameDesc", new PropertyMappingValue(new List<string>() { "Name" } , true)},
+               { "YearEstablished", new PropertyMappingValue(new List<string>() { "YearEstablished" } )},
+               { "YearEstablishedDesc", new PropertyMappingValue(new List<string>() { "YearEstablished" } , true)},
+          };
+        
+
         private Dictionary<string, PropertyMappingValue> _schoolPaymentsPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {
                //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
-               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" } )},
-               { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" } , true)},
-               { "AmountPaid", new PropertyMappingValue(new List<string>() { "AmountPaid" } )},
-               { "AmountPaidDesc", new PropertyMappingValue(new List<string>() { "AmountPaid" } , true)},
-               //{ "Name", new PropertyMappingValue(new List<string>() { "FirstName", "LastName" }) }
+               { "TypeDescription", new PropertyMappingValue(new List<string>() { "Description" } )},
+               { "TypeDescriptionDesc", new PropertyMappingValue(new List<string>() { "Description" } , true)},
+          };
+        
+        
+
+        private Dictionary<string, PropertyMappingValue> _subjectsPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "LongName", new PropertyMappingValue(new List<string>() { "LongName" } )},
+               { "LongNameDesc", new PropertyMappingValue(new List<string>() { "LongName" } , true)},
+               { "SubjectCode", new PropertyMappingValue(new List<string>() { "SubjectCode" } )},
+               { "SubjectCodeDesc", new PropertyMappingValue(new List<string>() { "SubjectCode" } , true)},
           };
 
         private IList<IPropertyMapping> _propertyMappings = new List<IPropertyMapping>();
 
         public PropertyMappingService()
         {
+            _propertyMappings.Add(new PropertyMapping<OfficesViewDto, Offices>(_officesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<OfficeTypesViewDto, OfficeTypes>(_officeTypesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<OfficeStatesViewDto, OfficeStates>(_officeStatesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<PinHistoriesViewDto, PinHistories>(_pinHistoriesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<PinsViewDto, Pins>(_pinsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<RecognitionTypesViewDto, RecognitionTypes>(_recognitionTypesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<SchoolsViewDto, Schools>(_schoolsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SchoolPaymentsViewDto, SchoolPayments>(_schoolPaymentsPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<SubjectsViewDto, Subjects>(_subjectsPropertyMapping));
         }
 
         public bool ValidMappingExistsFor<TSource, TDestination>(string fields)

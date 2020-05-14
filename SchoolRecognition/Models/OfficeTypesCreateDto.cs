@@ -9,6 +9,6 @@ namespace SchoolRecognition.Models
     {
         public Guid Id { get; set; }
         public string TypeDescription { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }

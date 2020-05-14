@@ -14,8 +14,8 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Offices" asp-action="Index">Manage Offices</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Offices"  asp-action="Details" asp-route-id="9c338b95-d8b1-479f-8104-54e23de90283">@Model.OfficeName</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Offices"  asp-action="Details" asp-route-id="@Model.Id">@Model.OfficeName</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -59,7 +59,7 @@
                         <table class="table table-responsive-md table-borderless">
                             <tbody style="font-size:16px">
                                 <tr>
-                                    <td>
+                                    <td class="p-0">
                                         <dl>
                                             <dt>Office</dt>
                                             <dd>@Model.OfficeName</dd>
@@ -67,7 +67,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>
+                                    <td class="p-0">
                                         <dl>
                                             <dt>Address</dt>
                                             <dd>@Model.OfficeAddress</dd>

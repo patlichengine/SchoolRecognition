@@ -17,5 +17,8 @@ namespace SchoolRecognition.Services
         Task<Guid?> CreateSubjectAsync(SubjectsCreateDto _obj);
         Task<SubjectsViewDto> UpdateSubjectAsync(SubjectsCreateDto _obj);
         Task DeleteSubjectAsync(Guid id); //return type is void
+        ///
+        Task<bool> CheckIfSubjectExists(string subjectCode, string longName, string shortName);
+        Task<bool> CheckIfSubjectExists(Guid id, string subjectCode, string longName, string shortName);
     }
 }

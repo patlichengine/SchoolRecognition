@@ -160,10 +160,10 @@ namespace SchoolRecognition.Services
                 {
                     var dbResult = _context.OfficeTypes as IQueryable<OfficeTypes>;
 
-                    var recognitionTypes = await dbResult.Where(x => x.Id == id).SingleOrDefaultAsync();
-                    returnValue = _mapper.Map<OfficeTypesViewDto>(recognitionTypes);
+                    var officeTypes = await dbResult.Where(x => x.Id == id).SingleOrDefaultAsync();
+                    returnValue = _mapper.Map<OfficeTypesViewDto>(officeTypes);
                     //
-                    returnValue.OfficesCount = await dbResult.Include(x => x.Description).Where(x => x.Id == id).SelectMany(x => x.Offices).CountAsync();
+                    returnValue.OfficesCount = await dbResult.Include(x => x.Offices).Where(x => x.Id == id).SelectMany(x => x.Offices).CountAsync();
 
 
                     return returnValue;
@@ -191,14 +191,43 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.OfficeTypes.Include(x => x.Offices).Where(x => x.Id == id) as IQueryable<OfficeTypes>;
+                    var dbResult = _context.OfficeTypes
+                        .Include(x => x.Offices)
+                        .ThenInclude(y => y.OfficeStates)
+                        .Include(x => x.Offices)
+                        .ThenInclude(y => y.OfficeType)
+                        .Include(x => x.Offices)
+                        .ThenInclude(y => y.CreatedByNavigation)
+                        .Where(x => x.Id == id) as IQueryable<OfficeTypes>;
 
 
                     returnValue = _mapper.Map<OfficeTypesViewDto>(await dbResult.SingleOrDefaultAsync());
 
-                    List<Offices> offices = await dbResult.SelectMany(x => x.Offices).ToListAsync();
+                    returnValueOffices = await dbResult.SelectMany(x => x.Offices).Select(x => new OfficesViewDto()
+                    {
+                        Id = x.Id,
+                        OfficeName = x.Name,
+                        OfficeAddress = x.Address,
+                        StateName = x.State != null ? x.State.Name : null,
+                        OfficeImage = x.OfficeImage,
+                        Longitude = x.Longitute,
+                        Latitude = x.Latitude,
+                        OfficeTypeDescription = x.OfficeType != null ? x.OfficeType.Description : null,
+                        //
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                        {
+                            Id = y.Id,
+                            StateName = y.State != null ? y.State.Name : null,
+                            StateCode = y.State != null ? y.State.Code : null,
+                            OfficeName = y.Office != null ? y.Office.Name : null,
+                            OfficeAddress = y.Office != null ? y.Office.Address : null,
+                        }),
 
-                    returnValueOffices = _mapper.Map<IEnumerable<OfficesViewDto>>(offices);
+
+                    }).ToListAsync();
+
 
                     returnValue.OfficeTypeOffices = returnValueOffices;
 
@@ -233,7 +262,14 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.OfficeTypes.Include(x => x.Offices).Where(x => x.Id == id) as IQueryable<OfficeTypes>;
+                    var dbResult = _context.OfficeTypes
+                        .Include(x => x.Offices)
+                        .ThenInclude(y => y.OfficeStates)
+                        .Include(x => x.Offices)
+                        .ThenInclude(y => y.OfficeType)
+                        .Include(x => x.Offices)
+                        .ThenInclude(y => y.CreatedByNavigation)
+                        .Where(x => x.Id == id) as IQueryable<OfficeTypes>;
 
                     OfficeTypes officeType = await dbResult.FirstOrDefaultAsync();
                     //
@@ -280,7 +316,16 @@ namespace SchoolRecognition.Services
                         //IsActive = x.IsActive,
                         //IsInUse = x.IsInUse,
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                        DateCreated = x.DateCreated
+                        DateCreated = x.DateCreated,
+
+                        OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                        {
+                            Id = y.Id,
+                            StateName = y.State != null ? y.State.Name : null,
+                            StateCode = y.State != null ? y.State.Code : null,
+                            OfficeName = y.Office != null ? y.Office.Name : null,
+                            OfficeAddress = y.Office != null ? y.Office.Address : null,
+                        }),
 
                     });
 
@@ -316,7 +361,7 @@ namespace SchoolRecognition.Services
             Guid? returnValue = null;
             try
             {
-                if (_obj != null)
+                if (_obj != null && _obj.Id == Guid.Empty)
                 {
                     OfficeTypes entity = _mapper.Map<OfficeTypes>(_obj);
                     //
@@ -394,6 +439,65 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+
+        public async Task<bool> CheckIfOfficeTypeExists(string officeTypeDescription)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (!String.IsNullOrWhiteSpace(officeTypeDescription))
+                {
+
+                    var searchQuery = officeTypeDescription.Trim().ToUpper();
+                    var dbResult = await _context.OfficeTypes.AnyAsync(x => x.Description.Trim().ToUpper() == searchQuery);
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(officeTypeDescription));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<bool> CheckIfOfficeTypeExists(Guid id, string officeTypeDescription)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (!String.IsNullOrWhiteSpace(officeTypeDescription))
+                {
+
+                    var searchQuery = officeTypeDescription.Trim().ToUpper();
+                    var dbResult = await _context.OfficeTypes.Where(x => x.Id != id).AnyAsync(x => x.Description.Trim().ToUpper() == searchQuery);
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
     }
 }
