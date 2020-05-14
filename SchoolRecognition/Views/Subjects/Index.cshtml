@@ -107,6 +107,7 @@
                                 <td>Subject Name</td>
                                 <td>Core Subject</td>
                                 <td>Trade Subject</td>
+                                <td>Requires Items</td>
                                 <td></td>
                             </tr>
                         </thead>
@@ -129,6 +130,17 @@
                                 </td>
                                 <td>
                                     @if (item.IsTradeSubject)
+                                    {
+                                        <i class="fas fa-check text-success"></i>
+                                    }
+                                    else
+                                    {
+
+                                        <i class="fas fa-times text-danger"></i>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.HasItem)
                                     {
                                         <i class="fas fa-check text-success"></i>
                                     }

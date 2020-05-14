@@ -76,7 +76,7 @@
 
                                 <div class="form-group">
                                     <label asp-for="SubjectCode">*Subject Code:</label>
-                                    <input minlength="3" maxlength="50" asp-for="SubjectCode" class="form-control" placeholder="Enter Subject Code" required>
+                                    <input minlength="3" maxlength="4" asp-for="SubjectCode" pattern="[0-9]" class="form-control" placeholder="Enter Subject Code" required>
                                 </div>
 
                             </div>
@@ -91,11 +91,11 @@
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" asp-for="IsTradeSubject">
-                                <label class="form-check-label"  asp-for="IsTradeSubject">Is a Trade Subject</label>
+                                <label class="form-check-label" asp-for="IsTradeSubject">Is a Trade Subject</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="checkbox" asp-for="HasItem">
-                                <label class="form-check-label"  asp-for="HasItem">Has Item</label>
+                                <label class="form-check-label" asp-for="HasItem">Requires Additional Items (e.g Equipments, Chemicals, Laboratories)</label>
                             </div>
 
                         </div>
@@ -165,7 +165,8 @@
                 SubjectCode: {
                     required: true,
                     minlength: 3,
-                    maxlength: 50
+                    maxlength: 4,
+                    pattern: /[0-9]/
                 }
 
             },
@@ -183,7 +184,8 @@
                 SubjectCode: {
                     required: "This field is required!",
                     minlength: "This field must have at least 3 characters!",
-                    maxlength: "This field must have less than 50 characters!",
+                    maxlength: "This field must have less than 4 characters!",
+                    pattern: "This field only accepts numerical values!"
                 }
             }
         });
