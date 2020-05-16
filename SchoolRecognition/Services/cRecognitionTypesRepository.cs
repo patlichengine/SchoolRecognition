@@ -204,14 +204,43 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.RecognitionTypes.Include(x => x.Pins).Where(x => x.Id == id) as IQueryable<RecognitionTypes>;
+                    var dbResult = _context.RecognitionTypes
+                        .Include(x => x.Pins)
+                        .ThenInclude(x => x.CreatedByNavigation)
+                        .Include(x => x.Pins)
+                        .ThenInclude(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category)
+                        .Where(x => x.Id == id) as IQueryable<RecognitionTypes>;
 
 
                     returnValue = _mapper.Map<RecognitionTypesViewDto>(await dbResult.SingleOrDefaultAsync());
 
-                    List<Pins> pins = await dbResult.SelectMany(x => x.Pins).ToListAsync();
+                    returnValuePins = await dbResult.SelectMany(x => x.Pins).Select(x => new PinsViewDto()
+                    {
+                        Id = x.Id,
+                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                        SerialNumber = x.SerialPin,
+                        IsActive = x.IsActive,
+                        IsInUse = x.IsInUse,
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
 
-                    returnValuePins = _mapper.Map<IEnumerable<PinsViewDto>>(pins);
+                        })
+                    }).ToListAsync();
+
 
                     returnValue.RecognitionTypePins = returnValuePins;
 
@@ -246,7 +275,14 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.RecognitionTypes.Include(x => x.Pins).Where(x => x.Id == id) as IQueryable<RecognitionTypes>;
+                    var dbResult = _context.RecognitionTypes
+                        .Include(x => x.Pins)
+                        .ThenInclude(x => x.CreatedByNavigation)
+                        .Include(x => x.Pins)
+                        .ThenInclude(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category)
+                        .Where(x => x.Id == id) as IQueryable<RecognitionTypes>;
 
                     RecognitionTypes recognitionType = await dbResult.FirstOrDefaultAsync();
                     //
@@ -285,8 +321,21 @@ namespace SchoolRecognition.Services
                         IsActive = x.IsActive,
                         IsInUse = x.IsInUse,
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                        DateCreated = x.DateCreated
+                        DateCreated = x.DateCreated,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
 
+                        })
                     });
 
                     returnValuePins = await CustomPagedList<PinsViewDto>.CreateAsync(mappedResult,

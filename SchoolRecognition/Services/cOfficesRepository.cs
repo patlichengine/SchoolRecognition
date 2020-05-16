@@ -63,9 +63,16 @@ namespace SchoolRecognition.Services
             IEnumerable<OfficesViewDto> returnValue = new List<OfficesViewDto>();
             try
             {
-                var dbResult = await _context.Offices.Include(x => x.OfficeType).Include(x => x.State).Include(x => x.CreatedByNavigation).Include(x => x.OfficeStates).ToListAsync();
+                var dbResult = _context.Offices
+                    .Include(x => x.OfficeType)
+                    .Include(x => x.State)
+                    .Include(x => x.CreatedByNavigation)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.State)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.Office) as IQueryable<Offices>;
 
-                returnValue = dbResult.Select(x => new OfficesViewDto()
+                returnValue = await dbResult.Select(x => new OfficesViewDto()
                 {
                     Id = x.Id,
                     OfficeName = x.Name,
@@ -81,6 +88,8 @@ namespace SchoolRecognition.Services
                     OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                     {
                         Id = y.Id,
+                        StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                        OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
                         StateName = y.State != null ? y.State.Name : null,
                         StateCode = y.State != null ? y.State.Code : null,
                         OfficeName = y.Office != null ? y.Office.Name : null,
@@ -88,7 +97,7 @@ namespace SchoolRecognition.Services
                     }),
 
 
-                });
+                }).ToListAsync();
 
                 return returnValue;
             }
@@ -113,8 +122,14 @@ namespace SchoolRecognition.Services
                 if (resourceParams != null)
                 {
 
-                    var dbResult = _context.Offices.Include(x => x.State).Include(x => x.OfficeType)
-                        .Include(x => x.OfficeStates) as IQueryable<Offices>;
+                    var dbResult = _context.Offices
+                    .Include(x => x.OfficeType)
+                    .Include(x => x.State)
+                    .Include(x => x.CreatedByNavigation)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.State)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.Office) as IQueryable<Offices>;
                     //Search
                     if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
                     {
@@ -157,6 +172,8 @@ namespace SchoolRecognition.Services
                         OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
                             Id = y.Id,
+                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
                             StateName = y.State != null ? y.State.Name : null,
                             StateCode = y.State != null ? y.State.Code : null,
                             OfficeName = y.Office != null ? y.Office.Name : null,
@@ -193,7 +210,14 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.Offices.Include(x => x.OfficeType).Include(x => x.State).Include(x => x.OfficeStates).Include(x => x.CreatedByNavigation).Where(x => x.Id == id) as IQueryable<Offices>;
+                    var dbResult = _context.Offices
+                    .Include(x => x.OfficeType)
+                    .Include(x => x.State)
+                    .Include(x => x.CreatedByNavigation)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.State)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.Office).Where(x => x.Id == id) as IQueryable<Offices>;
 
 
                     var office = await dbResult.Select(x => new OfficesViewDto()
@@ -212,6 +236,8 @@ namespace SchoolRecognition.Services
                         OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
                             Id = y.Id,
+                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
                             StateName = y.State != null ? y.State.Name : null,
                             StateCode = y.State != null ? y.State.Code : null,
                             OfficeName = y.Office != null ? y.Office.Name : null,
@@ -259,7 +285,15 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.Offices.Include(x => x.OfficeType).Include(x => x.State).Include(x => x.CreatedByNavigation).Include(x => x.OfficeStates).Where(x => x.Id == id) as IQueryable<Offices>;
+                    var dbResult = _context.Offices
+                    .Include(x => x.OfficeType)
+                    .Include(x => x.State)
+                    .Include(x => x.CreatedByNavigation)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.State)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.Office)
+                    .Where(x => x.Id == id) as IQueryable<Offices>;
 
                     var office = await dbResult.Select(x => new OfficeViewPagedListSchoolsDto()
                     {
@@ -277,6 +311,8 @@ namespace SchoolRecognition.Services
                         OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
                             Id = y.Id,
+                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
                             StateName = y.State != null ? y.State.Name : null,
                             StateCode = y.State != null ? y.State.Code : null,
                             OfficeName = y.Office != null ? y.Office.Name : null,
@@ -373,7 +409,13 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = await _context.Offices.Include(x => x.OfficeType).Include(x => x.State).Include(x => x.CreatedByNavigation).Include(x => x.OfficeStates)
+                    var dbResult = await _context.Offices.Include(x => x.OfficeType)
+                    .Include(x => x.State)
+                    .Include(x => x.CreatedByNavigation)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.State)
+                    .Include(x => x.OfficeStates)
+                    .ThenInclude(y => y.Office)
                         .Select(x => new OfficesViewDto()
                         {
                             Id = x.Id,
@@ -393,6 +435,8 @@ namespace SchoolRecognition.Services
                             OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                             {
                                 Id = y.Id,
+                                StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
                                 StateName = y.State != null ? y.State.Name : null,
                                 StateCode = y.State != null ? y.State.Code : null,
                                 OfficeName = y.Office != null ? y.Office.Name : null,

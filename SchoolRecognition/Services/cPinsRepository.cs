@@ -83,7 +83,7 @@ namespace SchoolRecognition.Services
                 {
 
                     //Get RecognitionType
-                    var _recognitionType = await _context.RecognitionTypes.Include(x => x.Pins).Where(x => x.Id == recognitionTypeId).FirstOrDefaultAsync();
+                    var _recognitionType = await _context.RecognitionTypes.Include(x => x.Pins).Where(x => x.Id == recognitionTypeId).SingleOrDefaultAsync();
                     //Get List of Pins of the given RecognitionType currently in the DB
 
                     if (_recognitionType != null)
@@ -132,7 +132,7 @@ namespace SchoolRecognition.Services
                 if (recognitionTypeId != Guid.Empty)
                 {
                     //Get RecognitionType
-                    var _recognitionType = await _context.RecognitionTypes.Include(x => x.Pins).Where(x => x.Id == recognitionTypeId).FirstOrDefaultAsync();
+                    var _recognitionType = await _context.RecognitionTypes.Include(x => x.Pins).Where(x => x.Id == recognitionTypeId).SingleOrDefaultAsync();
                     //Get List of Pins of the given RecognitionType currently in the DB
 
                     if (_recognitionType != null)
@@ -185,9 +185,36 @@ namespace SchoolRecognition.Services
             IEnumerable<PinsViewDto> returnValue = new List<PinsViewDto>();
             try
             {
-                var dbResult = await _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).ToListAsync();
+                var dbResult = _context.Pins.Include(x => x.RecognitionType)
+                        .Include(x => x.CreatedByNavigation)
+                        .Include(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category) as IQueryable<Pins>;
 
-                returnValue = _mapper.Map<IEnumerable<PinsViewDto>>(dbResult);
+                returnValue = await dbResult.Select(x => new PinsViewDto()
+                {
+                    Id = x.Id,
+                    RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                    SerialNumber = x.SerialPin,
+                    IsActive = x.IsActive,
+                    IsInUse = x.IsInUse,
+                    CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                    DateCreated = x.DateCreated,
+                    Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                    {
+                        Id = x.Id,
+                        AmountPaid = x.Amount,
+                        PaymentReceiptNo = x.ReceiptNo,
+                        DateCreated = x.DateCreated,
+                        PaymentReceiptImage = x.ReceiptImage,
+                        //CreatedByNavigation
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        SchoolName = x.School != null ? x.School.Name : null,
+                        SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                        PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
+
+                    })
+                }).ToListAsync();
 
                 return returnValue;
             }
@@ -212,7 +239,11 @@ namespace SchoolRecognition.Services
                 if (resourceParams != null)
                 {
 
-                    var dbResult = _context.Pins as IQueryable<Pins>;
+                    var dbResult = _context.Pins.Include(x => x.RecognitionType)
+                        .Include(x => x.CreatedByNavigation)
+                        .Include(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category) as IQueryable<Pins>;
                     //Search
                     if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
                     {
@@ -244,8 +275,21 @@ namespace SchoolRecognition.Services
                         IsActive = x.IsActive,
                         IsInUse = x.IsInUse,
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                        DateCreated = x.DateCreated
+                        DateCreated = x.DateCreated,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
 
+                        })
                     });
 
                     returnValue = await CustomPagedList<PinsViewDto>.CreateAsync(mappedResult,
@@ -276,10 +320,40 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = await _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Where(x => x.Id == id).SingleOrDefaultAsync();
+                    var dbResult = _context.Pins
+                        .Include(x => x.RecognitionType)
+                        .Include(x => x.CreatedByNavigation)
+                        .Include(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category)
+                        .Where(x => x.Id == id) as IQueryable<Pins>;
 
 
-                    returnValue = _mapper.Map<PinsViewDto>(dbResult);
+                    returnValue = await dbResult.Select(x => new PinsViewDto()
+                    {
+                        Id = x.Id,
+                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                        SerialNumber = x.SerialPin,
+                        IsActive = x.IsActive,
+                        IsInUse = x.IsInUse,
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
+
+                        })
+
+                    }).SingleOrDefaultAsync();
 
 
                     return returnValue;
@@ -306,10 +380,38 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Include(x => x.PinHistories).Where(x => x.Id == id) as IQueryable<Pins>;
+                    var dbResult = _context.Pins.Include(x => x.RecognitionType)
+                        .Include(x => x.CreatedByNavigation)
+                        .Include(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category)
+                        .Include(x => x.PinHistories)
+                        .Where(x => x.Id == id) as IQueryable<Pins>;
 
-                    var pin = await dbResult.SingleOrDefaultAsync();
-                    returnValue = _mapper.Map<PinsViewDto>(pin);
+                    returnValue = await dbResult.Select(x => new PinsViewDto()
+                    {
+                        Id = x.Id,
+                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                        SerialNumber = x.SerialPin,
+                        IsActive = x.IsActive,
+                        IsInUse = x.IsInUse,
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
+
+                        })
+                    }).SingleOrDefaultAsync();
 
                     var pinHistorys = await dbResult.SelectMany(x => x.PinHistories).ToListAsync();
                     returnValuePinHistorys = _mapper.Map<IEnumerable<PinHistoriesViewDto>>(pinHistorys);
@@ -340,17 +442,40 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Include(x => x.SchoolPayments).Where(x => x.Id == id) as IQueryable<Pins>;
+                    var dbResult = _context.Pins
+                        .Include(x => x.RecognitionType)
+                        .Include(x => x.CreatedByNavigation)
+                        .Include(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category).Where(x => x.Id == id) as IQueryable<Pins>;
 
 
-                    var pin = await dbResult.SingleOrDefaultAsync();
-                    returnValue = _mapper.Map<PinsViewDto>(pin);
+                    returnValue = await dbResult.Select(x => new PinsViewDto()
+                    {
+                        Id = x.Id,
+                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                        SerialNumber = x.SerialPin,
+                        IsActive = x.IsActive,
+                        IsInUse = x.IsInUse,
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
+
+                        })
+                    }).SingleOrDefaultAsync();
 
 
-                    var schoolPayments = await dbResult.SelectMany(x => x.SchoolPayments).ToListAsync();
-                    returnValueSchoolPayments = _mapper.Map<IEnumerable<SchoolPaymentsViewDto>>(schoolPayments);
-
-                    returnValue.Payments = returnValueSchoolPayments;
 
                     return returnValue;
                 }
@@ -382,9 +507,14 @@ namespace SchoolRecognition.Services
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Include(x => x.PinHistories).Where(x => x.Id == id) as IQueryable<Pins>;
+                    var dbResult = _context.Pins.Include(x => x.RecognitionType)
+                        .Include(x => x.CreatedByNavigation)
+                        .Include(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category)
+                        .Include(x => x.PinHistories).Where(x => x.Id == id) as IQueryable<Pins>;
 
-                    Pins pin = await dbResult.FirstOrDefaultAsync();
+                    //Pins pin = await dbResult.SingleOrDefaultAsync();
                     //
                     var queryablePins = dbResult.SelectMany(x => x.PinHistories) as IQueryable<PinHistories>;
 
@@ -429,7 +559,30 @@ namespace SchoolRecognition.Services
                         resourceParams.PageSize);
 
 
-                    returnValue = _mapper.Map<PinViewPagedListPinHistoriesDto>(pin);
+                    returnValue = await dbResult.Select(x => new PinViewPagedListPinHistoriesDto()
+                    {
+                        Id = x.Id,
+                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                        SerialNumber = x.SerialPin,
+                        IsActive = x.IsActive,
+                        IsInUse = x.IsInUse,
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
+
+                        })
+                    }).SingleOrDefaultAsync();
                     //
                     returnValue.Histories = returnValuePins;
 
@@ -448,97 +601,6 @@ namespace SchoolRecognition.Services
             }
         }
         
-
-        public async Task<PinViewPagedListSchoolPaymentsDto> GetPinsSchoolPaymentsAsPagedListAsync(Guid id, SchoolPaymentsResourceParams resourceParams)
-        {
-
-            //Instantiate Return Value
-            PinViewPagedListSchoolPaymentsDto returnValue = null;
-
-            //Instantiate Return Value
-            CustomPagedList<SchoolPaymentsViewDto> returnValuePins = CustomPagedList<SchoolPaymentsViewDto>
-                        .Create(Enumerable.Empty<SchoolPaymentsViewDto>().AsQueryable(),
-                            resourceParams.PageNumber,
-                            resourceParams.PageSize);
-            try
-            {
-                if (id != Guid.Empty)
-                {
-                    var dbResult = _context.Pins.Include(x => x.RecognitionType).Include(x => x.CreatedByNavigation).Include(x => x.SchoolPayments).Where(x => x.Id == id) as IQueryable<Pins>;
-
-                    Pins pin = await dbResult.FirstOrDefaultAsync();
-                    //
-                    var queryablePins = dbResult.SelectMany(x => x.SchoolPayments) as IQueryable<SchoolPayments>;
-
-
-
-                    //Search
-                    if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
-                    {
-
-                        var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
-
-                        queryablePins = queryablePins.Where(a => a.Amount.ToString().ToUpper().Contains(searchQuery)
-                            || a.ReceiptNo.ToUpper().ToString().ToUpper().Contains(searchQuery)
-                            || (a.DateCreated != null ? a.DateCreated : null).ToString().ToUpper().Contains(searchQuery)
-                            || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Surname : null).ToUpper().Contains(searchQuery)
-                            || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Othernames : null).ToUpper().Contains(searchQuery)
-                            || (a.Pin != null ? a.Pin.SerialPin : null).ToUpper().Contains(searchQuery)
-                            || (a.School != null ? a.School.Name : null).ToUpper().Contains(searchQuery)
-                            || (a.School != null && a.School.Category != null ? a.School.Category.Name : null).ToUpper().Contains(searchQuery)
-                            );
-                    }
-                    //Ordering
-                    if (!string.IsNullOrWhiteSpace(resourceParams.OrderBy))
-                    {
-                        // get property mapping dictionary
-                        var pinsPropertyMappingDictionary =
-                            _propertyMappingService.GetPropertyMapping<SchoolPaymentsViewDto, SchoolPayments>();
-
-                        queryablePins = queryablePins.ApplySort(resourceParams.OrderBy,
-                            pinsPropertyMappingDictionary);
-                    }
-                    ///Use LINQ to map pins to pinsviewdto
-                    var mappedResult = queryablePins.Select(x => new SchoolPaymentsViewDto()
-                    {
-                        Id = x.Id,
-                        AmountPaid = x.Amount,
-                        PaymentReceiptNo = x.ReceiptNo,
-                        DateCreated = x.DateCreated,
-                        PaymentReceiptImage = x.ReceiptImage,
-                        //CreatedByNavigation
-                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                        SchoolName = x.School != null ? x.School.Name : null,
-                        SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
-                        PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
-
-                    });
-
-                    returnValuePins = await CustomPagedList<SchoolPaymentsViewDto>.CreateAsync(mappedResult,
-                        resourceParams.PageNumber,
-                        resourceParams.PageSize);
-
-
-                    returnValue = _mapper.Map<PinViewPagedListSchoolPaymentsDto>(pin);
-                    //
-                    returnValue.Payments = returnValuePins;
-
-
-                    return returnValue;
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(id));
-                }
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-        
-
 
         public async Task<Guid?> CreatePinsAsync(PinsCreateDto _obj)
         {

@@ -92,6 +92,16 @@ namespace SchoolRecognition.Services
         
         
 
+        private Dictionary<string, PropertyMappingValue> _statesPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "StateName", new PropertyMappingValue(new List<string>() { "Name" } )},
+               { "StateNameDesc", new PropertyMappingValue(new List<string>() { "Name" } , true)},
+               { "StateCode", new PropertyMappingValue(new List<string>() { "Code" } )},
+               { "StateCodeDesc", new PropertyMappingValue(new List<string>() { "Code" } , true)},
+          };
+
         private Dictionary<string, PropertyMappingValue> _subjectsPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {

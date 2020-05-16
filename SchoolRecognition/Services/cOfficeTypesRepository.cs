@@ -198,6 +198,9 @@ namespace SchoolRecognition.Services
                         .ThenInclude(y => y.OfficeType)
                         .Include(x => x.Offices)
                         .ThenInclude(y => y.CreatedByNavigation)
+                        .Include(x => x.Offices)
+                        .ThenInclude(y => y.OfficeStates)
+                        .ThenInclude(z => z.State)
                         .Where(x => x.Id == id) as IQueryable<OfficeTypes>;
 
 
@@ -219,6 +222,8 @@ namespace SchoolRecognition.Services
                         OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
                             Id = y.Id,
+                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
                             StateName = y.State != null ? y.State.Name : null,
                             StateCode = y.State != null ? y.State.Code : null,
                             OfficeName = y.Office != null ? y.Office.Name : null,
@@ -269,6 +274,9 @@ namespace SchoolRecognition.Services
                         .ThenInclude(y => y.OfficeType)
                         .Include(x => x.Offices)
                         .ThenInclude(y => y.CreatedByNavigation)
+                        .Include(x => x.Offices)
+                        .ThenInclude(y => y.OfficeStates)
+                        .ThenInclude(z => z.State)
                         .Where(x => x.Id == id) as IQueryable<OfficeTypes>;
 
                     OfficeTypes officeType = await dbResult.FirstOrDefaultAsync();
@@ -321,6 +329,8 @@ namespace SchoolRecognition.Services
                         OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
                             Id = y.Id,
+                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
                             StateName = y.State != null ? y.State.Name : null,
                             StateCode = y.State != null ? y.State.Code : null,
                             OfficeName = y.Office != null ? y.Office.Name : null,

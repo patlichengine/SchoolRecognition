@@ -281,7 +281,7 @@ namespace SchoolRecognition.Controllers
 
 
 
-        [Route("update/{id?}")]
+        [Route("update")]
         [HttpGet]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
         [HttpCacheValidation(MustRevalidate = false)]
@@ -305,7 +305,7 @@ namespace SchoolRecognition.Controllers
         }
 
 
-        [Route("update/{id?}")]
+        [Route("update")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(OfficeTypesCreateDto model)

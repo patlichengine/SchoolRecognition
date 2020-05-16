@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace CourseLibrary.API.Helpers
+namespace SchoolRecognition.Helpers
 {
     public static class ObjectExtensions
     {

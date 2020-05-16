@@ -2,154 +2,289 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolRecognition.DbContexts;
 using SchoolRecognition.Entities;
 using SchoolRecognition.Models;
+using SchoolRecognition.ResourceParameters;
+using SchoolRecognition.Services;
+using Vereyon.Web;
 
 namespace SchoolRecognition.Controllers
 {
+
+    [Route("manage_locations/states")]
     public class StatesController : Controller
     {
-        private readonly SchoolRecognitionContext _context;
+        private IFlashMessage _flashMessage;
+        private IStatesRepository _statesRepository;
+        private readonly IMapper _mapper;
 
-        public StatesController(SchoolRecognitionContext context)
+        public StatesController(IFlashMessage flashMessage, IStatesRepository statesRepository, IMapper mapper)
         {
-            _context = context;
+            _flashMessage = flashMessage ??
+                throw new ArgumentNullException(nameof(mapper));
+            _statesRepository = statesRepository ??
+               throw new ArgumentNullException(nameof(statesRepository));
+            _mapper = mapper ??
+                throw new ArgumentNullException(nameof(mapper));
         }
 
-        // GET: States
+        [Route("")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.States.ToListAsync());
-        }
-
-        // GET: States/Details/5
-        public async Task<IActionResult> Details(Guid? id)
-        {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
 
-            var states = await _context.States
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (states == null)
+                var states = await _statesRepository.GetAllStatesAsync();
+
+                return View(states);
+            }
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            return View(states);
         }
+        //Get id
 
-        // GET: States/Create
-        public IActionResult Create()
+        [Route("new_state")]
+        [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        public async Task<IActionResult> Create()
         {
             return View();
         }
 
         // POST: States/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("new_state")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Code")] States states)
+        public async Task<IActionResult> Create(StatesCreateDto model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                states.Id = Guid.NewGuid();
-                _context.Add(states);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(states);
-        }
-
-        // GET: States/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var states = await _context.States.FindAsync(id);
-            if (states == null)
-            {
-                return NotFound();
-            }
-            return View(states);
-        }
-
-        // POST: States/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Code")] States states)
-        {
-            if (id != states.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(states);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StatesExists(states.Id))
+
+                    //Check if entry with similar data already exists
+                    if (await _statesRepository.CheckIfStateExists(model.StateName))
                     {
-                        return NotFound();
+
+                        _flashMessage.Danger("Duplicate Data Entry!", "An State with the same description already exists in the system...");
+                        return View(model);
+                    }
+
+                    var result = await _statesRepository.CreateStateAsync(model);
+
+                    if (result != null)
+                    {
+                        _flashMessage.Confirmation("Operation Completed", "New State Added Successfully!");
+                        return RedirectToAction("Index", "States");
                     }
                     else
                     {
-                        throw;
+                        _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
+                        return View(model);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
+                return View(model);
             }
-            return View(states);
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        // GET: States/Create
+        [Route("new_state")]
+        [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        public async Task<IActionResult> CreateState()
+        {
+            //
+            
+            return View();
+        }
+
+        [Route("new_state")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateState(StatesCreateDto model)
+        {
+
+            try
+            {
+
+                if (ModelState.IsValid)
+                {
+
+
+                    //Check if entry with similar data already exists
+                    if (await _statesRepository.CheckIfStateExists(model.StateName))
+                    {
+
+                        _flashMessage.Danger("Duplicate Data Entry!", "An State with the same Name already exists in the system...");
+                        return View(model);
+                    }
+                    //model.Id = Guid.Empty;
+                    var result = await _statesRepository.CreateStateAsync(model);
+
+                    if (result != null)
+                    {
+                        _flashMessage.Confirmation("Operation Completed", "New State Added Successfully!");
+                        return RedirectToAction("Index", "States");
+                    }
+                    else
+                    {
+                        _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
+                        return View(model);
+                    }
+                }
+                _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+
+        [Route("update")]
+        [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        public async Task<IActionResult> Update(Guid? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                var state = await _statesRepository.GetStatesSingleOrDefaultAsync(id.Value);
+                var model = _mapper.Map<StatesCreateDto>(state);
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        [Route("update")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(StatesCreateDto model)
+        {
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+
+                    //Check if entry with similar data already exists
+                    if (await _statesRepository.CheckIfStateExists(model.Id, model.StateName))
+                    {
+
+                        _flashMessage.Danger("Duplicate Data Entry!", "An State with the same description already exists in the system...");
+                        return View(model);
+                    }
+
+                    //Set Pins as active 
+                    var result = await _statesRepository.UpdateStateAsync(model);
+
+                    if (result != null)
+                    {
+                        _flashMessage.Confirmation("Operation Completed", "State Updated Successfully!");
+                        return RedirectToAction("ViewPins", "States", new { id = model.Id });
+                    }
+                    else
+                    {
+                        _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
+                        return View(model);
+                    }
+                }
+                _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         // GET: States/Delete/5
+        [Route("delete/{id?}")]
+        [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null)
+                {
+                    return NotFound();
+                }
 
-            var states = await _context.States
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (states == null)
+                var state = await _statesRepository.GetStatesSingleOrDefaultAsync(id.Value);
+
+                if (state == null)
+                {
+                    return NotFound();
+                }
+
+
+
+
+                return View(state);
+            }
+            catch (Exception)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            return View(states);
         }
 
         // POST: States/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [Route("delete/{id?}")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> Delete(StatesViewDto model)
         {
-            var states = await _context.States.FindAsync(id);
-            _context.States.Remove(states);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    await _statesRepository.DeleteStateAsync(model.Id);
+
+                    _flashMessage.Info("Delete Successful", "State removed from system!");
+                    return RedirectToAction("Index", "States");
+                }
+                _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
-        private bool StatesExists(Guid id)
-        {
-            return _context.States.Any(e => e.Id == id);
-        }
+
     }
 }

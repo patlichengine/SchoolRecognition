@@ -92,7 +92,7 @@ namespace SchoolRecognition.Services
             ApplicationSettingsViewDto returnValue = null;
             try
             {
-                if (_obj != null && _obj.Id == Guid.Empty)
+                if (_obj != null)
                 {
                     ApplicationSettings entity = _mapper.Map<ApplicationSettings>(_obj);
                     //

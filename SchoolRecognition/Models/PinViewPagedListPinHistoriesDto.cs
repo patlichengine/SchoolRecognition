@@ -15,6 +15,44 @@ namespace SchoolRecognition.Models
         public bool IsInUse { get; set; }
         public String CreatedByUser { get; set; }
         public DateTime? DateCreated { get; set; }
+        public string AssignedSchoolName
+        {
+            get
+            {
+                string schoolAssigned = null;
+
+                if (Payments != null && Payments.Count() > 0)
+                {
+                    var schoolPayment = Payments.SingleOrDefault();
+                    if (schoolPayment != null)
+                    {
+                        schoolAssigned = $"{schoolPayment.SchoolName}";
+                    }
+                }
+
+                return schoolAssigned;
+            }
+        }
+        public string AssignedSchoolCategoryName
+        {
+            get
+            {
+                string schoolAssigned = null;
+
+                if (Payments != null && Payments.Count() > 0)
+                {
+                    var schoolPayment = Payments.SingleOrDefault();
+                    if (schoolPayment != null)
+                    {
+                        schoolAssigned = $"{schoolPayment.SchoolCategoryName}";
+                    }
+                }
+
+                return schoolAssigned;
+            }
+        }
+
+        public IEnumerable<SchoolPaymentsViewDto> Payments { get; set; }
         public CustomPagedList<PinHistoriesViewDto> Histories { get; set; }
         //public virtual ICollection<SchoolPayments> SchoolPayments { get; set; }
     }

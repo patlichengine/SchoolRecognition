@@ -114,52 +114,63 @@
                             <tr role="row">
                                 <td>Date Generated</td>
                                 <td>Serial Number</td>
-                                <td>Created By</td>
+                                <td>Recognition Type</td>
                                 <td>Active</td>
-                                <td>In Use</td>
+                                @*<td>In Use</td>*@
+                                <td>School Assigned</td>
+                                <td>School Category</td>
                                 <td></td>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                <tr role="row">
-                                    <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
-                                    <td>@item.SerialNumber</td>
-                                    <td>@item.CreatedByUser</td>
-                                    <td>
-                                        @if (item.IsActive)
-                                        {
-                                            <i class="fas fa-check text-success"></i>
-                                        }
-                                        else
-                                        {
+                            <tr role="row">
+                                <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
+                                <td>@item.SerialNumber</td>
+                                <td>@item.RecognitionTypeName</td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <i class="fas fa-check text-success"></i>
+                                    }
+                                    else
+                                    {
 
-                                            <i class="fas fa-times text-danger"></i>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (item.IsInUse)
-                                        {
-                                            <i class="fas fa-check text-success"></i>
-                                        }
-                                        else
-                                        {
-
-                                            <i class="fas fa-times text-danger"></i>
-                                        }
-                                    </td>
-                                    <td class="text-center p-1">
-                                        <a asp-action="Details" asp-controller="Pins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
-                                            <i class="fas fa-desktop"></i>
-                                            @*View Pins*@
-                                        </a>
-                                        <a asp-action="Delete" asp-controller="Pins" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                            @*Generate Pins*@
-                                        </a>
-                                    </td>
-                                </tr>
+                                        <i class="fas fa-times text-danger"></i>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsInUse)
+                                    {
+                                        <span>@item.AssignedSchoolName</span>
+                                    }
+                                    else
+                                    {
+                                        <span>NOT ASSIGNED</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.IsInUse)
+                                    {
+                                        <span>@item.AssignedSchoolCategoryName</span>
+                                    }
+                                    else
+                                    {
+                                        <span>NOT ASSIGNED</span>
+                                    }
+                                </td>
+                                <td class="text-center p-1">
+                                    <a asp-action="Details" asp-controller="Pins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
+                                        <i class="fas fa-desktop"></i>
+                                        @*View Pins*@
+                                    </a>
+                                    <a asp-action="Delete" asp-controller="Pins" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                        @*Generate Pins*@
+                                    </a>
+                                </td>
+                            </tr>
                             }
                             @if (Model.TotalCount < 1)
                             {

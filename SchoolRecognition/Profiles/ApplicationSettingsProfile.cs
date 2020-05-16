@@ -13,6 +13,7 @@ namespace SchoolRecognition.Profiles
 
             CreateMap<Entities.ApplicationSettings, Models.ApplicationSettingsViewDto>();
             CreateMap<Models.ApplicationSettingsCreateDto, Entities.ApplicationSettings>();
+            CreateMap<Models.ApplicationSettingsViewDto, Models.ApplicationSettingsCreateDto>();
         }
     }
 }

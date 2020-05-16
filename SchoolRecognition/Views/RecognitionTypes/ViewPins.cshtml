@@ -149,9 +149,10 @@
                                     <tr role="row">
                                         <td>Date Generated</td>
                                         <td>Serial Number</td>
-                                        <td>Created By</td>
                                         <td>Active</td>
-                                        <td>In Use</td>
+                                        @*<td>In Use</td>*@
+                                        <td>School Assigned</td>
+                                        <td>School Category</td>
                                         <td></td>
                                     </tr>
                                 </thead>
@@ -161,7 +162,6 @@
                                         <tr role="row">
                                             <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
                                             <td>@item.SerialNumber</td>
-                                            <td>@item.CreatedByUser</td>
                                             <td>
                                                 @if (item.IsActive)
                                                 {
@@ -176,12 +176,21 @@
                                             <td>
                                                 @if (item.IsInUse)
                                                 {
-                                                    <i class="fas fa-check text-success"></i>
+                                                    <span>@item.AssignedSchoolName</span>
                                                 }
                                                 else
                                                 {
-
-                                                    <i class="fas fa-times text-danger"></i>
+                                                    <span>NOT ASSIGNED</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.IsInUse)
+                                                {
+                                                    <span>@item.AssignedSchoolCategoryName</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>NOT ASSIGNED</span>
                                                 }
                                             </td>
                                             <td class="text-center p-1">

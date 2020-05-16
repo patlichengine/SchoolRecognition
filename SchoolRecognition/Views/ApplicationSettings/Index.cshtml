@@ -1,0 +1,135 @@
+﻿@model ApplicationSettingsViewDto
+@{
+    ViewData["Title"] = "Application Settings";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+@section styles{
+    @*<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />*@
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active disabled" id="custom-tabs-three-home-tab" data-toggle="pill" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">
+                                <b>@ViewData["Title"]</b>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body clearfix">
+                    <div class="float-right">
+                        <a asp-area="" asp-controller="ApplicationSettings" asp-action="Update" class="btn btn-light">
+                            <i class="fas fa-users-cog"></i>
+                            Change Settings
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+
+
+                    <table class="table ">
+                        <caption style="caption-side: top">
+
+                            <h5 style="font-weight: 100">Prefered Application Settings:</h5>
+                        </caption>
+                        <tbody>
+                            <tr>
+                                <td class="p-0">
+                                    <dl>
+                                        <dt>Minimum Years a School Must Have Been Established Before Recognition</dt>
+                                        <dd class="lead">@(Model != null && Model.MinimumNoOfRecogYears != null ? Model.MinimumNoOfRecogYears.Value.ToString() : "NOT SET")</dd class="lead">
+                                    </dl>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-0">
+                                    <dl>
+                                        <dt>Maximum Number of Pins That Can Be Generated At A Time</dt>
+                                        <dd class="lead">@(Model != null && Model.MaximumNoOfPinsToGenerate != null ? Model.MaximumNoOfPinsToGenerate.Value.ToString() : "NOT SET")</dd class="lead">
+                                    </dl>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-0">
+                                    <dl>
+                                        <dt>Minimum Number of School Subjects</dt>
+                                        <dd class="lead">@(Model != null && Model.MinimumSchoolSubjects != null ? Model.MinimumSchoolSubjects.Value.ToString() : "NOT SET")</dd class="lead">
+                                    </dl>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-0">
+                                    <dl>
+                                        <dt>Maximum Number of Core Subjects</dt>
+                                        <dd class="lead">@(Model != null && Model.MaximumCoreSubjects != null ? Model.MaximumCoreSubjects.Value.ToString() : "NOT SET")</dd class="lead">
+                                    </dl>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-0">
+                                    <dl>
+                                        <dt>Minimum Number Of Trade Subjects</dt>
+                                        <dd class="lead">@(Model != null && Model.MinimumTradeSubjects != null ? Model.MinimumTradeSubjects.Value.ToString() : "NOT SET")</dd class="lead">
+                                    </dl>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    @*<script src="~/lib/datatables/datatables.min.js"></script>
+        <script>
+                $(document).ready( function () {
+                    $('#datatable-1').DataTable({
+                        responsive: true,
+                        "order": [[ 0, "desc" ]]
+                    });
+                } );
+        </script>*@
+}
+
