@@ -11,6 +11,16 @@ namespace SchoolRecognition.Services
     {
 
 
+        private Dictionary<string, PropertyMappingValue> _localGovernmentsPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "LgaName", new PropertyMappingValue(new List<string>() { "Name" } )},
+               { "LgaNameDesc", new PropertyMappingValue(new List<string>() { "Name" } , true)},
+               { "LgaCode", new PropertyMappingValue(new List<string>() { "Code" } ) },
+               { "LgaCodeDesc", new PropertyMappingValue(new List<string>() { "Code" }, true ) },
+          };
+
         private Dictionary<string, PropertyMappingValue> _officesPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {
@@ -116,6 +126,7 @@ namespace SchoolRecognition.Services
 
         public PropertyMappingService()
         {
+            _propertyMappings.Add(new PropertyMapping<LocalGovernmentsViewDto, LocalGovernments>(_localGovernmentsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<OfficesViewDto, Offices>(_officesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<OfficeTypesViewDto, OfficeTypes>(_officeTypesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<OfficeStatesViewDto, OfficeStates>(_officeStatesPropertyMapping));
@@ -124,6 +135,7 @@ namespace SchoolRecognition.Services
             _propertyMappings.Add(new PropertyMapping<RecognitionTypesViewDto, RecognitionTypes>(_recognitionTypesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SchoolsViewDto, Schools>(_schoolsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SchoolPaymentsViewDto, SchoolPayments>(_schoolPaymentsPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<StatesViewDto, States>(_statesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SubjectsViewDto, Subjects>(_subjectsPropertyMapping));
         }
 

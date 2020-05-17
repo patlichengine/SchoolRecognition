@@ -28,7 +28,7 @@ namespace SchoolRecognition.Profiles
                     opt.PreCondition(src => (src.CreatedByNavigation != null));
                     opt.MapFrom(src => $"{src.CreatedByNavigation.Surname} {src.CreatedByNavigation.Othernames}");
                 });
-            CreateMap<Pins, PinViewPagedListPinHistoriesDto>()
+            CreateMap<Pins, PinsViewPagedListPinHistoriesDto>()
                 .ForMember(
                 dest => dest.SerialNumber,
                 opt => opt.MapFrom(src => $"{src.SerialPin}"))

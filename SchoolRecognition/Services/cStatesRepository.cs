@@ -66,6 +66,7 @@ namespace SchoolRecognition.Services
                 var dbResult = _context
                     .States
                     .Include(x => x.LocalGovernments)
+                    .ThenInclude(y => y.Schools)
                     .Include(x => x.OfficeStates) as IQueryable<States>;
 
                 returnValue = await dbResult.Select(x => new StatesViewDto() {
@@ -74,6 +75,7 @@ namespace SchoolRecognition.Services
                     StateCode = x.Code,
                     LocalGovernmentsCount = x.LocalGovernments != null ? x.LocalGovernments.Count() : 0,
                     OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                    SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0
                 }).ToListAsync();
 
                 return returnValue;
@@ -102,7 +104,7 @@ namespace SchoolRecognition.Services
                         .States
                         .Include(x => x.LocalGovernments)
                         .ThenInclude(y => y.Schools)
-                        .ThenInclude(z => z.Category)
+                        //.ThenInclude(z => z.Category)
                         .Include(x => x.OfficeStates)
                         .ThenInclude(y => y.Office)
                         .ThenInclude(z => z.OfficeType)
@@ -137,8 +139,9 @@ namespace SchoolRecognition.Services
                         StateCode = x.Code,
                         LocalGovernmentsCount = x.LocalGovernments != null ? x.LocalGovernments.Count() : 0,
                         OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                        SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0
 
-                    }); ;
+                    });
 
                     returnValue = await CustomPagedList<StatesViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
@@ -149,6 +152,132 @@ namespace SchoolRecognition.Services
                 else
                 {
                     throw new ArgumentNullException(nameof(resourceParams));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<StatesViewPagedListLocalGovernmentsDto> GetStatesLocalGovernmentsAsPagedListAsync(Guid id, LocalGovernmentsResourceParams resourceParams)
+        {
+
+
+
+            //Instantiate Return Value
+            StatesViewPagedListLocalGovernmentsDto returnValue = null;
+
+            //Instantiate Return Value
+            CustomPagedList<LocalGovernmentsViewDto> returnValueLocalGovernments = CustomPagedList<LocalGovernmentsViewDto>
+                        .Create(Enumerable.Empty<LocalGovernmentsViewDto>().AsQueryable(),
+                            resourceParams.PageNumber,
+                            resourceParams.PageSize);
+            try
+            {
+                if (id != Guid.Empty)
+                {
+                    var dbResult = _context
+                        .States
+                        .Include(x => x.LocalGovernments)
+                        .ThenInclude(y => y.State)
+                        .Include(x => x.LocalGovernments)
+                        .ThenInclude(y => y.Schools)
+                        .ThenInclude(z => z.Category)
+                        .Include(x => x.OfficeStates)
+                        .ThenInclude(y => y.Office)
+                        .ThenInclude(z => z.OfficeType)
+                        .Include(x => x.OfficeStates)
+                        .ThenInclude(y => y.Office)
+                        .ThenInclude(z => z.State)
+                        .Include(x => x.OfficeStates)
+                        .ThenInclude(y => y.State)
+                        .Where(x => x.Id == id) as IQueryable<States>;
+
+                    //States recognitionType = await dbResult.FirstOrDefaultAsync();
+                    //
+                    var queryableLocalGovernments = dbResult.SelectMany(x => x.LocalGovernments) as IQueryable<LocalGovernments>;
+
+
+
+                    //Search
+                    if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
+                    {
+
+                        var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
+
+                        queryableLocalGovernments = queryableLocalGovernments.Where(
+                            a => a.Name.ToUpper().Contains(searchQuery)
+                            || a.Code.ToUpper().Contains(searchQuery)
+                            );
+                    }
+                    //Ordering
+                    if (!string.IsNullOrWhiteSpace(resourceParams.OrderBy))
+                    {
+                        // get property mapping dictionary
+                        var pinsPropertyMappingDictionary =
+                            _propertyMappingService.GetPropertyMapping<LocalGovernmentsViewDto, LocalGovernments>();
+
+                        queryableLocalGovernments = queryableLocalGovernments.ApplySort(resourceParams.OrderBy,
+                            pinsPropertyMappingDictionary);
+                    }
+                    ///Use LINQ to map pins to pinsviewdto
+                    var mappedResult = queryableLocalGovernments.Select(x => new LocalGovernmentsViewDto()
+                    {
+                        Id = x.Id,
+                        LgaName = x.Name,
+                        LgaCode = x.Code,
+                        StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
+                        SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
+                    });
+
+                    returnValueLocalGovernments = await CustomPagedList<LocalGovernmentsViewDto>.CreateAsync(mappedResult,
+                        resourceParams.PageNumber,
+                        resourceParams.PageSize);
+
+
+                    returnValue = await  dbResult.Select(x => new StatesViewPagedListLocalGovernmentsDto()
+                    {
+                        Id = x.Id,
+                        StateName = x.Name,
+                        StateCode = x.Code,
+                        LocalGovernmentsCount = x.LocalGovernments != null ? x.LocalGovernments.Count() : 0,
+                        OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                        //StateLGAs = x.LocalGovernments.Select(x => new LocalGovernmentsViewDto()
+                        //{
+                        //    Id = x.Id,
+                        //    LgaName = x.Name,
+                        //    LgaCode = x.Code,
+                        //    StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
+                        //    SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
+                        //}),
+
+                        SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0,
+                        StateOfficeStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                        {
+                            Id = y.Id,
+                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
+                            StateName = y.State != null ? y.State.Name : null,
+                            StateCode = y.State != null ? y.State.Code : null,
+                            OfficeName = y.Office != null ? y.Office.Name : null,
+                            OfficeAddress = y.Office != null ? y.Office.Address : null,
+                            OfficeTypeDescription = y.Office != null && y.Office.OfficeType != null ? y.Office.OfficeType.Description : null,
+                            StateLocated = y.Office != null && y.Office.State != null ? y.Office.State.Name : null,
+                        })
+
+                    }).SingleOrDefaultAsync();
+                    //
+                    returnValue.LocalGovernmentsCount = await queryableLocalGovernments.CountAsync();
+                    //
+                    returnValue.StateLGAs = returnValueLocalGovernments;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
                 }
             }
             catch (Exception ex)
@@ -171,8 +300,8 @@ namespace SchoolRecognition.Services
                     var dbResult = await _context
                         .States
                         .Include(x => x.LocalGovernments)
-                        .ThenInclude(y => y.State)
-                        .Include(x => x.LocalGovernments)
+                        //.ThenInclude(y => y.State)
+                        //.Include(x => x.LocalGovernments)
                         .ThenInclude(y => y.Schools)
                         .ThenInclude(z => z.Category)
                         .Include(x => x.OfficeStates)
@@ -187,13 +316,15 @@ namespace SchoolRecognition.Services
                             StateCode = x.Code,
                             LocalGovernmentsCount = x.LocalGovernments != null ? x.LocalGovernments.Count() : 0,
                             OfficeStatesCount= x.OfficeStates != null ? x.OfficeStates.Count() : 0,
-                            StateLGAs = x.LocalGovernments.Select(x=> new LocalGovernmentsViewDto() { 
-                                Id = x.Id,
-                                LgaName = x.Name,
-                                LgaCode = x.Code,
-                                StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
-                                SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
-                            }),
+                            //StateLGAs = x.LocalGovernments.Select(x=> new LocalGovernmentsViewDto() { 
+                            //    Id = x.Id,
+                            //    LgaName = x.Name,
+                            //    LgaCode = x.Code,
+                            //    StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
+                            //    SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
+                            //}),
+
+                            SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0,
                             StateOfficeStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                             {
                                 Id = y.Id,
@@ -225,8 +356,6 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-
-
 
         public async Task<Guid?> CreateStateAsync(StatesCreateDto _obj)
         {

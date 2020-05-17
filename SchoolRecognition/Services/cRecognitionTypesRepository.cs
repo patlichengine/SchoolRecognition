@@ -258,13 +258,13 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<RecognitionTypeViewPagedListPinsDto> GetRecognitionTypesPinsAsPagedListAsync(Guid id, PinsResourceParams resourceParams)
+        public async Task<RecognitionTypesViewPagedListPinsDto> GetRecognitionTypesPinsAsPagedListAsync(Guid id, PinsResourceParams resourceParams)
         {
 
 
 
             //Instantiate Return Value
-            RecognitionTypeViewPagedListPinsDto returnValue = null;
+            RecognitionTypesViewPagedListPinsDto returnValue = null;
 
             //Instantiate Return Value
             CustomPagedList<PinsViewDto> returnValuePins = CustomPagedList<PinsViewDto>
@@ -343,7 +343,7 @@ namespace SchoolRecognition.Services
                         resourceParams.PageSize);
 
 
-                    returnValue = _mapper.Map<RecognitionTypeViewPagedListPinsDto>(recognitionType);
+                    returnValue = _mapper.Map<RecognitionTypesViewPagedListPinsDto>(recognitionType);
                     //
                     returnValue.PinsCount = await queryablePins.CountAsync();
                     returnValue.IsActivePinsCount = await queryablePins.Where(x => x.IsActive == true).CountAsync();

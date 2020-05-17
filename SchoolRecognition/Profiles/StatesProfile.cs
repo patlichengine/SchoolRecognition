@@ -21,6 +21,16 @@ namespace SchoolRecognition.Profiles
                 dest => dest.StateCode,
                 opt => opt.MapFrom(src => $"{src.Code}"));
 
+
+
+            CreateMap<StatesViewDto, StatesCreateDto>()
+                .ForMember(
+                dest => dest.StateName,
+                opt => opt.MapFrom(src => $"{src.StateName}"))
+                .ForMember(
+                dest => dest.StateCode,
+                opt => opt.MapFrom(src => $"{src.StateCode}"));
+
             CreateMap<StatesCreateDto, States>()
                 .ForMember(
                 dest => dest.Name,

@@ -14,6 +14,7 @@ namespace SchoolRecognition.Services
 
         Task<IEnumerable<StatesViewDto>> GetAllStatesAsync();
         Task<CustomPagedList<StatesViewDto>> GetAllStatesAsPagedListAsync(StatesResourceParams resourceParams);
+        Task<StatesViewPagedListLocalGovernmentsDto> GetStatesLocalGovernmentsAsPagedListAsync(Guid id, LocalGovernmentsResourceParams resourceParams);
         Task<StatesViewDto> GetStatesSingleOrDefaultAsync(Guid id);
         Task<Guid?> CreateStateAsync(StatesCreateDto _obj);
         Task<StatesViewDto> UpdateStateAsync(StatesCreateDto _obj);

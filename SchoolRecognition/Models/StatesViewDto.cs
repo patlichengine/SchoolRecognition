@@ -12,7 +12,8 @@ namespace SchoolRecognition.Models
         public string StateCode { get; set; }
         public int LocalGovernmentsCount { get; set; }
         public int OfficeStatesCount { get; set; }
-        public virtual IEnumerable<LocalGovernmentsViewDto> StateLGAs { get; set; }
+        public int SchoolsCount { get; set; }
+        //public virtual IEnumerable<LocalGovernmentsViewDto> StateLGAs { get; set; }
         public virtual IEnumerable<OfficeStatesViewDto> StateOfficeStates { get; set; }
     }
 }

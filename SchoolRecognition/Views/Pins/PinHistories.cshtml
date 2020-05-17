@@ -1,6 +1,6 @@
 ﻿@model CustomPagedList<PinHistoriesViewDto>
 @{
-    var pin = (PinViewPagedListPinHistoriesDto)ViewData["Pin"];
+    var pin = (PinsViewPagedListPinHistoriesDto)ViewData["Pin"];
     var pages = (IEnumerable<int>)ViewData["Pages"];
     ViewData["Title"] = "Pin Use-Tracker";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";

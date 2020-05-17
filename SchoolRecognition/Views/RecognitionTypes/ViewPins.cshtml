@@ -1,6 +1,6 @@
 ﻿@model CustomPagedList<PinsViewDto>
 @{
-    var recognitionType = (RecognitionTypeViewPagedListPinsDto)ViewData["RecognitionType"];
+    var recognitionType = (RecognitionTypesViewPagedListPinsDto)ViewData["RecognitionType"];
     var pages = (IEnumerable<int>)ViewData["Pages"];
     ViewData["Title"] = recognitionType.RecognitionTypeName + " Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";

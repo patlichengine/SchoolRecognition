@@ -16,7 +16,7 @@ namespace SchoolRecognition.Services
         Task<CustomPagedList<RecognitionTypesViewDto>> GetAllRecognitionTypesAsPagedListAsync(RecognitionTypesResourceParams resourceParams);
         Task<RecognitionTypesViewDto> GetRecognitionTypesSingleOrDefaultAsync(Guid id);
         Task<RecognitionTypesViewDto> GetRecognitionTypesAllPinsAsync(Guid id);
-        Task<RecognitionTypeViewPagedListPinsDto> GetRecognitionTypesPinsAsPagedListAsync(Guid id, PinsResourceParams resourceParams);
+        Task<RecognitionTypesViewPagedListPinsDto> GetRecognitionTypesPinsAsPagedListAsync(Guid id, PinsResourceParams resourceParams);
         Task<Guid?> CreateRecognitionTypeAsync(RecognitionTypesCreateDto _obj);
         Task<RecognitionTypesViewDto> UpdateRecognitionTypeAsync(RecognitionTypesCreateDto _obj);
         Task DeleteRecognitionTypeAsync(Guid id); //return type is void

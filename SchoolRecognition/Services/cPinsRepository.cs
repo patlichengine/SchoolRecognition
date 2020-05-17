@@ -492,11 +492,11 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<PinViewPagedListPinHistoriesDto> GetPinsPinHistoriesAsPagedListAsync(Guid id, PinHistoriesResourceParams resourceParams)
+        public async Task<PinsViewPagedListPinHistoriesDto> GetPinsPinHistoriesAsPagedListAsync(Guid id, PinHistoriesResourceParams resourceParams)
         {
 
             //Instantiate Return Value
-            PinViewPagedListPinHistoriesDto returnValue = null;
+            PinsViewPagedListPinHistoriesDto returnValue = null;
 
             //Instantiate Return Value
             CustomPagedList<PinHistoriesViewDto> returnValuePins = CustomPagedList<PinHistoriesViewDto>
@@ -559,7 +559,7 @@ namespace SchoolRecognition.Services
                         resourceParams.PageSize);
 
 
-                    returnValue = await dbResult.Select(x => new PinViewPagedListPinHistoriesDto()
+                    returnValue = await dbResult.Select(x => new PinsViewPagedListPinHistoriesDto()
                     {
                         Id = x.Id,
                         RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,

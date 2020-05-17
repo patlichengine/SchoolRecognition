@@ -1,44 +1,148 @@
-﻿@model SchoolRecognition.Entities.States
-
+﻿@model StatesCreateDto
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "New State";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+@section styles{
 
-<h1>Create</h1>
+    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
+    @*<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />*@
 
-<h4>States</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="ManageLocations" asp-action="Index">Manage Locations</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="States" asp-action="Index">States</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Add New State</h3>
+                </div>
+                <div class="card-body">
+
+                    <small class="text-muted mt-1 mb-2">All fields marked <b class="text-dark">*</b> are required!</small>
+
+                    <form asp-action="Create" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+                        <div class="form-group">
+                            <label asp-for="StateName">*Name of State:</label>
+                            <input minlength="2" maxlength="50" asp-for="StateName" class="form-control" placeholder="Enter Name of State" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="StateCode">*Code:</label>
+                            <input minlength="1" maxlength="2" asp-for="StateCode" class="form-control" placeholder="Enter Code" required>
+                        </div>
+
+
+
+
+                        <!-- /.col -->
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-spinner fa-spin" id="loading_icon" style="display:none"></i>
+                            Submit
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-lg"> Reset</button>
+
+                        <!-- /.col -->
+
+                    </form>
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    <script src="~/js/loading_icon.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
+    @*<script src="~/lib/select2/dist/js/select2.full.min.js"></script>*@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+    @*<script>
+            $(document).ready(function () {
+                $('select.form-control').select2({
+                    theme: "classic"
+                });
+                //$('.select2me').select2();
+            });
+        </script>*@
+    <script>
+        // add the rule here
+        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        //    return arg !== value;
+        //}, "Select a valid value!");
+        $("form").validate({
+            rules: {
+                StateName: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 60
+                },
+                StateCode: {
+                    required: true,
+                    minlength: 1,
+                    maxlength: 2
+                },
+
+            },
+            messages: {
+                StateName: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 2 characters!",
+                    maxlength: "This field must have less than 50 characters!",
+                },
+                StateCode: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 1 characters!",
+                    maxlength: "This field must have less than 2 characters!",
+                }
+            }
+        });
+    </script>
+
+}
+
+

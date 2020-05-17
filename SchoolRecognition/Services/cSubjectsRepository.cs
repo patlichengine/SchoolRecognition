@@ -229,11 +229,11 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<SubjectViewPagedListCentreSubjectSanctionsDto> GetSubjectsCentreSubjectSanctionsAsPagedListAsync(Guid id, CentreSubjectSanctionsResourceParams resourceParams)
+        public async Task<SubjectsViewPagedListCentreSubjectSanctionsDto> GetSubjectsCentreSubjectSanctionsAsPagedListAsync(Guid id, CentreSubjectSanctionsResourceParams resourceParams)
         {
 
             //Instantiate Return Value
-            SubjectViewPagedListCentreSubjectSanctionsDto returnValue = null;
+            SubjectsViewPagedListCentreSubjectSanctionsDto returnValue = null;
 
             //Instantiate Return Value
             CustomPagedList<CentreSubjectSanctionsViewDto> returnValueCentreSubjectSanctions = CustomPagedList<CentreSubjectSanctionsViewDto>
@@ -317,7 +317,7 @@ namespace SchoolRecognition.Services
                         resourceParams.PageSize);
 
 
-                    returnValue = _mapper.Map<SubjectViewPagedListCentreSubjectSanctionsDto>(pin);
+                    returnValue = _mapper.Map<SubjectsViewPagedListCentreSubjectSanctionsDto>(pin);
                     //
                     returnValue.CentreSanctions = returnValueCentreSubjectSanctions;
 

@@ -20,7 +20,7 @@ namespace SchoolRecognition.Profiles
                 dest => dest.RecognitionTypeCode,
                 opt => opt.MapFrom(src => $"{src.Code}"));
 
-            CreateMap<RecognitionTypes, RecognitionTypeViewPagedListPinsDto>()
+            CreateMap<RecognitionTypes, RecognitionTypesViewPagedListPinsDto>()
                 .ForMember(
                 dest => dest.RecognitionTypeName,
                 opt => opt.MapFrom(src => $"{src.Name}"))
