@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ namespace SchoolRecognition.Models
                 return stateAssigned;
             }
         }
+        [JsonIgnore]
         public virtual IEnumerable<OfficeStatesViewDto> OfficeStateOffices { get; set; }
         public virtual IEnumerable<SchoolsViewDto> OfficeSchools { get; set; }
     }

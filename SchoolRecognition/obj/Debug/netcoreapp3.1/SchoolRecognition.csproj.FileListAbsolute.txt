@@ -1143,3 +1143,4 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\s
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\ApplicationSettings\Index.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\ApplicationSettings\Update.cshtml.g.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\ManageLocations\Index.cshtml.g.cs
