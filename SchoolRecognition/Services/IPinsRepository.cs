@@ -26,5 +26,6 @@ namespace SchoolRecognition.Services
         //
         Task<int> CheckNumberOfActivePinsNOTInUseAsync();
         Task<PinsStatisticsSummaryDto> GetPinsStatisticSummaryAsync();
+        Task<PinsCreationDependecyDto> GetPinsCreationDepedencys();
     }
 }

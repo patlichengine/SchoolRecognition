@@ -1,6 +1,7 @@
 ﻿@model PinsCreateDto
 @{
     var recognitionTypes = (IEnumerable<SelectListItem>)ViewData["RecognitionTypes"];
+    var maximumNumberOfPinsToGenerate = (int)ViewData["MaximumNumberOfPinsToGenerate"];
     ViewData["Title"] = "Generate Pins";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -62,10 +63,10 @@
                             <span asp-validation-for="RecognitionTypeId" class="text-danger"></span>
                         </div>
 
+
                         <div class="form-group">
                             <label asp-for="NoOfPinToGenerate">Number of Pins</label>
-                            <input type="number" min="1" max="20" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate" required>
-                            <span asp-validation-for="NoOfPinToGenerate" class="text-danger"></span>
+                            <input type="number" min="1" max="@maximumNumberOfPinsToGenerate" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate" required>
                         </div>
 
 
@@ -124,7 +125,7 @@
                 NoOfPinToGenerate: {
                     required: true,
                     min: 1,
-                    max: 20
+                    max: @maximumNumberOfPinsToGenerate
                 },
 
             },
@@ -136,7 +137,7 @@
                 NoOfPinToGenerate: {
                     required: "This field is required!",
                     min: "Select a valid value greater than 0!",
-                    max: "Select a valid value less than 20!",
+                    max: "Select a valid value less than @maximumNumberOfPinsToGenerate!",
                 },
             }
         });

@@ -20,6 +20,7 @@ namespace SchoolRecognition.Controllers
         private IFlashMessage _flashMessage;
         private IPinsRepository _pinsRepository;
         private IRecognitionTypesRepository _recognitionTypesRepository;
+        private int _maximumNumberOfPinsToGenerate = 10;
 
         public PinsController(IFlashMessage flashMessage, IPinsRepository pinsRepository, IRecognitionTypesRepository recognitionTypesRepository)
         {
@@ -227,7 +228,13 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
-                var recognitionTypes = await _recognitionTypesRepository.GetAllRecognitionTypesAsync();
+
+                #region PinCreationDependencys
+
+                var pinsCreationDependencys = await _pinsRepository.GetPinsCreationDepedencys();
+
+                var recognitionTypes = pinsCreationDependencys.RecognitionTypes;
+                var applicationSetting = pinsCreationDependencys.ApplicationSetting;
 
                 ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
                  new SelectListItem()
@@ -235,6 +242,15 @@ namespace SchoolRecognition.Controllers
                      Text = x.RecognitionTypeName,
                      Value = x.Id.ToString(),
                  }).ToList();
+
+                if (applicationSetting != null && applicationSetting.MaximumNoOfPinsToGenerate != null && applicationSetting.MaximumNoOfPinsToGenerate > 0)
+                {
+                    _maximumNumberOfPinsToGenerate = applicationSetting.MaximumNoOfPinsToGenerate.Value;
+                }
+                ViewData["MaximumNumberOfPinsToGenerate"] = _maximumNumberOfPinsToGenerate;
+
+
+                #endregion
 
                 return View();
             }
@@ -253,14 +269,29 @@ namespace SchoolRecognition.Controllers
 
             try
             {
-                var recognitionTypes = await _recognitionTypesRepository.GetAllRecognitionTypesAsync();
-                //
+
+                #region PinCreationDependencys
+
+                var pinsCreationDependencys = await _pinsRepository.GetPinsCreationDepedencys();
+
+                var recognitionTypes = pinsCreationDependencys.RecognitionTypes;
+                var applicationSetting = pinsCreationDependencys.ApplicationSetting;
+
                 ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
                  new SelectListItem()
                  {
                      Text = x.RecognitionTypeName,
                      Value = x.Id.ToString(),
                  }).ToList();
+
+                if (applicationSetting != null && applicationSetting.MaximumNoOfPinsToGenerate != null && applicationSetting.MaximumNoOfPinsToGenerate > 0)
+                {
+                    _maximumNumberOfPinsToGenerate = applicationSetting.MaximumNoOfPinsToGenerate.Value;
+                }
+                ViewData["MaximumNumberOfPinsToGenerate"] = _maximumNumberOfPinsToGenerate;
+
+
+                #endregion
 
                 if (ModelState.IsValid)
                 {

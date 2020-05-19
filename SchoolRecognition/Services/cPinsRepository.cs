@@ -807,5 +807,41 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+
+        public async Task<PinsCreationDependecyDto> GetPinsCreationDepedencys()
+        {
+            //Instantiate Return Value
+            PinsCreationDependecyDto returnValue = new PinsCreationDependecyDto();
+            try
+            {
+                var recognitionTypes = await _context.RecognitionTypes
+                    .Select(x => new RecognitionTypesViewDto()
+                    {
+                        Id = x.Id,
+                        RecognitionTypeCode = x.Code,
+                        RecognitionTypeName = x.Name
+                    }).ToListAsync();
+
+                var applicationSetting = await _context.ApplicationSettings.Select(x => new ApplicationSettingsViewDto()
+                {
+                    Id = x.Id,
+                    MinimumNoOfRecogYears = x.MinimumNoOfRecogYears,
+                    MaximumNoOfPinsToGenerate = x.MaximumNoOfPinsToGenerate,
+                    MinimumSchoolSubjects = x.MinimumSchoolSubjects,
+                    MinimumTradeSubjects = x.MinimumTradeSubjects,
+                    MaximumCoreSubjects = x.MaximumCoreSubjects
+                }).SingleOrDefaultAsync();
+
+                returnValue.RecognitionTypes = recognitionTypes;
+                returnValue.ApplicationSetting = applicationSetting;
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

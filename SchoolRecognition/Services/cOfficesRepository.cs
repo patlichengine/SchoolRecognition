@@ -621,10 +621,10 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<OfficeCreationDependecyDto> GetOfficeCreationDepedencys()
+        public async Task<OfficesCreationDependecyDto> GetOfficeCreationDepedencys()
         {
             //Instantiate Return Value
-            OfficeCreationDependecyDto returnValue = new OfficeCreationDependecyDto();
+            OfficesCreationDependecyDto returnValue = new OfficesCreationDependecyDto();
             try
             {
                 var officeTypes = await _context.OfficeTypes.Select(x => new OfficeTypesViewDto()

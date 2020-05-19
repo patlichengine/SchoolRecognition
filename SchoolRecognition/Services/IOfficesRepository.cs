@@ -22,6 +22,6 @@ namespace SchoolRecognition.Services
         //
         Task<bool> CheckIfOfficeExists(string officeName);
         Task<bool> CheckIfOfficeExists(Guid id, string officeName);
-        Task<OfficeCreationDependecyDto> GetOfficeCreationDepedencys();
+        Task<OfficesCreationDependecyDto> GetOfficeCreationDepedencys();
     }
 }
