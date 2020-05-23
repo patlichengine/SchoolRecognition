@@ -1,0 +1,239 @@
+﻿@model LoginViewModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
+
+@{
+    ViewData["Title"] = "User Login Page";
+    var msg = (MessageViewModel)ViewBag.Message;
+    string message = "", title = "";
+    if (ViewBag.Message != null)
+    {
+        message = msg.Message;
+        title = msg.Title;
+    }
+}
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+@Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-white">
+    <div class="row">
+        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12 offset-xl-3 offset-lg-3 offset-md-2">
+            <div class="card">
+                <div class="card-body login-card-body">
+
+
+                    <div class="col-12">
+                        <div class="login-logo">
+                            <a asp-controller="Home" asp-action="Index">
+                                <img src="~/images/bgLogo.png" height="60" width="60" />
+                                <span class="text-primary">School Recognition System</span>
+                            </a>
+                        </div>
+                        <p class="login-box-msg">Sign in</p>
+
+                        <form asp-action="Index" method="post" name="login_form" id="login_form">
+
+                            <input type="hidden" id="RequestVerificationToken"
+                                   name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                            <div class="input-group mb-3">
+                                <input type="email" asp-for="Email" class="form-control" placeholder="Email">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-envelope"></span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="password" asp-for="Password" class="form-control" placeholder="Password">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+
+
+                            <div class="d-flex justify-content-around">
+                                <div>
+                                    <!-- Remember me -->
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" id="remember">
+                                        <label for="remember">
+                                            Remember Me
+                                        </label>
+                                    </div>
+                                </div>
+                                <div>
+                                    <!-- Forgot password -->
+                                    <a asp-controller="Accounts" asp-action="forgotpassword">Forgot Password?</a>
+                                </div>
+                            </div>
+
+                            <hr />
+                            <!-- /.col -->
+                            <button type="submit" class="btn btn-secondary btn-flat" id="btnSignIn">Sign In</button>
+
+                            <!-- /.col -->
+                            <!-- Register -->
+                            <p class="mt-5">
+                                Don't have an account?
+                                <a asp-controller="Accounts" asp-action="Register">Register</a>
+                            </p>
+
+
+
+
+
+                        </form>
+
+                    </div>
+
+
+                    <!-- /.login-card-body -->
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
+            <div class="col-md-12 p-lg-5 mx-auto my-5">
+                <i class="fa fa-lock fa-5x" aria-hidden="true"></i>
+                <h3 class="font-weight-normal">User Authentication</h3>
+                <p class="lead font-weight-normal">User accounts must be rgistered with a valid email email address and account must be verified through an email before users can use this portal</p>
+                @*<a class="btn btn-outline-secondary" href="#">Coming soon</a>*@
+            </div>
+            <div class="product-device box-shadow d-none d-md-block"></div>
+            <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- /.login-logo -->
+<!-- /.login-box -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        var message = '@message';
+        var title = '@title';
+    $(function () {
+        // Initialize form validation on the registration form.
+        // It has the name attribute "registration"
+        $("form[name='login_form']").validate({
+            // Specify validation rules
+            rules: {
+                // The key name on the left side is the name attribute
+                // of an input field. Validation rules are defined
+                // on the right side
+                Email: {
+                    required: true,
+                    // Specify that email should be validated
+                    // by the built-in "email" rule
+                    email: true
+                },
+                Password: {
+                    required: true,
+                }
+            },
+            // Specify validation error messages
+            messages: {
+                Password: {
+                    required: "Please provide a password",
+                },
+                Email: "Please enter a valid email address"
+            },
+        });
+
+        var token = document.getElementById('RequestVerificationToken').value;
+        XMLHttpRequest.prototype.realSend = XMLHttpRequest.prototype.send;
+        var newSend = function (vData) {
+            if (this.getResponseHeader("X-CSRF-TOKEN") == null) {
+                this.setRequestHeader("X-CSRF-TOKEN", token);
+            }
+            this.realSend(vData);
+        };
+        XMLHttpRequest.prototype.send = newSend;
+
+        if (message != null) {
+             toastr.error(message, title);
+        }
+    });
+
+    //Define a loading text that will show if the user clicks the Register button
+        const loadingString = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">' +
+            '</span > <span class="sr-only text-white">Please wait...</span>';
+
+        //Define the baseUrl for the interaction with the API
+        //const baseUrl = '@Url.Content("~/api/accounts")';
+        const baseUrl = '@Url.Content("~/Account/Login")';
+
+    $("#btnSignIn").on("click", function (event) {
+
+        event.preventDefault();
+
+        const buttonString = $(this).text();
+        var text = $(this).text();
+        $(this).html(loadingString)
+        //alert("Test");
+        //Get Login user
+        const email = $("#Email").val();
+        const password = $("#Password").val();
+
+
+
+
+        //Depending on the outcome of the login operation, change the display on the button
+        setTimeout(function () {
+            $("#btnSignIn").text(text);
+        }, 50000);
+
+        //call a method to validate the user login detais
+        LoginUser(email, password, text);
+    });
+
+    //This method will pass the email and the password into the web api
+        //const LoginUser = (email, password) => {
+
+        //    console.log('Test 2');
+
+        //    const url = baseUrl+ '/login';
+        //    $.get(url, { email: email, password: password }, function (result) {
+        //        console.log(result);
+        //        if (result.FullName == null && result.Id.indexOf('000000') >= 0) {
+        //            toastr.error("User login detail does not exist. Please ensure your Email and Password is registered", "Login Failed");
+        //        } else {
+        //            if (result == null) {
+        //                $("#login_form")[0].reset();
+        //                toastr.error("Invalid user login", "Login Failed");
+        //            }
+        //            else {
+        //                window.location.href = "Admin/Index";
+        //            }
+        //        }
+        //    });
+        //};
+
+        const LoginUser = (email, password, text) => {
+
+            $("#login_form").submit(); // Submit the form
+            $("#btnSignIn").text(text);
+        };
+    </script>
+}

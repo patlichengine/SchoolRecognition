@@ -1,0 +1,89 @@
+﻿
+<!DOCTYPE html>
+<html style="height: auto;">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewData["Title"] - WAEC School Recognition System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/lib/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="~/lib/icheck-bootstrap/icheck-bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css" />
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/css/waeclte.css">
+
+
+    @RenderSection("styles", required: false)
+    <link href="~/css/custom.css" rel="stylesheet" />
+</head>
+<body class="sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+        <!-- Navbar -->
+        <partial name="_NavigationAdmin" />
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <partial name="_SidebarAdmin" />
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper p-2" style="min-height: 650px">
+            @RenderBody()
+        </div>
+        <!-- /.content-wrapper -->
+
+        <footer class="main-footer">
+            <strong>Copyright © @DateTime.Today.Year <a href="#">West African Examinations Council</a>.</strong> All Rights
+            Reserved.
+        </footer>
+
+
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/js/waeclte.min.js" asp-append-version="true"></script>
+    
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+
+    <script type="text/javascript">
+        var defaultHtml = '<h3 class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Loading...</h3> <h4 class="timeline-header no-border"><a href="#">If the page does not load, click here</a></h4>';
+
+        //$(function () {
+        $('a[data-toggle="link"]').click(function (e) {
+            localStorage.setItem('lastLink', $(e.target).attr('href'));
+            //alert("Checked");
+            //goto the last page if it exists
+            var lastLink = localStorage.getItem('lastLink');
+            var currentLink = $(this).attr('href');
+
+            console.log(lastLink);
+            console.log(currentLink);
+            if (currentLink) {
+                if (currentLink == '#') {
+                } else {
+                    //$('.content-wrapper').html(defaultHtml).show();
+                    $('.content-wrapper').load(currentLink);
+                    e.preventDefault();
+                }
+            }
+            //return false;
+        });
+
+
+            //});
+
+    </script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

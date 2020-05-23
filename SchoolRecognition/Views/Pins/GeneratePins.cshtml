@@ -1,0 +1,148 @@
+﻿@model PinsCreateDto
+@{
+    var recognitionTypes = (IEnumerable<SelectListItem>)ViewData["RecognitionTypes"];
+    var maximumNumberOfPinsToGenerate = (int)ViewData["MaximumNumberOfPinsToGenerate"];
+    ViewData["Title"] = "Generate Pins";
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section styles{
+
+    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
+    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
+
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="RecognitionTypes" asp-action="Index">Manage Pins</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Generate School Recognition Pins</h3>
+                </div>
+                <div class="card-body">
+
+
+                    <form asp-action="GeneratePins" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="form-group">
+                            <label asp-for="RecognitionTypeId">Recognition Type</label>
+                            <select asp-for="RecognitionTypeId" asp-items="@recognitionTypes.ToList()" class="form-control" required>
+                                <option value="">--Select Recognition Type---</option>
+                            </select>
+                            <span asp-validation-for="RecognitionTypeId" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label asp-for="NoOfPinToGenerate">Number of Pins</label>
+                            <input type="number" min="1" max="@maximumNumberOfPinsToGenerate" asp-for="NoOfPinToGenerate" class="form-control" placeholder="Enter Number of Pins To Generate" required>
+                        </div>
+
+
+                        <!-- /.col -->
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-spinner fa-spin" id="loading_icon" style="display:none"></i>
+                            Submit
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-lg"> Reset</button>
+
+                        <!-- /.col -->
+
+                    </form>
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/loading_icon.js"></script>
+    @*<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
+    <script src="~/lib/select2/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('select.form-control').select2({
+                theme: 'bootstrap4'
+            });
+            //$('.select2me').select2();
+
+        });
+    </script>
+    <script>
+        // add the rule here
+         $.validator.addMethod("valueNotEquals", function(value, element, arg){
+          return arg !== value;
+         }, "Select a valid value!");
+        $("form").validate({
+            rules: {
+                RecognitionTypeId: {
+                    required: true,
+                    //min: 1
+                },
+                NoOfPinToGenerate: {
+                    required: true,
+                    min: 1,
+                    max: @maximumNumberOfPinsToGenerate
+                },
+
+            },
+            messages: {
+                RecognitionTypeId: {
+                    required: "This field is required!",
+                    valueNotEquals: ""
+                },
+                NoOfPinToGenerate: {
+                    required: "This field is required!",
+                    min: "Select a valid value greater than 0!",
+                    max: "Select a valid value less than @maximumNumberOfPinsToGenerate!",
+                },
+            }
+        });
+    </script>
+
+}
+
+<script type="text/javascript" src="~/js/linkClick.js"></script>
+
+

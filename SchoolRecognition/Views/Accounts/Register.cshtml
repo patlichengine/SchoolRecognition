@@ -1,0 +1,231 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "User Register Page";
+}
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+
+
+@Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-white">
+    <div class="row">
+        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 offset-xl-2 offset-lg-2 offset-md-2">
+            <div class="card">
+                <div class="card-body login-card-body">
+
+
+                    <div class="col-12">
+                        <div class="register-logo">
+                            <a asp-controller="Home" asp-action="Index">
+                                <img src="~/images/bgLogo.png" height="60" width="60" />
+                                <span class="text-primary">School Recognition System</span>
+                            </a>
+                        </div>
+                        <p class="login-box-msg">Register User</p>
+
+                        <form asp-action="Register" method="post" name="registration" id="registration" asp-antiforgery="true">
+
+
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="input-group mb-3">
+                                <input type="text" asp-for="Surname" class="form-control" placeholder="Surname">
+                                <div class="input-group-appSurnameend">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Surname" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="input-group mb-3">
+                                <input type="text" asp-for="OtherName" class="form-control" placeholder="Other Names">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-user"></span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="OtherName" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="input-group mb-3">
+                                <input type="text" asp-for="PhoneNo" class="form-control" placeholder="Phone Number">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-phone"></span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="PhoneNo" class="text-danger"></span>
+                            </div>
+
+                            <hr />
+
+                            <div class="input-group mb-3">
+                                <input type="email" asp-for="Email" class="form-control" placeholder="Email">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-envelope"></span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input type="password" asp-for="Password" class="form-control" placeholder="Password">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password">
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="icheck-primary">
+                                        <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+                                        <label for="agreeTerms">
+                                            I agree to the <a href="#">terms and conditions</a>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <button type="submit" class="btn btn-secondary btn-flat" id="btnRegisterUser"><span class="fas fa-save"></span> Submit</button>
+
+                            <!-- /.col -->
+
+                        </form>
+
+
+                        <hr />
+
+                        <p class="mb-1">
+                            <a asp-controller="Home" asp-action="Index">I already have a user account</a>
+                        </p>
+                    </div>
+
+
+                    <!-- /.login-card-body -->
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
+            <div class="col-md-12 p-lg-5 mx-auto my-5">
+                <i class="fa fa-user fa-5x" aria-hidden="true"></i>
+                <h3 class="font-weight-normal">User Registration</h3>
+                <p class="lead font-weight-normal">Please ensure that you supply a valid email email address and check you mail to verify your account once account registration is completed</p>
+                
+            </div>
+            <div class="product-device box-shadow d-none d-md-block"></div>
+            <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- /.login-box -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+    $(function () {
+        // Initialize form validation on the registration form.
+        // It has the name attribute "registration"
+        $("form[name='registration']").validate({
+            // Specify validation rules
+            rules: {
+                // The key name on the left side is the name attribute
+                // of an input field. Validation rules are defined
+                // on the right side
+                Surname: "required",
+                OtherName: "required",
+                PhoneNo: "required",
+                Email: {
+                    required: true,
+                    // Specify that email should be validated
+                    // by the built-in "email" rule
+                    email: true
+                },
+                Password: {
+                    required: true,
+                    minlength: 6
+                }
+            },
+            // Specify validation error messages
+            messages: {
+                Surname: "*",
+                OtherName: "*",
+                PhoneNo: "*",
+                password: {
+                    required: "*",
+                    minlength: "Your password must be at least 5 characters long"
+                },
+                Email: "*"
+            },
+            // Make sure the form is submitted to the destination defined
+            // in the "action" attribute of the form when valid
+            //submitHandler: function (form) {
+            //    form.submit();
+            //}
+        });
+
+    });
+
+        //Define a loading text that will show if the user clicks the Register button
+        const loadingString = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true">' +
+            '</span > <span class="sr-only text-white">Please wait...</span>';
+
+        //Define the baseUrl for the interaction with the API
+        //const baseUrl = '@Url.Content("~/api/accounts")';
+        const baseUrl = '@Url.Content("~/Account/Register")';
+
+
+        //When the user clicks the button, execute the code in the block
+        $("#btnRegisterUser").on("click", (event) => {
+
+            event.preventDefault();
+
+            const buttonString = $(this).text();
+            $(this).html(loadingString)
+
+            //Get Login user
+            //const email = $("#Email").val(), password = $("#Password").val();
+            RegiterUser();
+
+            //Depending on the outcome of the login operation, change the display on the button
+            setTimeout( () => {
+                $("#btnRegisterUser").text(text);
+            }, 5000);
+        });
+
+        const RegiterUser = () => {
+
+             $("#registration").submit(); // Submit the form
+
+            //toastr.info("Register user is dactivated at the moment", "Try Later");
+
+        };
+    </script>
+}
