@@ -7,6 +7,7 @@ namespace SchoolRecognition.Entities
     {
         public LocalGovernments()
         {
+            OfficeLocalGovernments = new HashSet<OfficeLocalGovernments>();
             Schools = new HashSet<Schools>();
         }
 
@@ -16,6 +17,7 @@ namespace SchoolRecognition.Entities
         public Guid? StateId { get; set; }
 
         public virtual States State { get; set; }
+        public virtual ICollection<OfficeLocalGovernments> OfficeLocalGovernments { get; set; }
         public virtual ICollection<Schools> Schools { get; set; }
     }
 }

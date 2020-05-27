@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -71,24 +72,25 @@ namespace SchoolRecognition.Services
 
 
 
-        public async Task<IEnumerable<RecognitionTypesViewDto>> GetAllRecognitionTypesAsync()
+        public async Task<IEnumerable<RecognitionTypesViewDto>> List()
         {
             //Instantiate Return Value
             IEnumerable<RecognitionTypesViewDto> returnValue = new List<RecognitionTypesViewDto>();
             try
             {
-                var dbResult = await _context.RecognitionTypes.Include(x => x.Pins)
-                    .Select(x => new RecognitionTypesViewDto()
-                    {
-                        Id = x.Id,
-                        RecognitionTypeCode = x.Code,
-                        RecognitionTypeName = x.Name,
-                        PinsCount = x.Pins != null ? x.Pins.Count() : 0,
-                        IsActivePinsCount = x.Pins != null ? x.Pins.Where(x => x.IsActive == true).Count() : 0,
-                        IsInUsePinsCount = x.Pins != null ? x.Pins.Where(x => x.IsInUse == true).Count() : 0,
-                    }).ToListAsync();
 
-                returnValue = dbResult;
+
+                //IQueryable<RecognitionTypesViewDto> mappedResult = Enumerable.Empty<RecognitionTypesViewDto>().AsQueryable();
+
+
+                var dbResult = _context.RecognitionTypes
+                .Include(x => x.Pins) as IQueryable<RecognitionTypes>;
+
+                //Get the mapped data
+                var mappingData = (_mapper.Map<IEnumerable<RecognitionTypesViewDto>>(dbResult)).AsQueryable();// as IQueryable<AccountsDto>;
+
+
+                returnValue = mappingData.ToList();
 
                 return returnValue;
             }
@@ -99,10 +101,10 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<CustomPagedList<RecognitionTypesViewDto>> GetAllRecognitionTypesAsPagedListAsync(RecognitionTypesResourceParams resourceParams)
+        public async Task<PagedList<RecognitionTypesViewDto>> PagedList(RecognitionTypesResourceParams resourceParams)
         {
             //Instantiate Return Value
-            CustomPagedList<RecognitionTypesViewDto> returnValue = CustomPagedList<RecognitionTypesViewDto>
+            PagedList<RecognitionTypesViewDto> returnValue = PagedList<RecognitionTypesViewDto>
                         .Create(Enumerable.Empty<RecognitionTypesViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -138,11 +140,11 @@ namespace SchoolRecognition.Services
                         Id = x.Id,
                         RecognitionTypeCode = x.Code,
                         RecognitionTypeName = x.Name,
-                        PinsCount = x.Pins.Count(),
+                        TotalPins = x.Pins.Count(),
 
                     });
 
-                    returnValue = await CustomPagedList<RecognitionTypesViewDto>.CreateAsync(mappedResult,
+                    returnValue = await PagedList<RecognitionTypesViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -160,7 +162,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<RecognitionTypesViewDto> GetRecognitionTypesSingleOrDefaultAsync(Guid id)
+        public async Task<RecognitionTypesViewDto> Get(Guid id)
         {
 
             //Instantiate Return Value
@@ -174,9 +176,9 @@ namespace SchoolRecognition.Services
                     var recognitionTypes = await dbResult.Where(x => x.Id == id).SingleOrDefaultAsync();
                     returnValue = _mapper.Map<RecognitionTypesViewDto>(recognitionTypes);
                     //
-                    returnValue.PinsCount = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).CountAsync();
-                    returnValue.IsActivePinsCount = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).Where(x => x.IsActive == true).CountAsync();
-                    returnValue.IsInUsePinsCount = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).Where(x => x.IsInUse == true).CountAsync();
+                    returnValue.TotalPins = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).CountAsync();
+                    returnValue.TotalActivePins = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).Where(x => x.IsActive == true).CountAsync();
+                    returnValue.TotalInUsePins = await dbResult.Include(x => x.Pins).Where(x => x.Id == id).SelectMany(x => x.Pins).Where(x => x.IsInUse == true).CountAsync();
 
 
                     return returnValue;
@@ -193,7 +195,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<RecognitionTypesViewDto> GetRecognitionTypesAllPinsAsync(Guid id)
+        public async Task<RecognitionTypesViewDto> GetIncludingListOfPins(Guid id)
         {
 
 
@@ -258,7 +260,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<RecognitionTypesViewPagedListPinsDto> GetRecognitionTypesPinsAsPagedListAsync(Guid id, PinsResourceParams resourceParams)
+        public async Task<RecognitionTypesViewPagedListPinsDto> GetIncludingPagedListOfPins(Guid id, PinsResourceParams resourceParams)
         {
 
 
@@ -267,7 +269,7 @@ namespace SchoolRecognition.Services
             RecognitionTypesViewPagedListPinsDto returnValue = null;
 
             //Instantiate Return Value
-            CustomPagedList<PinsViewDto> returnValuePins = CustomPagedList<PinsViewDto>
+            PagedList<PinsViewDto> returnValuePins = PagedList<PinsViewDto>
                         .Create(Enumerable.Empty<PinsViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -338,16 +340,16 @@ namespace SchoolRecognition.Services
                         })
                     });
 
-                    returnValuePins = await CustomPagedList<PinsViewDto>.CreateAsync(mappedResult,
+                    returnValuePins = await PagedList<PinsViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
 
                     returnValue = _mapper.Map<RecognitionTypesViewPagedListPinsDto>(recognitionType);
                     //
-                    returnValue.PinsCount = await queryablePins.CountAsync();
-                    returnValue.IsActivePinsCount = await queryablePins.Where(x => x.IsActive == true).CountAsync();
-                    returnValue.IsInUsePinsCount = await queryablePins.Where(x => x.IsInUse == true).CountAsync();
+                    returnValue.TotalPins = await queryablePins.CountAsync();
+                    returnValue.TotalActivePins = await queryablePins.Where(x => x.IsActive == true).CountAsync();
+                    returnValue.TotalInUsePins = await queryablePins.Where(x => x.IsInUse == true).CountAsync();
                     //
                     returnValue.RecognitionTypePins = returnValuePins;
 
@@ -366,7 +368,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<Guid?> CreateRecognitionTypeAsync(RecognitionTypesCreateDto _obj)
+        public async Task<Guid?> Create(RecognitionTypesCreateDto _obj)
         {
             //Instantiate Return Value
             Guid? returnValue = null;
@@ -394,7 +396,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<RecognitionTypesViewDto> UpdateRecognitionTypeAsync(RecognitionTypesCreateDto _obj)
+        public async Task<RecognitionTypesViewDto> Update(RecognitionTypesCreateDto _obj)
         {
 
             //Instantiate Return Value
@@ -424,7 +426,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task DeleteRecognitionTypeAsync(Guid id)
+        public async Task Delete(Guid id)
         {
             try
             {
@@ -451,7 +453,7 @@ namespace SchoolRecognition.Services
             }
         }
         ///
-        public async Task<bool> CheckIfRecognitionTypeExists(string name, string code)
+        public async Task<bool> Exists(string name, string code)
         {
             //Instantiate Return Value
             bool returnValue = true;
@@ -483,7 +485,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<bool> CheckIfRecognitionTypeExists(Guid id, string name, string code)
+        public async Task<bool> Exists(Guid id, string name, string code)
         {
             //Instantiate Return Value
             bool returnValue = true;

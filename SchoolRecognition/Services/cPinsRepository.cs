@@ -63,7 +63,7 @@ namespace SchoolRecognition.Services
 
         #endregion
 
-        private async Task<string> GenerateSerialPinAsync(Guid recognitionTypeId)
+        private async Task<string> GenerateUniqueSerialPin(Guid recognitionTypeId)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-        private async Task<List<string>> GenerateMultipleSerialPinsAsync(Guid recognitionTypeId, int numberOfPins)
+        private async Task<List<string>> GenerateMultipleUniqueSerialPins(Guid recognitionTypeId, int numberOfPins)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<IEnumerable<PinsViewDto>> GetAllPinsAsync()
+        public async Task<IEnumerable<PinsViewDto>> List()
         {
 
             //Instantiate Return Value
@@ -226,10 +226,10 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<CustomPagedList<PinsViewDto>> GetAllPinsAsPagedListAsync(PinsResourceParams resourceParams)
+        public async Task<PagedList<PinsViewDto>> PagedList(PinsResourceParams resourceParams)
         {
             //Instantiate Return Value
-            CustomPagedList<PinsViewDto> returnValue = CustomPagedList<PinsViewDto>
+            PagedList<PinsViewDto> returnValue = PagedList<PinsViewDto>
                         .Create(Enumerable.Empty<PinsViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -292,7 +292,7 @@ namespace SchoolRecognition.Services
                         })
                     });
 
-                    returnValue = await CustomPagedList<PinsViewDto>.CreateAsync(mappedResult,
+                    returnValue = await PagedList<PinsViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -311,7 +311,7 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<PinsViewDto> GetPinsSingleOrDefaultAsync(Guid id)
+        public async Task<PinsViewDto> Get(Guid id)
         {
 
             //Instantiate Return Value
@@ -371,7 +371,7 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<PinsViewDto> GetPinsAllPinHistoriesAsync(Guid id)
+        public async Task<PinsViewDto> GetIncludingListOfPinHistories(Guid id)
         {
             //Instantiate Return Value
             PinsViewDto returnValue = null;
@@ -433,7 +433,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<PinsViewDto> GetPinsAllSchoolPaymentsAsync(Guid id)
+        public async Task<PinsViewDto> GetIncludingListOfSchoolPayments(Guid id)
         {
             //Instantiate Return Value
             PinsViewDto returnValue = null;
@@ -492,14 +492,14 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<PinsViewPagedListPinHistoriesDto> GetPinsPinHistoriesAsPagedListAsync(Guid id, PinHistoriesResourceParams resourceParams)
+        public async Task<PinsViewPagedListPinHistoriesDto> GetIncludingPagedListOfPinHistories(Guid id, PinHistoriesResourceParams resourceParams)
         {
 
             //Instantiate Return Value
             PinsViewPagedListPinHistoriesDto returnValue = null;
 
             //Instantiate Return Value
-            CustomPagedList<PinHistoriesViewDto> returnValuePins = CustomPagedList<PinHistoriesViewDto>
+            PagedList<PinHistoriesViewDto> returnValuePins = PagedList<PinHistoriesViewDto>
                         .Create(Enumerable.Empty<PinHistoriesViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -554,7 +554,7 @@ namespace SchoolRecognition.Services
 
                     });
 
-                    returnValuePins = await CustomPagedList<PinHistoriesViewDto>.CreateAsync(mappedResult,
+                    returnValuePins = await PagedList<PinHistoriesViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -602,7 +602,7 @@ namespace SchoolRecognition.Services
         }
         
 
-        public async Task<Guid?> CreatePinsAsync(PinsCreateDto _obj)
+        public async Task<Guid?> Create(PinsCreateDto _obj)
         {
             //Instantiate Return Value
             Guid? returnValue = null;
@@ -616,7 +616,7 @@ namespace SchoolRecognition.Services
                     if (_obj.RecognitionTypeId != Guid.Empty)
                     {
                         //Generate a SerialPin
-                        serialPin = await GenerateSerialPinAsync(_obj.RecognitionTypeId);
+                        serialPin = await GenerateUniqueSerialPin(_obj.RecognitionTypeId);
                     }
                     //Create a PINs Object to be stored in the db
                     var entity = new Pins()
@@ -648,7 +648,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<bool> CreateMultiplePinsAsync(PinsCreateDto _obj)
+        public async Task<bool> CreateMultiple(PinsCreateDto _obj)
         {
 
             try
@@ -662,13 +662,13 @@ namespace SchoolRecognition.Services
                 Guid? returnId = Guid.Empty;
                 if (_obj != null)
                 {
-                    //Generate a List of Custom SerialPin
+                    //Generate a List of  SerialPin
                     if (_obj.RecognitionTypeId != null && _obj.RecognitionTypeId != Guid.Empty)
                     {
-                        strGeneratedSerialPins = await GenerateMultipleSerialPinsAsync(_obj.RecognitionTypeId, numberOfPinsToGenerate);
+                        strGeneratedSerialPins = await GenerateMultipleUniqueSerialPins(_obj.RecognitionTypeId, numberOfPinsToGenerate);
                     }
 
-                    //Assign Custom SerialPins to Pin objects
+                    //Assign  SerialPins to Pin objects
                     for (int i = 0; i < numberOfPinsToGenerate; i++)
                     {
                         //Get string at position "i" in the string array
@@ -707,7 +707,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<PinsViewDto> UpdatePinAsync(PinsUpdateDto _obj)
+        public async Task<PinsViewDto> Update(PinsUpdateDto _obj)
         {
 
             //Instantiate Return Value
@@ -737,7 +737,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task DeletePinAsync(Guid id)
+        public async Task Delete(Guid id)
         {
             try
             {
@@ -764,12 +764,14 @@ namespace SchoolRecognition.Services
         }
 
         /// <summary>
-        /// The method "CheckNumberOfActivePinsNOTInUseAsync" checks the number of pins that are Active but NOT in use
-        /// i.e. such pins can be used to make SchoolPayments. If less than 0 (zero)
+        /// The method "CheckTotalActivePinsNOTInUse" checks the number of pins that are Active but NOT in use
+        /// i.e. such pins can be used to make SchoolPayments. If value < 1 (one)
         /// the are no pins avaliable for SchoolPayments
+        /// If value >= 1 there are pins available for SchoolPayments 
+        /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<int> CheckNumberOfActivePinsNOTInUseAsync()
+        public async Task<int> CheckTotalActivePinsNOTInUse()
         {
             //Instantiate Return Value
             int returnValue = 0;
@@ -787,7 +789,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<PinsStatisticsSummaryDto> GetPinsStatisticSummaryAsync()
+        public async Task<PinsStatisticsSummaryDto> Summary()
         {
             //Instantiate Return Value
             PinsStatisticsSummaryDto returnValue = new PinsStatisticsSummaryDto();
@@ -808,7 +810,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<PinsCreationDependecyDto> GetPinsCreationDepedencys()
+        public async Task<PinsCreationDependecyDto> GetCreationDepedencys()
         {
             //Instantiate Return Value
             PinsCreationDependecyDto returnValue = new PinsCreationDependecyDto();

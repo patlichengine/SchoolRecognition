@@ -13,6 +13,8 @@ namespace SchoolRecognition.Models
         public int TotalPages { get; set; }
         public string PrevDisabled { get; set; }
         public string NextDisabled { get; set; }
-        public string Controller { get; set; } 
+        public string Controller { get; set; }
+        public string Action { get; set; }
+        public Guid? Id { get; set; }
     }
 }

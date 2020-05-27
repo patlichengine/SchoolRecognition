@@ -65,7 +65,7 @@ namespace SchoolRecognition.Services
 
         #endregion
 
-        public async Task<IEnumerable<OfficeTypesViewDto>> GetAllOfficeTypesAsync()
+        public async Task<IEnumerable<OfficeTypesViewDto>> List()
         {
             //Instantiate Return Value
             IEnumerable<OfficeTypesViewDto> returnValue = new List<OfficeTypesViewDto>();
@@ -90,10 +90,10 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<CustomPagedList<OfficeTypesViewDto>> GetAllOfficeTypesAsPagedListAsync(OfficeTypesResourceParams resourceParams)
+        public async Task<PagedList<OfficeTypesViewDto>> PagedList(OfficeTypesResourceParams resourceParams)
         {
             //Instantiate Return Value
-            CustomPagedList<OfficeTypesViewDto> returnValue = CustomPagedList<OfficeTypesViewDto>
+            PagedList<OfficeTypesViewDto> returnValue = PagedList<OfficeTypesViewDto>
                         .Create(Enumerable.Empty<OfficeTypesViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -131,7 +131,7 @@ namespace SchoolRecognition.Services
 
                     });
 
-                    returnValue = await CustomPagedList<OfficeTypesViewDto>.CreateAsync(mappedResult,
+                    returnValue = await PagedList<OfficeTypesViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -149,7 +149,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<OfficeTypesViewDto> GetOfficeTypesSingleOrDefaultAsync(Guid id)
+        public async Task<OfficeTypesViewDto> Get(Guid id)
         {
 
             //Instantiate Return Value
@@ -180,7 +180,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<OfficeTypesViewDto> GetOfficeTypesAllOfficesAsync(Guid id)
+        public async Task<OfficeTypesViewDto> GetIncludingListOfOffices(Guid id)
         {
 
 
@@ -219,7 +219,7 @@ namespace SchoolRecognition.Services
                         //
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                         DateCreated = x.DateCreated,
-                        OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                        OfficeStateStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
                             Id = y.Id,
                             StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
@@ -250,7 +250,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<OfficeTypeViewPagedListOfficesDto> GetOfficeTypesOfficesAsPagedListAsync(Guid id, OfficesResourceParams resourceParams)
+        public async Task<OfficeTypeViewPagedListOfficesDto> GetIncludingPagedListOfOffices(Guid id, OfficesResourceParams resourceParams)
         {
 
 
@@ -259,7 +259,7 @@ namespace SchoolRecognition.Services
             OfficeTypeViewPagedListOfficesDto returnValue = null;
 
             //Instantiate Return Value
-            CustomPagedList<OfficesViewDto> returnValueOffices = CustomPagedList<OfficesViewDto>
+            PagedList<OfficesViewDto> returnValueOffices = PagedList<OfficesViewDto>
                         .Create(Enumerable.Empty<OfficesViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -326,7 +326,7 @@ namespace SchoolRecognition.Services
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                         DateCreated = x.DateCreated,
 
-                        OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                        OfficeStateStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
                             Id = y.Id,
                             StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
@@ -339,7 +339,7 @@ namespace SchoolRecognition.Services
 
                     });
 
-                    returnValueOffices = await CustomPagedList<OfficesViewDto>.CreateAsync(mappedResult,
+                    returnValueOffices = await PagedList<OfficesViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -365,7 +365,7 @@ namespace SchoolRecognition.Services
             }
         }
         
-        public async Task<Guid?> CreateOfficeTypeAsync(OfficeTypesCreateDto _obj)
+        public async Task<Guid?> Create(OfficeTypesCreateDto _obj)
         {
             //Instantiate Return Value
             Guid? returnValue = null;
@@ -393,7 +393,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<OfficeTypesViewDto> UpdateOfficeTypeAsync(OfficeTypesCreateDto _obj)
+        public async Task<OfficeTypesViewDto> Update(OfficeTypesCreateDto _obj)
         {
 
             //Instantiate Return Value
@@ -423,7 +423,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task DeleteOfficeTypeAsync(Guid id)
+        public async Task Delete(Guid id)
         {
             try
             {
@@ -450,7 +450,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<bool> CheckIfOfficeTypeExists(string officeTypeDescription)
+        public async Task<bool> Exists(string officeTypeDescription)
         {
             //Instantiate Return Value
             bool returnValue = false;
@@ -479,7 +479,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<bool> CheckIfOfficeTypeExists(Guid id, string officeTypeDescription)
+        public async Task<bool> Exists(Guid id, string officeTypeDescription)
         {
             //Instantiate Return Value
             bool returnValue = false;

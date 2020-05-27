@@ -56,7 +56,7 @@ namespace SchoolRecognition.Services
         #endregion
 
 
-        public async Task<IEnumerable<OfficesViewDto>> GetAllOfficesAsync()
+        public async Task<IEnumerable<OfficesViewDto>> List()
         {
 
             //Instantiate Return Value
@@ -67,10 +67,9 @@ namespace SchoolRecognition.Services
                     .Include(x => x.OfficeType)
                     .Include(x => x.State)
                     .Include(x => x.CreatedByNavigation)
-                    .Include(x => x.OfficeStates)
-                    .ThenInclude(y => y.State)
-                    .Include(x => x.OfficeStates)
-                    .ThenInclude(y => y.Office) as IQueryable<Offices>;
+                    .Include(x=>x.OfficeLocalGovernments)
+                    .Include(x=>x.Schools)
+                    .Include(x => x.OfficeStates) as IQueryable<Offices>;
 
                 returnValue = await dbResult.Select(x => new OfficesViewDto()
                 {
@@ -85,16 +84,9 @@ namespace SchoolRecognition.Services
                     //
                     CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                     DateCreated = x.DateCreated,
-                    OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
-                    {
-                        Id = y.Id,
-                        StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
-                        OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
-                        StateName = y.State != null ? y.State.Name : null,
-                        StateCode = y.State != null ? y.State.Code : null,
-                        OfficeName = y.Office != null ? y.Office.Name : null,
-                        OfficeAddress = y.Office != null ? y.Office.Address : null,
-                    }),
+                    OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                    OfficeLocalGovernmentsCount = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
+                    SchoolsCount = x.Schools != null ? x.Schools.Count() : 0,
 
 
                 }).ToListAsync();
@@ -108,11 +100,59 @@ namespace SchoolRecognition.Services
             }
         }
 
+        public async Task<IEnumerable<OfficesViewDto>> ListByOfficeTypeId(Guid officeTypeId)
+        {
 
-        public async Task<CustomPagedList<OfficesViewDto>> GetAllOfficesAsPagedListAsync(OfficesResourceParams resourceParams)
+            //Instantiate Return Value
+            IEnumerable<OfficesViewDto> returnValue = new List<OfficesViewDto>();
+            try
+            {
+                if (officeTypeId != Guid.Empty)
+                {
+                    var dbResult = _context.Offices
+                    .Include(x => x.OfficeType)
+                    .Include(x => x.State)
+                    .Include(x => x.CreatedByNavigation)
+                    .Include(x => x.OfficeLocalGovernments)
+                    .Include(x => x.Schools)
+                    .Include(x => x.OfficeStates)
+                    .Where(x => x.OfficeTypeId == officeTypeId) as IQueryable<Offices>;
+
+                    returnValue = await dbResult.Select(x => new OfficesViewDto()
+                    {
+                        Id = x.Id,
+                        OfficeName = x.Name,
+                        OfficeAddress = x.Address,
+                        StateName = x.State != null ? x.State.Name : null,
+                        OfficeImage = x.OfficeImage,
+                        Longitude = x.Longitute,
+                        Latitude = x.Latitude,
+                        OfficeTypeDescription = x.OfficeType != null ? x.OfficeType.Description : null,
+                        //
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                        OfficeLocalGovernmentsCount = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
+                        SchoolsCount = x.Schools != null ? x.Schools.Count() : 0,
+
+
+                    }).ToListAsync();
+                }
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+        public async Task<PagedList<OfficesViewDto>> PagedList(OfficesResourceParams resourceParams)
         {
             //Instantiate Return Value
-            CustomPagedList<OfficesViewDto> returnValue = CustomPagedList<OfficesViewDto>
+            PagedList<OfficesViewDto> returnValue = PagedList<OfficesViewDto>
                         .Create(Enumerable.Empty<OfficesViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -126,10 +166,9 @@ namespace SchoolRecognition.Services
                     .Include(x => x.OfficeType)
                     .Include(x => x.State)
                     .Include(x => x.CreatedByNavigation)
-                    .Include(x => x.OfficeStates)
-                    .ThenInclude(y => y.State)
-                    .Include(x => x.OfficeStates)
-                    .ThenInclude(y => y.Office) as IQueryable<Offices>;
+                    .Include(x => x.OfficeLocalGovernments)
+                    .Include(x => x.Schools)
+                    .Include(x => x.OfficeStates) as IQueryable<Offices>;
                     //Search
                     if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
                     {
@@ -169,21 +208,14 @@ namespace SchoolRecognition.Services
                         //
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                         DateCreated = x.DateCreated,
-                        OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
-                        {
-                            Id = y.Id,
-                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
-                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
-                            StateName = y.State != null ? y.State.Name : null,
-                            StateCode = y.State != null ? y.State.Code : null,
-                            OfficeName = y.Office != null ? y.Office.Name : null,
-                            OfficeAddress = y.Office != null ? y.Office.Address : null,
-                        }),
+                        OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                        OfficeLocalGovernmentsCount = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
+                        SchoolsCount = x.Schools != null ? x.Schools.Count() : 0,
 
 
                     }); ;
 
-                    returnValue = await CustomPagedList<OfficesViewDto>.CreateAsync(mappedResult,
+                    returnValue = await PagedList<OfficesViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -201,59 +233,70 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<OfficesViewDto> GetOfficesAllSchoolsAsync(Guid id)
+
+        public async Task<OfficesViewDto> Get(Guid id)
         {
+
             //Instantiate Return Value
             OfficesViewDto returnValue = null;
-            IEnumerable<SchoolsViewDto> returnValueSchools = new List<SchoolsViewDto>();
             try
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = _context.Offices
-                    .Include(x => x.OfficeType)
+                    var dbResult = await _context.Offices.Include(x => x.OfficeType)
                     .Include(x => x.State)
                     .Include(x => x.CreatedByNavigation)
                     .Include(x => x.OfficeStates)
                     .ThenInclude(y => y.State)
                     .Include(x => x.OfficeStates)
-                    .ThenInclude(y => y.Office).Where(x => x.Id == id) as IQueryable<Offices>;
-
-
-                    var office = await dbResult.Select(x => new OfficesViewDto()
-                    {
-                        Id = x.Id,
-                        OfficeName = x.Name,
-                        OfficeAddress = x.Address,
-                        StateName = x.State != null ? x.State.Name : null,
-                        OfficeImage = x.OfficeImage,
-                        Longitude = x.Longitute,
-                        Latitude = x.Latitude,
-                        OfficeTypeDescription = x.OfficeType != null ? x.OfficeType.Description : null,
-                        //
-                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                        DateCreated = x.DateCreated,
-                        OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                    .ThenInclude(y => y.Office)
+                    .Include(x => x.OfficeLocalGovernments)
+                    .ThenInclude(y => y.LocalGovernment)
+                    .Include(x => x.OfficeLocalGovernments)
+                    .ThenInclude(y => y.Office)
+                        .Select(x => new OfficesViewDto()
                         {
-                            Id = y.Id,
-                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
-                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
-                            StateName = y.State != null ? y.State.Name : null,
-                            StateCode = y.State != null ? y.State.Code : null,
-                            OfficeName = y.Office != null ? y.Office.Name : null,
-                            OfficeAddress = y.Office != null ? y.Office.Address : null,
-                        }),
+                            Id = x.Id,
+                            OfficeName = x.Name,
+                            OfficeAddress = x.Address,
+                            StateName = x.State != null ? x.State.Name : null,
+                            OfficeImage = x.OfficeImage,
+                            Longitude = x.Longitute,
+                            Latitude = x.Latitude,
+                            OfficeTypeDescription = x.OfficeType != null ? x.OfficeType.Description : null,
+                            //IsActive = x.IsActive,
+                            StateId = x.StateId,
+                            OfficeTypeId = x.OfficeTypeId,
+                            //IsInUse = x.IsInUse,
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            DateCreated = x.DateCreated,
+                            OfficeStateStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                            {
+                                Id = y.Id,
+                                StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
+                                StateName = y.State != null ? y.State.Name : null,
+                                StateCode = y.State != null ? y.State.Code : null,
+                                OfficeName = y.Office != null ? y.Office.Name : null,
+                                OfficeAddress = y.Office != null ? y.Office.Address : null,
+                            }),
+                            OfficeLgas = x.OfficeLocalGovernments.Select(y => new OfficeLocalGovernmentsViewDto()
+                            {
+                                Id = y.Id,
+                                LocalGovernmentId = y.LocalGovernmentId != null ? y.LocalGovernmentId.Value : Guid.Empty,
+                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
+                                LocalGovernmentName = y.LocalGovernment != null ? y.LocalGovernment.Name : null,
+                                LocalGovernmentCode = y.LocalGovernment != null ? y.LocalGovernment.Code : null,
+                                OfficeName = y.Office != null ? y.Office.Name : null,
+                                OfficeAddress = y.Office != null ? y.Office.Address : null,
+                            }),
+
+                        })
+                        .Where(x => x.Id == id).SingleOrDefaultAsync();
 
 
-                    }).SingleOrDefaultAsync();
+                    returnValue = dbResult;
 
-                    returnValue = office;
-
-
-                    var schoolPayments = await dbResult.SelectMany(x => x.Schools).ToListAsync();
-                    returnValueSchools = _mapper.Map<IEnumerable<SchoolsViewDto>>(schoolPayments);
-
-                    returnValue.OfficeSchools = returnValueSchools;
 
                     return returnValue;
                 }
@@ -270,14 +313,14 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<OfficeViewPagedListSchoolsDto> GetOfficesSchoolsAsPagedListAsync(Guid id, SchoolsResourceParams resourceParams)
+        public async Task<OfficeViewPagedListSchoolsDto> GetIncludingPagedListOfSchools(Guid id, SchoolsResourceParams resourceParams)
         {
 
             //Instantiate Return Value
             OfficeViewPagedListSchoolsDto returnValue = null;
 
             //Instantiate Return Value
-            CustomPagedList<SchoolsViewDto> returnValueSchools = CustomPagedList<SchoolsViewDto>
+            PagedList<SchoolsViewDto> returnValueSchools = PagedList<SchoolsViewDto>
                         .Create(Enumerable.Empty<SchoolsViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -293,6 +336,16 @@ namespace SchoolRecognition.Services
                     .ThenInclude(y => y.State)
                     .Include(x => x.OfficeStates)
                     .ThenInclude(y => y.Office)
+                    .Include(x => x.OfficeLocalGovernments)
+                    .ThenInclude(y => y.LocalGovernment)
+                    .Include(x => x.OfficeLocalGovernments)
+                    .ThenInclude(y => y.Office)
+                    .Include(x => x.Schools)
+                    .ThenInclude(x => x.Category)
+                    .Include(x => x.Schools)
+                    .ThenInclude(x => x.Lg)
+                    .Include(x => x.Schools)
+                    .ThenInclude(x => x.Office)
                     .Where(x => x.Id == id) as IQueryable<Offices>;
 
                     var office = await dbResult.Select(x => new OfficeViewPagedListSchoolsDto()
@@ -308,7 +361,7 @@ namespace SchoolRecognition.Services
                         //
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                         DateCreated = x.DateCreated,
-                        OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                        OfficeStateStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
                             Id = y.Id,
                             StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
@@ -317,6 +370,16 @@ namespace SchoolRecognition.Services
                             StateCode = y.State != null ? y.State.Code : null,
                             OfficeName = y.Office != null ? y.Office.Name : null,
                             OfficeAddress = y.Office != null ? y.Office.Address : null,
+                        }),
+                        OfficeLgas = x.OfficeLocalGovernments.Select(x => new OfficeLocalGovernmentsViewDto()
+                        {
+                            Id = x.Id,
+                            LocalGovernmentName = x.LocalGovernment != null ? x.LocalGovernment.Name : null,
+                            LocalGovernmentCode = x.LocalGovernment != null ? x.LocalGovernment.Code : null,
+                            StateName = x.LocalGovernment != null && x.LocalGovernment.State != null ? x.LocalGovernment.State.Name : null,
+                            StateCode = x.LocalGovernment != null && x.LocalGovernment.Code != null ? x.LocalGovernment.State.Name : null,
+                            OfficeName = x.Office != null ? x.Office.Name : null,
+                            OfficeAddress = x.Office != null ? x.Office.Address : null,
                         }),
 
 
@@ -375,7 +438,7 @@ namespace SchoolRecognition.Services
 
                     });
 
-                    returnValueSchools = await CustomPagedList<SchoolsViewDto>.CreateAsync(mappedResult,
+                    returnValueSchools = await PagedList<SchoolsViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -398,56 +461,113 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-
-
-        public async Task<OfficesViewDto> GetOfficesSingleOrDefaultAsync(Guid id)
+        
+        
+        public async Task<OfficeViewPagedListOfficeLocalGovernmentsDto> GetIncludingPagedListOfOfficeLocalGovernments(Guid id, OfficeLocalGovernmentsResourceParams resourceParams)
         {
 
             //Instantiate Return Value
-            OfficesViewDto returnValue = null;
+            OfficeViewPagedListOfficeLocalGovernmentsDto returnValue = null;
+
+            //Instantiate Return Value
+            PagedList<OfficeLocalGovernmentsViewDto> returnValueOfficeLocalGovernments = PagedList<OfficeLocalGovernmentsViewDto>
+                        .Create(Enumerable.Empty<OfficeLocalGovernmentsViewDto>().AsQueryable(),
+                            resourceParams.PageNumber,
+                            resourceParams.PageSize);
             try
             {
                 if (id != Guid.Empty)
                 {
-                    var dbResult = await _context.Offices.Include(x => x.OfficeType)
+                    var dbResult = _context.Offices
+                    .Include(x => x.OfficeType)
                     .Include(x => x.State)
                     .Include(x => x.CreatedByNavigation)
                     .Include(x => x.OfficeStates)
                     .ThenInclude(y => y.State)
                     .Include(x => x.OfficeStates)
                     .ThenInclude(y => y.Office)
-                        .Select(x => new OfficesViewDto()
+                    .Include(x => x.OfficeLocalGovernments)
+                    .ThenInclude(y => y.LocalGovernment)
+                    .ThenInclude(z => z.State)
+                    .Include(x => x.OfficeLocalGovernments)
+                    .ThenInclude(y => y.Office)
+                    .ThenInclude(z => z.OfficeType)
+                    .Where(x => x.Id == id) as IQueryable<Offices>;
+
+                    var office = await dbResult.Select(x => new OfficeViewPagedListOfficeLocalGovernmentsDto()
+                    {
+                        Id = x.Id,
+                        OfficeName = x.Name,
+                        OfficeAddress = x.Address,
+                        StateName = x.State != null ? x.State.Name : null,
+                        OfficeImage = x.OfficeImage,
+                        Longitude = x.Longitute,
+                        Latitude = x.Latitude,
+                        OfficeTypeDescription = x.OfficeType != null ? x.OfficeType.Description : null,
+                        //
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        OfficeStateStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
                         {
-                            Id = x.Id,
-                            OfficeName = x.Name,
-                            OfficeAddress = x.Address,
-                            StateName = x.State != null ? x.State.Name : null,
-                            OfficeImage = x.OfficeImage,
-                            Longitude = x.Longitute,
-                            Latitude = x.Latitude,
-                            OfficeTypeDescription = x.OfficeType != null ? x.OfficeType.Description : null,
-                            //IsActive = x.IsActive,
-                            StateId = x.StateId,
-                            OfficeTypeId = x.OfficeTypeId,
-                            //IsInUse = x.IsInUse,
-                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                            DateCreated = x.DateCreated,
-                            OfficeStateOffices = x.OfficeStates.Select(y => new OfficeStatesViewDto()
-                            {
-                                Id = y.Id,
-                                StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
-                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
-                                StateName = y.State != null ? y.State.Name : null,
-                                StateCode = y.State != null ? y.State.Code : null,
-                                OfficeName = y.Office != null ? y.Office.Name : null,
-                                OfficeAddress = y.Office != null ? y.Office.Address : null,
-                            }),
-
-                        })
-                        .Where(x => x.Id == id).SingleOrDefaultAsync();
+                            Id = y.Id,
+                            StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                            OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
+                            StateName = y.State != null ? y.State.Name : null,
+                            StateCode = y.State != null ? y.State.Code : null,
+                            OfficeName = y.Office != null ? y.Office.Name : null,
+                            OfficeAddress = y.Office != null ? y.Office.Address : null,
+                        }),
 
 
-                    returnValue = dbResult;
+                    }).FirstOrDefaultAsync();
+                    //
+                    var queryableOfficeLocalGovernments = dbResult.SelectMany(x => x.OfficeLocalGovernments) as IQueryable<OfficeLocalGovernments>;
+
+
+
+                    //Search
+                    if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
+                    {
+
+                        var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
+
+                        queryableOfficeLocalGovernments = queryableOfficeLocalGovernments.Where(
+                            a => (a.LocalGovernment != null ? a.LocalGovernment.Name : null).ToString().ToUpper().Contains(searchQuery)
+                            || (a.LocalGovernment != null ? a.LocalGovernment.Code : null).ToString().ToUpper().Contains(searchQuery)
+                            || (a.LocalGovernment != null && a.LocalGovernment.State != null ? a.LocalGovernment.State.Name : null).ToString().ToUpper().Contains(searchQuery)
+                            || (a.LocalGovernment != null && a.LocalGovernment.State != null ? a.LocalGovernment.State.Code : null).ToString().ToUpper().Contains(searchQuery)
+                            );
+                    }
+                    //Ordering
+                    if (!string.IsNullOrWhiteSpace(resourceParams.OrderBy))
+                    {
+                        // get property mapping dictionary
+                        var pinsPropertyMappingDictionary =
+                            _propertyMappingService.GetPropertyMapping<OfficeLocalGovernmentsViewDto, OfficeLocalGovernments>();
+
+                        queryableOfficeLocalGovernments = queryableOfficeLocalGovernments.ApplySort(resourceParams.OrderBy,
+                            pinsPropertyMappingDictionary);
+                    }
+                    ///Use LINQ to map pins to pinsviewdto
+                    var mappedResult = queryableOfficeLocalGovernments.Select(x => new OfficeLocalGovernmentsViewDto()
+                    {
+                        Id = x.Id,
+                        LocalGovernmentName = x.LocalGovernment != null ? x.LocalGovernment.Name : null,
+                        LocalGovernmentCode = x.LocalGovernment != null ? x.LocalGovernment.Code : null,
+                        StateName = x.LocalGovernment != null && x.LocalGovernment.State != null ? x.LocalGovernment.State.Name : null,
+                        StateCode = x.LocalGovernment != null && x.LocalGovernment.Code != null ? x.LocalGovernment.State.Name : null,
+                        OfficeName = x.Office != null ? x.Office.Name : null,
+                        OfficeAddress = x.Office != null ? x.Office.Address : null,
+                    });
+
+                    returnValueOfficeLocalGovernments = await PagedList<OfficeLocalGovernmentsViewDto>.CreateAsync(mappedResult,
+                        resourceParams.PageNumber,
+                        resourceParams.PageSize);
+
+
+                    returnValue = office;
+                    //
+                    returnValue.OfficeLgas = returnValueOfficeLocalGovernments;
 
 
                     return returnValue;
@@ -463,9 +583,8 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
-        
 
-        public async Task<Guid?> CreateOfficeAsync(OfficesCreateDto _obj)
+        public async Task<Guid?> Create(OfficesCreateDto _obj)
         {
             //Instantiate Return Value
             Guid? returnValue = null;
@@ -476,17 +595,8 @@ namespace SchoolRecognition.Services
                     Offices entity = _mapper.Map<Offices>(_obj);
                     //
                     entity.Id = Guid.NewGuid();
+                    entity.DateCreated = DateTime.Now;
                     await _context.Offices.AddAsync(entity);
-
-                    //Create OfficeState entity for this Office
-                    OfficeStates officeState = new OfficeStates()
-                    {
-                        Id = Guid.NewGuid(),
-                        OfficeId = entity.Id,
-                        StateId = _obj.StateAssigned
-                    };
-                    await _context.OfficeStates.AddAsync(officeState);
-
 
                     await this.Save();
 
@@ -504,7 +614,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<OfficesViewDto> UpdateOfficeAsync(OfficesCreateDto _obj)
+        public async Task<OfficesViewDto> Update(OfficesCreateDto _obj)
         {
 
             //Instantiate Return Value
@@ -534,7 +644,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task DeleteOfficeAsync(Guid id)
+        public async Task Delete(Guid id)
         {
             try
             {
@@ -563,7 +673,7 @@ namespace SchoolRecognition.Services
 
 
         ///
-        public async Task<bool> CheckIfOfficeExists(string officeName)
+        public async Task<bool> Exists(string officeName)
         {
             //Instantiate Return Value
             bool returnValue = true;
@@ -592,7 +702,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<bool> CheckIfOfficeExists(Guid id, string officeName)
+        public async Task<bool> Exists(Guid id, string officeName)
         {
             //Instantiate Return Value
             bool returnValue = true;
@@ -621,7 +731,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<OfficesCreationDependecyDto> GetOfficeCreationDepedencys()
+        public async Task<OfficesCreationDependecyDto> GetCreationDependencys()
         {
             //Instantiate Return Value
             OfficesCreationDependecyDto returnValue = new OfficesCreationDependecyDto();

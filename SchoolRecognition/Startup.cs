@@ -152,18 +152,21 @@ namespace SchoolRecognition
             //services.AddTransient<IPinsRepository, cPinsRepository>(provider => new cPinsRepository(connectionString));
             //services.AddTransient<IRecognitionTypesRepository, cRecognitionTypesRepository>(provider => new cRecognitionTypesRepository(connectionString));
 
+
             services.AddScoped<IAccountsRepository, cAccountsRepository>();
             services.AddScoped<IApplicationSettingsRepository, cApplicationSettingsRepository>();
             services.AddScoped<ICentresRepository, cCentresRepository>();
-            services.AddScoped<ISchoolPaymentsRepository, cSchoolPaymentsRepository>();
-            services.AddScoped<IStatesRepository, cStatesRepository>();
+            services.AddScoped<ILocalGovernmentsRepository, cLocalGovernmentsRepository>();
             services.AddScoped<IOfficesRepository, cOfficesRepository>();
-            services.AddScoped<IOfficeTypesRepository, cOfficeTypesRepository>();
+            services.AddScoped<IOfficeLocalGovernmentsRepository, cOfficeLocalGovernmentsRepository>();
             services.AddScoped<IOfficeStatesRepository, cOfficeStatesRepository>();
+            services.AddScoped<IOfficeTypesRepository, cOfficeTypesRepository>();
             services.AddScoped<IPinsRepository, cPinsRepository>();
             services.AddScoped<IRecognitionTypesRepository, cRecognitionTypesRepository>();
             services.AddScoped<ISchoolCategoryRepository, cSchoolCategoryRepository>();
             services.AddScoped<ISchoolsRepository, cSchoolsRepository>();
+            services.AddScoped<ISchoolPaymentsRepository, cSchoolPaymentsRepository>();
+            services.AddScoped<IStatesRepository, cStatesRepository>();
             services.AddScoped<ISubjectsRepository, cSubjectsRepository>();
 
 

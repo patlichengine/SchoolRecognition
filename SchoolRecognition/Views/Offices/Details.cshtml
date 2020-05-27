@@ -1,13 +1,14 @@
-﻿@model CustomPagedList<SchoolsViewDto>
+﻿@model PagedList<SchoolsViewDto>
 @{
     var office = (OfficeViewPagedListSchoolsDto)ViewData["Office"];
     var pages = (IEnumerable<int>)ViewData["Pages"];
     ViewData["Title"] = office.OfficeName;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 
 @section styles{
-    @*<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />*@
+    <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
 
 }
 
@@ -58,19 +59,7 @@
                             <h4 class="mt-4 mb-2" style="font-weight: 100">Office Details:</h4>
 
                             <table class="table table-striped table-borderless">
-                                <caption class="bg-light" style="caption-side: top">
-
-                                    <ul class="nav nav-pills nav-fill">
-                                        <li class="nav-item">
-                                            <a class="nav-link disabled text-center" href="#">
-                                                State Assigned
-                                                <div class="text-bold text-wrap">
-                                                    @office.StateAssigned
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </caption>
+             
                                 <tbody>
                                     <tr>
                                         <td class="p-0">
@@ -153,9 +142,13 @@
                                         <i class="fas fa-desktop"></i>
                                         Update Office
                                     </a>
-                                    <a asp-area="" asp-controller="OfficeStates" asp-action="Update" asp-route-officeId="@office.Id" class="btn btn-light">
+                                    <a asp-area="" asp-controller="OfficeStates" asp-action="CreateMultiple" class="btn btn-light">
                                         <i class="fas fa-exchange-alt"></i>
-                                        Re-assign Office
+                                        Assign States to Office
+                                    </a>
+                                    <a asp-area="" asp-controller="OfficeLocalGovernments" asp-action="CreateMultiple" asp-route-officeId="@office.Id" class="btn btn-light">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        Assign LGAs to Office
                                     </a>
                                     <a asp-area="" asp-controller="Offices" asp-action="Delete" asp-route-id="@office.Id" class="btn btn-danger">
                                         <i class="fas fa-trash-alt"></i>
@@ -166,179 +159,275 @@
 
                             </div>
 
-                            @*<h4 class="mb-2" style="font-weight: 100;">Tracking Table:</h4>*@
+                            <ul class="nav nav-tabs" id="tab-content" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="tab-content-states-tab" data-toggle="pill" href="#tab-content-states" role="tab" aria-controls="tab-content-states" aria-selected="true">
+                                        States Controlled
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-content-lgas-tab" data-toggle="pill" href="#tab-content-lgas" role="tab" aria-controls="tab-content-lgas" aria-selected="false">
+                                        Local Governments Controlled
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="tab-content-schools-tab" data-toggle="pill" href="#tab-content-schools" role="tab" aria-controls="tab-content-schools" aria-selected="false">
+                                        Schools Managed
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="tab-contentContent">
 
 
+                                <div class="tab-pane fade show active p-3" id="tab-content-states" role="tabpanel" aria-labelledby="tab-content-states-tab">
 
-                            <div class="row mb-2">
-                                <div class="col">
-                                    <h5 style="font-weight: 100">Schools Managed:</h5>
+                                    <h5 class="mb-3" style="font-weight: 100">States Controlled:</h5>
+
+                                    <table id="datatable-1" class="table table-bordered table-striped" role="grid" aria-describedby="example1_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <td>State Code</td>
+                                                <td>State</td>
+                                                <td></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in office.OfficeStateStates)
+                                            {
+                                                <tr role="row">
+                                                    <td>@item.StateCode</td>
+                                                    <td>@item.StateName</td>
+                                                    <td class="text-center p-1">
+
+                                                        <a asp-controller="OfficeStates" asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                            <i class="fas fa-trash"></i>
+                                                            @*Generate Pins*@
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+
                                 </div>
-                                <div class="col-8">
+                                <div class="tab-pane fade p-3 active" id="tab-content-lgas" role="tabpanel" aria-labelledby="tab-content-lgas-tab">
 
-                                    <form asp-action="ViewOffices" asp-route-id="@office.Id" method="get" class="md-form mb-3" id="searchForm">
 
-                                        <div class="input-group">
-                                            <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewData["SearchQuery"]" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
-                                            @*<div class="input-group-prepend">
-                                                    <span class="input-group-text md-addon" id="material-addon1">
-                                                        <i class="fas fa-search"></i>
-                                                    </span>
-                                                </div>*@
-                                            <div class="input-group-prepend">
-                                                <button class="btn btn-md btn-light" type="submit">
-                                                    <i class="fas fa-search"></i>
-                                                    Search
-                                                </button>
-                                            </div>
+                                    <h5 class="mb-3" style="font-weight: 100">Local Governments Controlled:</h5>
+
+                                    <table id="datatable-2" class="table table-bordered table-striped" role="grid" aria-describedby="example2_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <td>LGA Code</td>
+                                                <td>Local Government</td>
+                                                <td>State Located</td>
+                                                <td></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in office.OfficeLgas)
+                                            {
+                                                <tr role="row">
+                                                    <td>@item.LocalGovernmentCode</td>
+                                                    <td>@item.LocalGovernmentName</td>
+                                                    <td>@item.StateName</td>
+                                                    <td class="text-center p-1">
+
+                                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Update">
+                                                            <i class="fas fa-edit"></i>
+                                                            @*Generate Pins*@
+                                                        </a>
+                                                        <a asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                                            <i class="fas fa-trash"></i>
+                                                            @*Generate Pins*@
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                                <div class="tab-pane fade p-3" id="tab-content-schools" role="tabpanel" aria-labelledby="tab-content-schools-tab">
+
+
+                                                                       
+                                    <div class="row mb-2">
+                                        <div class="col">
+                                            <h5 style="font-weight: 100">Schools Managed:</h5>
+                                        </div>
+                                        <div class="col-8">
+
+                                            <form asp-action="Details" asp-route-id="@office.Id" method="get" class="md-form mb-3" id="searchForm">
+
+                                                <div class="input-group">
+                                                    <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewData["SearchQuery"]" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
+                                                    @*<div class="input-group-prepend">
+                            <span class="input-group-text md-addon" id="material-addon1">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>*@
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-md btn-light" type="submit">
+                                                            <i class="fas fa-search"></i>
+                                                            Search
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </form>
+
                                         </div>
 
-
-
-                                    </form>
-
-                                </div>
-
-                                <div class="col-md-12 mb-1">
+                                        <div class="col-md-12 mb-1">
 
 
 
 
 
-                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "school_name", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
-                                        Name Ascending
-                                        <i class="fas fa-sort-up"></i>
-                                    </a>
-                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "school_name_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
-                                        Name Descending
-                                        <i class="fas fa-sort-down"></i>
-                                    </a>
-                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "year", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
-                                        Year Established Ascending
-                                        <i class="fas fa-sort-up"></i>
-                                    </a>
-                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "year_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
-                                        Year Established Descending
-                                        <i class="fas fa-sort-down"></i>
-                                    </a>
+                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "school_name", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                                Name Ascending
+                                                <i class="fas fa-sort-up"></i>
+                                            </a>
+                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "school_name_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                                Name Descending
+                                                <i class="fas fa-sort-down"></i>
+                                            </a>
+                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "year", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                                Year Established Ascending
+                                                <i class="fas fa-sort-up"></i>
+                                            </a>
+                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "year_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                                Year Established Descending
+                                                <i class="fas fa-sort-down"></i>
+                                            </a>
 
+                                        </div>
+                                    </div>
+
+                                    <table id="datatable-1" class="table table-bordered table-striped" role="grid" aria-describedby="example1_info">
+
+                                        <thead>
+                                            <tr role="row">
+                                                <td>Name of School</td>
+                                                <td>Category</td>
+                                                <td>LGA</td>
+                                                <td>Year Est.</td>
+                                                @*<td>Address</td>*@
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr role="row">
+                                                    <td>@(!String.IsNullOrWhiteSpace(item.SchoolName) ? item.SchoolName : "NOT STATED")</td>
+                                                    <td>@(!String.IsNullOrWhiteSpace(item.SchoolCategoryName) ? item.SchoolCategoryName : "NOT STATED")</td>
+                                                    <td>@(!String.IsNullOrWhiteSpace(item.LgaName) ? item.LgaName : "NOT STATED")</td>
+                                                    <td>@item.YearEstablished</td>
+                                                    @*<td>@(!String.IsNullOrWhiteSpace(item.Address) ? item.Address : "NOT STATED")</td>*@
+                                                    <td class="text-center p-1">
+                                                        @*<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="View Offices">
+                                <i class="fas fa-desktop"></i>
+                                View Offices
+                            </a>*@
+                                                    </td>
+                                                </tr>
+                                            }
+                                            @if (Model.TotalCount < 1)
+                                            {
+                                                <tr>
+                                                    <td class="text-center" colspan="5">
+                                                        No data available in table
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+
+
+                                    @{
+                                        var prevDisabled = Model.HasPrevious ? "" : "disabled";
+                                        var nextDisabled = Model.HasNext ? "" : "disabled";
+                                        //var disableAll =
+                                    }
+                                    @if (Model.TotalCount > 0)
+                                    {
+                                        int range = Model.PageSize > Model.TotalCount ? Model.TotalCount : Model.PageSize;
+                                        <div class="row mt-2">
+                                            <div class="col">
+                                                @String.Format("Showing {0} to {1} of {2} ", (((Model.CurrentPage - 1) * range) + 1), (Model.CurrentPage * range), Model.TotalCount)
+                                            </div>
+                                            <div class="col-8">
+
+                                                <ul class="pagination">
+                                                    <li class="page-item @prevDisabled">
+                                                        <a asp-controller="Offices" asp-action="Details"
+                                                           asp-route-id="@office.Id"
+                                                           asp-route-orderBy="@ViewData["OrderBy"]"
+                                                           asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                           asp-route-pageNumber=""
+                                                           class="page-link">
+                                                            <i class="fas fa-angle-double-left"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li class="page-item @prevDisabled">
+                                                        <a asp-controller="Offices" asp-action="Details"
+                                                           asp-route-id="@office.Id"
+                                                           asp-route-orderBy="@ViewData["OrderBy"]"
+                                                           asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                           asp-route-pageNumber="@(Model.CurrentPage - 1)"
+                                                           class="page-link">
+                                                            <i class="fas fa-angle-left"></i>
+                                                        </a>
+                                                    </li>
+                                                    @foreach (var item in pages)
+                                                    {
+                                                        <li class="@(item == Model.CurrentPage ? "page-item active" : "page-item")">
+                                                            <a asp-controller="Offices" asp-action="Details"
+                                                               asp-route-id="@office.Id"
+                                                               asp-route-orderBy="@ViewData["OrderBy"]"
+                                                               asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                               asp-route-pageNumber="@item"
+                                                               class="page-link">
+                                                                @item
+                                                            </a>
+                                                        </li>
+                                                    }
+
+                                                    <li class="page-item @nextDisabled">
+                                                        <a asp-controller="Offices" asp-action="Details"
+                                                           asp-route-id="@office.Id"
+                                                           asp-route-orderBy="@ViewData["OrderBy"]"
+                                                           asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                           asp-route-pageNumber="@(Model.CurrentPage + 1)"
+                                                           class="page-link">
+                                                            <i class="fas fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li class="page-item @nextDisabled">
+                                                        <a asp-controller="Offices" asp-action="Details"
+                                                           asp-route-id="@office.Id"
+                                                           asp-route-orderBy="@ViewData["OrderBy"]"
+                                                           asp-route-searchQuery="@ViewData["SearchQuery"]"
+                                                           asp-route-pageNumber="@Model.TotalPages"
+                                                           class="page-link">
+                                                            <i class="fas fa-angle-double-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
 
-                            <table id="datatable-1" class="table table-bordered table-striped table-responsive-md" role="grid" aria-describedby="example1_info">
-                                
-                                <thead>
-                                    <tr role="row">
-                                        <td>Name of School</td>
-                                        <td>Category</td>
-                                        <td>LGA</td>
-                                        <td>Year Est.</td>
-                                        @*<td>Address</td>*@
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr role="row">
-                                            <td>@(!String.IsNullOrWhiteSpace(item.SchoolName) ? item.SchoolName : "NOT STATED")</td>
-                                            <td>@(!String.IsNullOrWhiteSpace(item.SchoolCategoryName) ? item.SchoolCategoryName : "NOT STATED")</td>
-                                            <td>@(!String.IsNullOrWhiteSpace(item.LgaName) ? item.LgaName : "NOT STATED")</td>
-                                            <td>@item.YearEstablished</td>
-                                            @*<td>@(!String.IsNullOrWhiteSpace(item.Address) ? item.Address : "NOT STATED")</td>*@
-                                            <td class="text-center p-1">
-                                                @*<a asp-action="ViewOffices" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="View Offices">
-                            <i class="fas fa-desktop"></i>
-                            View Offices
-                        </a>*@
-                                            </td>
-                                        </tr>
-                                    }
-                                    @if (Model.TotalCount < 1)
-                                    {
-                                        <tr>
-                                            <td class="text-center" colspan="5">
-                                                No data available in table
-                                            </td>
-                                        </tr>
-                                    }
-
-                                </tbody>
-                            </table>
-
-
-                            @{
-                                var prevDisabled = Model.HasPrevious ? "" : "disabled";
-                                var nextDisabled = Model.HasNext ? "" : "disabled";
-                                //var disableAll =
-                            }
-                            @if (Model.TotalCount > 0)
-                            {
-                                int range = Model.PageSize > Model.TotalCount ? Model.TotalCount : Model.PageSize;
-                                <div class="row mt-2">
-                                    <div class="col">
-                                        @String.Format("Showing {0} to {1} of {2} ", (((Model.CurrentPage - 1) * range) + 1), (Model.CurrentPage * range), Model.TotalCount)
-                                    </div>
-                                    <div class="col-8">
-
-                                        <ul class="pagination">
-                                            <li class="page-item @prevDisabled">
-                                                <a asp-controller="Offices" asp-action="Details"
-                                                   asp-route-id="@office.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber=""
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-double-left"></i>
-                                                </a>
-                                            </li>
-                                            <li class="page-item @prevDisabled">
-                                                <a asp-controller="Offices" asp-action="Details"
-                                                   asp-route-id="@office.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@(Model.CurrentPage - 1)"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-left"></i>
-                                                </a>
-                                            </li>
-                                            @foreach (var item in pages)
-                                            {
-                                                <li class="@(item == Model.CurrentPage ? "page-item active" : "page-item")">
-                                                    <a asp-controller="Offices" asp-action="Details"
-                                                       asp-route-id="@office.Id"
-                                                       asp-route-orderBy="@ViewData["OrderBy"]"
-                                                       asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                       asp-route-pageNumber="@item"
-                                                       class="page-link">
-                                                        @item
-                                                    </a>
-                                                </li>
-                                            }
-
-                                            <li class="page-item @nextDisabled">
-                                                <a asp-controller="Offices" asp-action="Details"
-                                                   asp-route-id="@office.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@(Model.CurrentPage + 1)"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-right"></i>
-                                                </a>
-                                            </li>
-                                            <li class="page-item @nextDisabled">
-                                                <a asp-controller="Offices" asp-action="Details"
-                                                   asp-route-id="@office.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@Model.TotalPages"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-double-right"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            }
 
                         </div>
                         <!-- /.col -->
@@ -357,15 +446,22 @@
 <!-- /.content -->
 
 @section scripts{
-    @*<script src="~/lib/datatables/datatables.min.js"></script>
+    <script src="~/lib/datatables/datatables.min.js"></script>
         <script>
                 $(document).ready( function () {
                     $('#datatable-1').DataTable({
                         responsive: true,
-                        "order": [[ 0, "desc" ]]
+                        //"order": [[ 0, "desc" ]]
                     });
                 } );
-        </script>*@
+        </script>
+        <script>
+                $(document).ready( function () {
+                    $('#datatable-2').DataTable({
+                        responsive: true,
+                        //"order": [[ 0, "desc" ]]
+                    });
+                } );
+        </script>
 }
 
-<script type="text/javascript" src="~/js/linkClick.js"></script>

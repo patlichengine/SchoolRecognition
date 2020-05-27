@@ -40,12 +40,12 @@ namespace SchoolRecognition.Services
                { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" }, true ) },
           };
 
-        private Dictionary<string, PropertyMappingValue> _officeTypesPropertyMapping =
+        private Dictionary<string, PropertyMappingValue> _officeLocalGovernmentsPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {
                //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
-               { "OfficeTypeName", new PropertyMappingValue(new List<string>() { "Name" } )},
-               { "OfficeTypeNameDesc", new PropertyMappingValue(new List<string>() { "Name" }, true )}
+               { "Id", new PropertyMappingValue(new List<string>() { "Id" } )},
+               { "IdDesc", new PropertyMappingValue(new List<string>() { "Id" }, true )},
           };
 
 
@@ -56,6 +56,15 @@ namespace SchoolRecognition.Services
                { "Id", new PropertyMappingValue(new List<string>() { "Id" } )},
                { "IdDesc", new PropertyMappingValue(new List<string>() { "Id" }, true )},
           };
+
+        private Dictionary<string, PropertyMappingValue> _officeTypesPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
+               { "OfficeTypeName", new PropertyMappingValue(new List<string>() { "Name" } )},
+               { "OfficeTypeNameDesc", new PropertyMappingValue(new List<string>() { "Name" }, true )}
+          };
+
 
         private Dictionary<string, PropertyMappingValue> _pinHistoriesPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
@@ -138,8 +147,9 @@ namespace SchoolRecognition.Services
             _propertyMappings.Add(new PropertyMapping<AccountsDto, ApplicationUsers>(_accountsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<LocalGovernmentsViewDto, LocalGovernments>(_localGovernmentsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<OfficesViewDto, Offices>(_officesPropertyMapping));
-            _propertyMappings.Add(new PropertyMapping<OfficeTypesViewDto, OfficeTypes>(_officeTypesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<OfficeLocalGovernmentsViewDto, OfficeLocalGovernments>(_officeLocalGovernmentsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<OfficeStatesViewDto, OfficeStates>(_officeStatesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<OfficeTypesViewDto, OfficeTypes>(_officeTypesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<PinHistoriesViewDto, PinHistories>(_pinHistoriesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<PinsViewDto, Pins>(_pinsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<RecognitionTypesViewDto, RecognitionTypes>(_recognitionTypesPropertyMapping));

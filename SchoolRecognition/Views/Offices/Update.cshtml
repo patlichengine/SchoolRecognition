@@ -3,6 +3,7 @@
     var officeTypes = (IEnumerable<SelectListItem>)ViewData["OfficeTypes"];
     var states = (IEnumerable<SelectListItem>)ViewData["States"];
     ViewData["Title"] = "Update Office";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 @section styles{
 
@@ -57,6 +58,9 @@
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="DateCreated" />
+
 
                         <div class="form-group">
                             <label asp-for="OfficeTypeId">*Type Of Office</label>
@@ -66,40 +70,11 @@
                             <span asp-validation-for="OfficeTypeId" class="text-danger"></span>
                         </div>
 
-                        <div class="row">
 
-                            <div class="col-md-6">
-
-                                <div class="form-group">
-                                    <label asp-for="OfficeName">*Name:</label>
-                                    <input minlength="2" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-
-                                <div class="form-group">
-                                    <label>*Date Created:</label>
-                                    <input type="text" asp-for="DateCreated" class="form-control" placeholder="Date Created/Established" required />
-                                    <span asp-validation-for="StateAssigned" class="text-danger"></span>
-                                </div>
-
-                            </div>
-
+                        <div class="form-group">
+                            <label asp-for="OfficeName">*Name:</label>
+                            <input minlength="2" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
                         </div>
-
-                        @*<h5 style="font-weight: 100">Assign Office to State</h5>
-
-                            <div class="form-group">
-                                <label asp-for="StateAssigned">*State Assigned</label>
-                                <select asp-for="StateAssigned" asp-items="@states.ToList()" class="form-control" required>
-                                    <option value="">--Select State---</option>
-                                </select>
-                                <span asp-validation-for="StateAssigned" class="text-danger"></span>
-                            </div>*@
 
 
                         <h5 style="font-weight: 100">Location Information</h5>
@@ -182,11 +157,12 @@
 <!-- /.content -->
 
 @section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/loading_icon.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
     @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
     <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
     <script>
         $(document).ready(function () {
             $('select.form-control').select2({
@@ -291,5 +267,5 @@
 
 
 }
-<script type="text/javascript" src="~/js/linkClick.js"></script>
+
 

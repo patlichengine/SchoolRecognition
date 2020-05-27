@@ -1,4 +1,4 @@
-﻿@model CustomPagedList<PinsViewDto>
+﻿@model PagedList<PinsViewDto>
 @{
     var recognitionType = (RecognitionTypesViewPagedListPinsDto)ViewData["RecognitionType"];
     var pages = (IEnumerable<int>)ViewData["Pages"];
@@ -130,7 +130,7 @@
                                             <a class="nav-link disabled text-center" href="#">
                                                 Active Pins
                                                 <div class="text-muted">
-                                                    @recognitionType.IsActivePinsCount
+                                                    @recognitionType.TotalActivePins
                                                 </div>
                                             </a>
                                         </li>
@@ -138,7 +138,7 @@
                                             <a class="nav-link disabled text-center" href="#">
                                                 Used Pins
                                                 <div class="text-muted">
-                                                    @recognitionType.IsInUsePinsCount
+                                                    @recognitionType.TotalInUsePins
                                                 </div>
                                             </a>
                                         </li>

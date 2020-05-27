@@ -1,8 +1,9 @@
-﻿@model CustomPagedList<OfficesViewDto>
+﻿@model PagedList<OfficesViewDto>
 @{
     var officeType = (OfficeTypeViewPagedListOfficesDto)ViewData["OfficeType"];
     var pages = (IEnumerable<int>)ViewData["Pages"];
     ViewData["Title"] = officeType.TypeDescription;
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 @section styles{
@@ -21,7 +22,7 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
-                    <li  class="breadcrumb-item active">Types of Offices</a></li>
+                    <li class="breadcrumb-item active">Types of Offices</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -73,10 +74,10 @@
                                         <div class="input-group">
                                             <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewData["SearchQuery"]" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
                                             @*<div class="input-group-prepend">
-                                        <span class="input-group-text md-addon" id="material-addon1">
-                                            <i class="fas fa-search"></i>
-                                        </span>
-                                    </div>*@
+                                                    <span class="input-group-text md-addon" id="material-addon1">
+                                                        <i class="fas fa-search"></i>
+                                                    </span>
+                                                </div>*@
                                             <div class="input-group-prepend">
                                                 <button class="btn btn-md btn-light" type="submit">
                                                     <i class="fas fa-search"></i>
@@ -103,19 +104,18 @@
                                         Name Descending
                                         <i class="fas fa-sort-down"></i>
                                     </a>
-                       
+
                                 </div>
                             </div>
 
                             <table class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
-            
+
                                 <thead>
                                     <tr role="row">
                                         <td>Year Est.</td>
                                         <td>Name</td>
                                         <td>State Located</td>
                                         <td>Address</td>
-                                        <td>State Assigned</td>
                                         <td></td>
                                     </tr>
                                 </thead>
@@ -127,8 +127,7 @@
                                             <td>@item.OfficeName</td>
                                             <td>@item.StateName</td>
                                             <td>@item.OfficeAddress</td>
-                                            <td>@item.StateAssigned</td>
-                       
+
                                             <td class="text-center p-1">
                                                 <a asp-action="Details" asp-controller="Offices" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
                                                     <i class="fas fa-desktop"></i>
@@ -251,13 +250,12 @@
 
 @section scripts{
     @*<script src="~/lib/datatables/datatables.min.js"></script>
-    <script>
-        $(document).ready( function () {
-            $('#datatable-1').DataTable({
-                "order": [[ 0, "desc" ]]
-            });
-        } );
-    </script>*@
+        <script>
+            $(document).ready( function () {
+                $('#datatable-1').DataTable({
+                    "order": [[ 0, "desc" ]]
+                });
+            } );
+        </script>*@
 }
 
-<script type="text/javascript" src="~/js/linkClick.js"></script>

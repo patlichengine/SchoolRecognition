@@ -46,7 +46,7 @@ namespace SchoolRecognition.Controllers
             try
             {
 
-                var recognitionTypes = await _recognitionTypesRepository.GetAllRecognitionTypesAsync();
+                var recognitionTypes = await _recognitionTypesRepository.List();
 
                 return PartialView(recognitionTypes);
             }
@@ -79,8 +79,8 @@ namespace SchoolRecognition.Controllers
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "DateCreated",
                 };
-                //Instantiate CustomPagedList
-                CustomPagedList<PinsViewDto> pins = CustomPagedList<PinsViewDto>
+                //Instantiate PagedList
+                PagedList<PinsViewDto> pins = PagedList<PinsViewDto>
                          .Create(Enumerable.Empty<PinsViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -103,7 +103,7 @@ namespace SchoolRecognition.Controllers
                         break;
                 }
 
-                var result = await _recognitionTypesRepository.GetRecognitionTypesPinsAsPagedListAsync(id, resourceParams);
+                var result = await _recognitionTypesRepository.GetIncludingPagedListOfPins(id, resourceParams);
 
                 if (result != null)
                 {
@@ -165,13 +165,13 @@ namespace SchoolRecognition.Controllers
                 {
 
                     //Check if entry with similar data already exists
-                    if (await _recognitionTypesRepository.CheckIfRecognitionTypeExists(model.RecognitionTypeCode, model.RecognitionTypeName))
+                    if (await _recognitionTypesRepository.Exists(model.RecognitionTypeCode, model.RecognitionTypeName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "A Recognition Type with the same values already exists in the system...");
                         return PartialView(model);
                     }
-                    var result = await _recognitionTypesRepository.CreateRecognitionTypeAsync(model);
+                    var result = await _recognitionTypesRepository.Create(model);
 
                     if (result != null)
                     {
@@ -207,7 +207,7 @@ namespace SchoolRecognition.Controllers
             {
                 #region PinCreationDependencys
 
-                var pinsCreationDependencys = await _pinsRepository.GetPinsCreationDepedencys();
+                var pinsCreationDependencys = await _pinsRepository.GetCreationDepedencys();
 
                 var recognitionTypes = pinsCreationDependencys.RecognitionTypes;
                 var applicationSetting = pinsCreationDependencys.ApplicationSetting;
@@ -249,7 +249,7 @@ namespace SchoolRecognition.Controllers
             {
                 #region PinCreationDependencys
 
-                var pinsCreationDependencys = await _pinsRepository.GetPinsCreationDepedencys();
+                var pinsCreationDependencys = await _pinsRepository.GetCreationDepedencys();
 
                 var recognitionTypes = pinsCreationDependencys.RecognitionTypes;
                 var applicationSetting = pinsCreationDependencys.ApplicationSetting;
@@ -283,7 +283,7 @@ namespace SchoolRecognition.Controllers
                 {
                     //Set Pins as active 
                     model.IsActive = true;
-                    var result = await _pinsRepository.CreateMultiplePinsAsync(model);
+                    var result = await _pinsRepository.CreateMultiple(model);
 
                     if (result)
                     {
@@ -319,7 +319,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var recognitionType = await _recognitionTypesRepository.GetRecognitionTypesSingleOrDefaultAsync(id.Value);
+                var recognitionType = await _recognitionTypesRepository.Get(id.Value);
                 var model = _mapper.Map<RecognitionTypesCreateDto>(recognitionType);
                 return PartialView(model);
             }
@@ -340,13 +340,13 @@ namespace SchoolRecognition.Controllers
                 if (ModelState.IsValid)
                 {
                     //Check if entry with similar data already exists
-                    if (await _recognitionTypesRepository.CheckIfRecognitionTypeExists(model.Id, model.RecognitionTypeCode, model.RecognitionTypeName))
+                    if (await _recognitionTypesRepository.Exists(model.Id, model.RecognitionTypeCode, model.RecognitionTypeName))
                     {
                         _flashMessage.Danger("Duplicate Data Entry!", "A Recognition Type with the same values already exists in the system...");
                         return PartialView(model);
                     }
                     //Set Pins as active 
-                    var result = await _recognitionTypesRepository.UpdateRecognitionTypeAsync(model);
+                    var result = await _recognitionTypesRepository.Update(model);
 
                     if (result != null)
                     {
@@ -382,7 +382,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var recognitionType = await _recognitionTypesRepository.GetRecognitionTypesSingleOrDefaultAsync(id.Value);
+                var recognitionType = await _recognitionTypesRepository.Get(id.Value);
 
                 if (recognitionType == null)
                 {
@@ -410,7 +410,7 @@ namespace SchoolRecognition.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _recognitionTypesRepository.DeleteRecognitionTypeAsync(model.Id);
+                    await _recognitionTypesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Recognition Type removed from system!");
                     return RedirectToAction("Index", "RecognitionTypes");

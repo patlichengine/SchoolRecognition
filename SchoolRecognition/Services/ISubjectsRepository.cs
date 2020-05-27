@@ -11,14 +11,14 @@ namespace SchoolRecognition.Services
     public interface ISubjectsRepository
     {
 
-        Task<IEnumerable<SubjectsViewDto>> GetAllSubjectsAsync();
-        Task<CustomPagedList<SubjectsViewDto>> GetAllSubjectsAsPagedListAsync(SubjectsResourceParams resourceParams);
-        Task<SubjectsViewDto> GetSubjectsSingleOrDefaultAsync(Guid id);
-        Task<Guid?> CreateSubjectAsync(SubjectsCreateDto _obj);
-        Task<SubjectsViewDto> UpdateSubjectAsync(SubjectsCreateDto _obj);
-        Task DeleteSubjectAsync(Guid id); //return type is void
+        Task<IEnumerable<SubjectsViewDto>> List();
+        Task<PagedList<SubjectsViewDto>> PagedList(SubjectsResourceParams resourceParams);
+        Task<SubjectsViewDto> Get(Guid id);
+        Task<Guid?> Create(SubjectsCreateDto _obj);
+        Task<SubjectsViewDto> Update(SubjectsCreateDto _obj);
+        Task Delete(Guid id); //return type is void
         ///
-        Task<bool> CheckIfSubjectExists(string subjectCode, string longName, string shortName);
-        Task<bool> CheckIfSubjectExists(Guid id, string subjectCode, string longName, string shortName);
+        Task<bool> Exists(string subjectCode, string longName, string shortName);
+        Task<bool> Exists(Guid id, string subjectCode, string longName, string shortName);
     }
 }

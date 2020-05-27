@@ -1,7 +1,8 @@
-﻿@model CustomPagedList<SubjectsViewDto>
+﻿@model PagedList<SubjectsViewDto>
 @{
     var pages = (IEnumerable<int>)ViewData["Pages"];
     ViewData["Title"] = "Manage Subjects";
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 @section styles{
@@ -267,4 +268,3 @@
             });
         </script>*@
 }
-<script type="text/javascript" src="~/js/linkClick.js"></script>

@@ -65,7 +65,7 @@ namespace SchoolRecognition.Services
 
         #endregion
 
-        public async Task<IEnumerable<SubjectsViewDto>> GetAllSubjectsAsync()
+        public async Task<IEnumerable<SubjectsViewDto>> List()
         {
             //Instantiate Return Value
             IEnumerable<SubjectsViewDto> returnValue = new List<SubjectsViewDto>();
@@ -94,10 +94,10 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<CustomPagedList<SubjectsViewDto>> GetAllSubjectsAsPagedListAsync(SubjectsResourceParams resourceParams)
+        public async Task<PagedList<SubjectsViewDto>> PagedList(SubjectsResourceParams resourceParams)
         {
             //Instantiate Return Value
-            CustomPagedList<SubjectsViewDto> returnValue = CustomPagedList<SubjectsViewDto>
+            PagedList<SubjectsViewDto> returnValue = PagedList<SubjectsViewDto>
                         .Create(Enumerable.Empty<SubjectsViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -142,7 +142,7 @@ namespace SchoolRecognition.Services
 
                     });
 
-                    returnValue = await CustomPagedList<SubjectsViewDto>.CreateAsync(mappedResult,
+                    returnValue = await PagedList<SubjectsViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -160,7 +160,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<SubjectsViewDto> GetSubjectsSingleOrDefaultAsync(Guid id)
+        public async Task<SubjectsViewDto> Get(Guid id)
         {
 
             //Instantiate Return Value
@@ -190,7 +190,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<SubjectsViewDto> GetSubjectsAllCentreSubjectSanctionsAsync(Guid id)
+        public async Task<SubjectsViewDto> GetIncludingListOfCentreSubjectSanctions(Guid id)
         {
             //Instantiate Return Value
             SubjectsViewDto returnValue = null;
@@ -229,14 +229,14 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<SubjectsViewPagedListCentreSubjectSanctionsDto> GetSubjectsCentreSubjectSanctionsAsPagedListAsync(Guid id, CentreSubjectSanctionsResourceParams resourceParams)
+        public async Task<SubjectsViewPagedListCentreSubjectSanctionsDto> GetIncludingPagedListOfCentreSubjectSanctions(Guid id, CentreSubjectSanctionsResourceParams resourceParams)
         {
 
             //Instantiate Return Value
             SubjectsViewPagedListCentreSubjectSanctionsDto returnValue = null;
 
             //Instantiate Return Value
-            CustomPagedList<CentreSubjectSanctionsViewDto> returnValueCentreSubjectSanctions = CustomPagedList<CentreSubjectSanctionsViewDto>
+            PagedList<CentreSubjectSanctionsViewDto> returnValueCentreSubjectSanctions = PagedList<CentreSubjectSanctionsViewDto>
                         .Create(Enumerable.Empty<CentreSubjectSanctionsViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -312,7 +312,7 @@ namespace SchoolRecognition.Services
 
                     });
 
-                    returnValueCentreSubjectSanctions = await CustomPagedList<CentreSubjectSanctionsViewDto>.CreateAsync(mappedResult,
+                    returnValueCentreSubjectSanctions = await PagedList<CentreSubjectSanctionsViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -336,7 +336,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<Guid?> CreateSubjectAsync(SubjectsCreateDto _obj)
+        public async Task<Guid?> Create(SubjectsCreateDto _obj)
         {
             //Instantiate Return Value
             Guid? returnValue = null;
@@ -364,7 +364,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<SubjectsViewDto> UpdateSubjectAsync(SubjectsCreateDto _obj)
+        public async Task<SubjectsViewDto> Update(SubjectsCreateDto _obj)
         {
 
             //Instantiate Return Value
@@ -394,7 +394,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task DeleteSubjectAsync(Guid id)
+        public async Task Delete(Guid id)
         {
             try
             {
@@ -422,7 +422,7 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<bool> CheckIfSubjectExists(string subjectCode, string longName, string shortName)
+        public async Task<bool> Exists(string subjectCode, string longName, string shortName)
         {
             //Instantiate Return Value
             bool returnValue = false;
@@ -457,7 +457,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<bool> CheckIfSubjectExists(Guid id, string subjectCode, string longName, string shortName)
+        public async Task<bool> Exists(Guid id, string subjectCode, string longName, string shortName)
         {
             //Instantiate Return Value
             bool returnValue = false;

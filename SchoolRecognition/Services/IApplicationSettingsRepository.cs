@@ -10,7 +10,7 @@ namespace SchoolRecognition.Services
     {
 
 
-        Task<ApplicationSettingsViewDto> GetApplicationSettingsSingleOrDefaultAsync();
-        Task<ApplicationSettingsViewDto> UpdateApplicationSettingAsync(ApplicationSettingsCreateDto _obj);
+        Task<ApplicationSettingsViewDto> Get();
+        Task<ApplicationSettingsViewDto> Update(ApplicationSettingsCreateDto _obj);
     }
 }

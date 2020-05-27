@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 using SchoolRecognition.Entities;
 
 namespace SchoolRecognition.DbContexts
@@ -33,6 +32,7 @@ namespace SchoolRecognition.DbContexts
         public virtual DbSet<FacilityTypes> FacilityTypes { get; set; }
         public virtual DbSet<LocalGovernments> LocalGovernments { get; set; }
         public virtual DbSet<LocationTypes> LocationTypes { get; set; }
+        public virtual DbSet<OfficeLocalGovernments> OfficeLocalGovernments { get; set; }
         public virtual DbSet<OfficeStates> OfficeStates { get; set; }
         public virtual DbSet<OfficeTypes> OfficeTypes { get; set; }
         public virtual DbSet<Offices> Offices { get; set; }
@@ -62,7 +62,7 @@ namespace SchoolRecognition.DbContexts
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=NORMAL-PC\\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI;");
+                optionsBuilder.UseSqlServer("Server=NORMAL-PC\\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI");
             }
         }
 
@@ -401,6 +401,27 @@ namespace SchoolRecognition.DbContexts
                 entity.Property(e => e.Description).HasMaxLength(100);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<OfficeLocalGovernments>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.LocalGovernmentId).HasColumnName("LocalGovernmentID");
+
+                entity.Property(e => e.OfficeId).HasColumnName("OfficeID");
+
+                entity.HasOne(d => d.LocalGovernment)
+                    .WithMany(p => p.OfficeLocalGovernments)
+                    .HasForeignKey(d => d.LocalGovernmentId)
+                    .HasConstraintName("FK_OfficeLocalGovernments_LocalGovernments");
+
+                entity.HasOne(d => d.Office)
+                    .WithMany(p => p.OfficeLocalGovernments)
+                    .HasForeignKey(d => d.OfficeId)
+                    .HasConstraintName("FK_OfficeLocalGovernments_Offices");
             });
 
             modelBuilder.Entity<OfficeStates>(entity =>
@@ -936,5 +957,4 @@ namespace SchoolRecognition.DbContexts
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
-
 }

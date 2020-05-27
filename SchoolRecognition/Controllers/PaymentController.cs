@@ -73,7 +73,7 @@ namespace SchoolRecognition.Controllers
         {
            List<RecognitionTypesViewDto> recognitionList = new List<RecognitionTypesViewDto>();
 
-            var recTypes = await _recognitionTypeRepository.GetAllRecognitionTypesAsync();
+            var recTypes = await _recognitionTypeRepository.List();
             recognitionList = (from c in recTypes select c).ToList();
             //re.Insert(0, new RecognitionTypes { Id = new Guid("00000000-0000-0000-0000-000000000000"), Name = "Select rec type" });
             // re.Insert(1, new RecognitionTypes {Id=recTypes.First().Id,Name=recTypes.First().Name });

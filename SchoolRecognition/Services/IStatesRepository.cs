@@ -12,17 +12,17 @@ namespace SchoolRecognition.Services
     {
 
 
-        Task<IEnumerable<StatesViewDto>> GetAllStatesAsync();
-        Task<CustomPagedList<StatesViewDto>> GetAllStatesAsPagedListAsync(StatesResourceParams resourceParams);
-        Task<StatesViewPagedListLocalGovernmentsDto> GetStatesLocalGovernmentsAsPagedListAsync(Guid id, LocalGovernmentsResourceParams resourceParams);
-        Task<StatesViewDto> GetStatesSingleOrDefaultAsync(Guid id);
-        Task<Guid?> CreateStateAsync(StatesCreateDto _obj);
-        Task<StatesViewDto> UpdateStateAsync(StatesCreateDto _obj);
-        Task DeleteStateAsync(Guid id); //return type is void
+        Task<IEnumerable<StatesViewDto>> List();
+        Task<PagedList<StatesViewDto>> PagedList(StatesResourceParams resourceParams);
+        Task<StatesViewPagedListLocalGovernmentsDto> GetIncludingPagedListOfLocalGovernments(Guid id, LocalGovernmentsResourceParams resourceParams);
+        Task<StatesViewDto> Get(Guid id);
+        Task<Guid?> Create(StatesCreateDto _obj);
+        Task<StatesViewDto> Update(StatesCreateDto _obj);
+        Task Delete(Guid id); //return type is void
         ///
 
-        Task<bool> CheckIfStateExists(string stateName);
-        Task<bool> CheckIfStateExists(Guid id, string stateName);
+        Task<bool> Exists(string stateName);
+        Task<bool> Exists(Guid id, string stateName);
 
     }
 }

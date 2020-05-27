@@ -63,7 +63,7 @@ namespace SchoolRecognition.Services
 
 
         #endregion
-        public async Task<ApplicationSettingsViewDto> GetApplicationSettingsSingleOrDefaultAsync()
+        public async Task<ApplicationSettingsViewDto> Get()
         {
 
             //Instantiate Return Value
@@ -85,7 +85,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        private async Task<ApplicationSettingsViewDto> CreateApplicationSettingAsync(ApplicationSettingsCreateDto _obj)
+        private async Task<ApplicationSettingsViewDto> Create(ApplicationSettingsCreateDto _obj)
         {
 
             //Instantiate Return Value
@@ -116,24 +116,24 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<ApplicationSettingsViewDto> UpdateApplicationSettingAsync(ApplicationSettingsCreateDto _obj)
+        public async Task<ApplicationSettingsViewDto> Update(ApplicationSettingsCreateDto _obj)
         {
 
             //Instantiate Return Value
             ApplicationSettingsViewDto returnValue = null;
             try
             {
-                var existingApplicationSetting = await _context.ApplicationSettings.SingleOrDefaultAsync();
-                if (existingApplicationSetting == null)
+                var hasExistingApplicationSetting = await _context.ApplicationSettings.AnyAsync();
+                if (hasExistingApplicationSetting == false)
                 {
-                    returnValue = await this.CreateApplicationSettingAsync(_obj);
+                    returnValue = await this.Create(_obj);
 
                     return returnValue;
 
                 }
                 else if (_obj != null && _obj.Id != Guid.Empty)
                 {
-                    var entity = _mapper.Map<ApplicationSettings>(_obj);
+                    ApplicationSettings entity = _mapper.Map<ApplicationSettings>(_obj);
 
                     _context.Update(entity);
                     await this.Save();

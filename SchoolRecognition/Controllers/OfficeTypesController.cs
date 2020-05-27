@@ -19,6 +19,7 @@ namespace SchoolRecognition.Controllers
     [Route("manage_offices")]
     public class OfficeTypesController : Controller
     {
+
         private IFlashMessage _flashMessage;
         private IOfficesRepository _officesRepository;
         private IOfficeTypesRepository _officeTypesRepository;
@@ -44,7 +45,7 @@ namespace SchoolRecognition.Controllers
             try
             {
 
-                var officeTypes = await _officeTypesRepository.GetAllOfficeTypesAsync();
+                var officeTypes = await _officeTypesRepository.List();
 
                 return PartialView(officeTypes);
             }
@@ -77,8 +78,8 @@ namespace SchoolRecognition.Controllers
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "DateCreated",
                 };
-                //Instantiate CustomPagedList
-                CustomPagedList<OfficesViewDto> offices = CustomPagedList<OfficesViewDto>
+                //Instantiate PagedList
+                PagedList<OfficesViewDto> offices = PagedList<OfficesViewDto>
                          .Create(Enumerable.Empty<OfficesViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -95,7 +96,7 @@ namespace SchoolRecognition.Controllers
                         break;
                 }
 
-                var result = await _officeTypesRepository.GetOfficeTypesOfficesAsPagedListAsync(id, resourceParams);
+                var result = await _officeTypesRepository.GetIncludingPagedListOfOffices(id, resourceParams);
 
                 if (result != null)
                 {
@@ -157,14 +158,14 @@ namespace SchoolRecognition.Controllers
                 {
 
                     //Check if entry with similar data already exists
-                    if (await _officeTypesRepository.CheckIfOfficeTypeExists(model.TypeDescription))
+                    if (await _officeTypesRepository.Exists(model.TypeDescription))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office Type with the same description already exists in the system...");
                         return PartialView(model);
                     }
 
-                    var result = await _officeTypesRepository.CreateOfficeTypeAsync(model);
+                    var result = await _officeTypesRepository.Create(model);
 
                     if (result != null)
                     {
@@ -195,7 +196,7 @@ namespace SchoolRecognition.Controllers
         public async Task<IActionResult> CreateOffice(Guid id)
         {
             //
-            var creationDependencys = await _officesRepository.GetOfficeCreationDepedencys();
+            var creationDependencys = await _officesRepository.GetCreationDependencys();
             var officeTypes = creationDependencys.OfficeTypes;
             var states = creationDependencys.States;
             //
@@ -227,7 +228,7 @@ namespace SchoolRecognition.Controllers
 
             try
             {
-                var creationDependencys = await _officesRepository.GetOfficeCreationDepedencys();
+                var creationDependencys = await _officesRepository.GetCreationDependencys();
                 var officeTypes = creationDependencys.OfficeTypes;
                 var states = creationDependencys.States;
                 //
@@ -250,14 +251,14 @@ namespace SchoolRecognition.Controllers
 
 
                     //Check if entry with similar data already exists
-                    if (await _officesRepository.CheckIfOfficeExists(model.OfficeName))
+                    if (await _officesRepository.Exists(model.OfficeName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
                         return PartialView(model);
                     }
                     //model.Id = Guid.Empty;
-                    var result = await _officesRepository.CreateOfficeAsync(model);
+                    var result = await _officesRepository.Create(model);
 
                     if (result != null)
                     {
@@ -294,7 +295,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var officeType = await _officeTypesRepository.GetOfficeTypesSingleOrDefaultAsync(id.Value);
+                var officeType = await _officeTypesRepository.Get(id.Value);
                 var model = _mapper.Map<OfficeTypesCreateDto>(officeType);
                 return PartialView(model);
             }
@@ -318,7 +319,7 @@ namespace SchoolRecognition.Controllers
 
 
                     //Check if entry with similar data already exists
-                    if (await _officeTypesRepository.CheckIfOfficeTypeExists(model.Id, model.TypeDescription))
+                    if (await _officeTypesRepository.Exists(model.Id, model.TypeDescription))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office Type with the same description already exists in the system...");
@@ -326,7 +327,7 @@ namespace SchoolRecognition.Controllers
                     }
 
                     //Set Pins as active 
-                    var result = await _officeTypesRepository.UpdateOfficeTypeAsync(model);
+                    var result = await _officeTypesRepository.Update(model);
 
                     if (result != null)
                     {
@@ -362,7 +363,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var officeType = await _officeTypesRepository.GetOfficeTypesSingleOrDefaultAsync(id.Value);
+                var officeType = await _officeTypesRepository.Get(id.Value);
 
                 if (officeType == null)
                 {
@@ -390,7 +391,7 @@ namespace SchoolRecognition.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _officeTypesRepository.DeleteOfficeTypeAsync(model.Id);
+                    await _officeTypesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Office Type removed from system!");
                     return RedirectToAction("Index", "OfficeTypes");

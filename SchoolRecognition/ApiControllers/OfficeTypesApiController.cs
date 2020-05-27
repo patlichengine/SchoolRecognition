@@ -39,21 +39,23 @@ namespace SchoolRecognition.ApiControllers
 
         [HttpGet("", Name = "GetAllOfficeTypes")]
         [HttpHead]
-        public async Task<ActionResult<IEnumerable<OfficeTypesViewDto>>> GetOfficeTypes()
+        public async Task<ActionResult<IEnumerable<OfficeTypesViewDto>>> List()
         {
             try
             {
-                var result = await _officeTypesRepository.GetAllOfficeTypesAsync();
+                var result = await _officeTypesRepository.List();
                 var links = CreateLinksForOfficeTypes();
 
                 var shapedOfficeTypes = result
                                .ShapeData(null);
 
 
+                var officesResourceParams = new OfficesResourceParams();
+
                 var shapedOfficeTypesWithLinks = shapedOfficeTypes.Select(officeType =>
                 {
                     var officeTypeAsDictionary = officeType as IDictionary<string, object>;
-                    var officeTypeLinks = CreateLinksForOfficeType((Guid)officeTypeAsDictionary["Id"], null);
+                    var officeTypeLinks = CreateLinksForOfficeType((Guid)officeTypeAsDictionary["Id"], null, officesResourceParams);
                     officeTypeAsDictionary.Add("links", officeTypeLinks);
                     return officeTypeAsDictionary;
                 });
@@ -77,7 +79,7 @@ namespace SchoolRecognition.ApiControllers
 
         [HttpGet("{officeTypeId:guid}", Name = "GetOfficeTypeDetails")]
         //[Route("{id:guid}")]
-        public async Task<ActionResult<OfficeTypesViewDto>> GetOfficeTypeDetails(Guid officeTypeId)
+        public async Task<ActionResult<OfficeTypesViewDto>> Get(Guid officeTypeId)
         {
             try
             {
@@ -85,8 +87,11 @@ namespace SchoolRecognition.ApiControllers
                 {
                     return BadRequest();
                 }
-                var result = await _officeTypesRepository.GetOfficeTypesSingleOrDefaultAsync(officeTypeId);
-                var links = CreateLinksForOfficeType(officeTypeId, null);
+                var result = await _officeTypesRepository.Get(officeTypeId);
+
+                var officesResourceParams = new OfficesResourceParams();
+
+                var links = CreateLinksForOfficeType(officeTypeId, null, officesResourceParams);
 
 
                 if (result == null)
@@ -112,7 +117,7 @@ namespace SchoolRecognition.ApiControllers
 
         [HttpGet("{officeTypeId:guid}/offices", Name = "GetOfficeTypeDetailsIncludingOffices")]
         //[Route("{id:guid}/offices")]
-        public async Task<ActionResult<OfficeTypesViewDto>> GetOfficeTypeDetailsIncludingOffices(Guid officeTypeId, [FromQuery] OfficesResourceParams resourceParams)
+        public async Task<ActionResult<OfficeTypesViewDto>> GetIncludingListOfOffices(Guid officeTypeId, [FromQuery] OfficesResourceParams resourceParams)
         {
             try
             {
@@ -131,8 +136,8 @@ namespace SchoolRecognition.ApiControllers
                 {
                     return BadRequest();
                 }
-                var result = await _officeTypesRepository.GetOfficeTypesOfficesAsPagedListAsync(officeTypeId, resourceParams);
-                var links = CreateLinksForOfficeType(officeTypeId, null);
+                var result = await _officeTypesRepository.GetIncludingPagedListOfOffices(officeTypeId, resourceParams);
+                var links = CreateLinksForOfficeType(officeTypeId, null, resourceParams);
                 if (result == null)
                 {
                     return NotFound();
@@ -165,6 +170,116 @@ namespace SchoolRecognition.ApiControllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
+
+
+        [HttpPost(Name = "CreateOfficeType")]
+        public async Task<ActionResult> Create([FromBody]OfficeTypesCreateDto model)
+        {
+            try
+            {
+                if (model == null)
+                {
+                    return BadRequest("Model is null or empty!");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Model is invalid!");
+                }
+                if (await _officeTypesRepository.Exists(model.TypeDescription))
+                {
+                    var message = "An item with this description already exists in the system!";
+                    return StatusCode(StatusCodes.Status409Conflict, message);
+                }
+
+                var result = await _officeTypesRepository.Create(model);
+
+                if (result == null)
+                {
+                    var message = "Entry unsuccessful!";
+                    return StatusCode(StatusCodes.Status501NotImplemented, message);
+                }
+
+                return CreatedAtRoute("GetOfficeTypeDetails", new { officeTypeId = result.Value });
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+
+        [HttpPut("{officeTypeId:guid}", Name = "UpdateOfficeType")]
+        public async Task<ActionResult> Update(Guid officeTypeId, [FromBody]OfficeTypesCreateDto model)
+        {
+            try
+            {
+                if (officeTypeId == null || officeTypeId == Guid.Empty)
+                {
+                    return BadRequest("Invalid route parameters");
+
+                }
+                if (model == null)
+                {
+                    return BadRequest("Model is null or empty!");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Model is invalid!");
+                }
+                if (await _officeTypesRepository.Exists(model.Id, model.TypeDescription))
+                {
+                    var message = "An item with this description already exists in the system!";
+                    return StatusCode(StatusCodes.Status409Conflict, message);
+                }
+
+                var result = await _officeTypesRepository.Update(model);
+
+                if (result == null)
+                {
+                    var message = "Entry unsuccessful!";
+                    return StatusCode(StatusCodes.Status501NotImplemented, message);
+                }
+
+                return CreatedAtRoute("GetOfficeTypeDetails", new { officeTypeId = result.Id });
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+        
+        [HttpDelete("{officeTypeId:guid}", Name = "DeleteOfficeType")]
+        public async Task<ActionResult> Delete(Guid officeTypeId)
+        {
+            try
+            {
+                if (officeTypeId == null || officeTypeId == Guid.Empty)
+                {
+                    return BadRequest("Invalid route parameters");
+
+                }
+
+                await _officeTypesRepository.Delete(officeTypeId);
+
+                return RedirectToRoute("GetAllOfficeTypes");
+
+
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
 
         private string CreateOfficeTypesResourceUri(
            OfficeTypesResourceParams resourceParams,
@@ -248,7 +363,10 @@ namespace SchoolRecognition.ApiControllers
 
         }
 
-        private IEnumerable<LinkDto> CreateLinksForOfficeType(Guid officeTypeId, string fields)
+        private IEnumerable<LinkDto> CreateLinksForOfficeType(
+            Guid officeTypeId, 
+            string fields,
+            OfficesResourceParams resourceParams)
         {
             var links = new List<LinkDto>();
 
@@ -268,24 +386,25 @@ namespace SchoolRecognition.ApiControllers
             }
 
             links.Add(
-                  new LinkDto(Url.Link("GetOfficeTypeDetailsIncludingOffices", new { officeTypeId }),
+                  new LinkDto(Url.Link("GetOfficeTypeDetailsIncludingOffices", new { officeTypeId, resourceParams }),
                   "self",
                   "GET"));
 
-            //links.Add(
-            //   new LinkDto(Url.Link("DeleteOfficeType", new { authorId }),
-            //   "delete_author",
-            //   "DELETE"));
+            links.Add(
+                new LinkDto(Url.Link("CreateOfficeType", new { }),
+                "create_office_type",
+                "POST"));
+            
+            links.Add(
+                new LinkDto(Url.Link("UpdateOfficeType", new { officeTypeId }),
+                "update_office_type",
+                "PUT"));
 
-            //links.Add(
-            //    new LinkDto(Url.Link("CreateCourseForOfficeType", new { authorId }),
-            //    "create_course_for_author",
-            //    "POST"));
+            links.Add(
+               new LinkDto(Url.Link("DeleteOfficeType", new { officeTypeId }),
+               "delete_office_type",
+               "DELETE"));
 
-            //links.Add(
-            //   new LinkDto(Url.Link("GetCoursesForOfficeType", new { authorId }),
-            //   "courses",
-            //   "GET"));
 
             return links;
         }
@@ -320,6 +439,7 @@ namespace SchoolRecognition.ApiControllers
 
             return links;
         }
+
         private IEnumerable<LinkDto> CreateLinksForOfficeTypes()
         {
             var links = new List<LinkDto>();

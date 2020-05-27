@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\WebProjects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {}
+    "C:\\csharp_projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {}
   },
   "projects": {
-    "C:\\WebProjects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {
+    "C:\\csharp_projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\WebProjects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+        "projectUniqueName": "C:\\csharp_projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
         "projectName": "SchoolRecognition",
-        "projectPath": "C:\\WebProjects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\WebProjects\\SchoolRecognition\\SchoolRecognition\\obj\\",
+        "projectPath": "C:\\csharp_projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+        "packagesPath": "C:\\Users\\NORMAL\\.nuget\\packages\\",
+        "outputPath": "C:\\csharp_projects\\SchoolRecognition\\SchoolRecognition\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
@@ -19,7 +19,7 @@
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\NORMAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
@@ -29,9 +29,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\user\\Documents\\Visual Studio 2015\\Projects\\WAECCASSOfflineBkup\\packages": {},
-          "C:\\WebProjects\\OfflineCOMES\\packages": {},
-          "C:\\WebProjects\\cassproject\\packages": {},
+          "C:\\csharp_projects\\Libraries\\SeedWork": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -141,7 +139,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.102\\RuntimeIdentifierGraph.json"
         }
       }
     }

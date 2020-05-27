@@ -49,8 +49,8 @@ namespace SchoolRecognition.Controllers
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "DateCreated",
                 };
-                //Instantiate CustomPagedList
-                CustomPagedList<PinsViewDto> pins = CustomPagedList<PinsViewDto>
+                //Instantiate PagedList
+                PagedList<PinsViewDto> pins = PagedList<PinsViewDto>
                          .Create(Enumerable.Empty<PinsViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -73,7 +73,7 @@ namespace SchoolRecognition.Controllers
                         break;
                 }
 
-                var result = await _pinsRepository.GetAllPinsAsPagedListAsync(resourceParams);
+                var result = await _pinsRepository.PagedList(resourceParams);
 
                 if (result != null)
                 {
@@ -125,7 +125,7 @@ namespace SchoolRecognition.Controllers
                 {
                     return BadRequest();
                 }
-                var result = await _pinsRepository.GetPinsAllSchoolPaymentsAsync(id.Value);
+                var result = await _pinsRepository.GetIncludingListOfSchoolPayments(id.Value);
                 if (result == null)
                 {
                     return NotFound();
@@ -160,8 +160,8 @@ namespace SchoolRecognition.Controllers
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "DateActive",
                 };
-                //Instantiate CustomPagedList
-                CustomPagedList<PinHistoriesViewDto> pins = CustomPagedList<PinHistoriesViewDto>
+                //Instantiate PagedList
+                PagedList<PinHistoriesViewDto> pins = PagedList<PinHistoriesViewDto>
                          .Create(Enumerable.Empty<PinHistoriesViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -178,7 +178,7 @@ namespace SchoolRecognition.Controllers
                         break;
                 }
 
-                var result = await _pinsRepository.GetPinsPinHistoriesAsPagedListAsync(id, resourceParams);
+                var result = await _pinsRepository.GetIncludingPagedListOfPinHistories(id, resourceParams);
 
                 if (result != null)
                 {
@@ -231,7 +231,7 @@ namespace SchoolRecognition.Controllers
 
                 #region PinCreationDependencys
 
-                var pinsCreationDependencys = await _pinsRepository.GetPinsCreationDepedencys();
+                var pinsCreationDependencys = await _pinsRepository.GetCreationDepedencys();
 
                 var recognitionTypes = pinsCreationDependencys.RecognitionTypes;
                 var applicationSetting = pinsCreationDependencys.ApplicationSetting;
@@ -272,7 +272,7 @@ namespace SchoolRecognition.Controllers
 
                 #region PinCreationDependencys
 
-                var pinsCreationDependencys = await _pinsRepository.GetPinsCreationDepedencys();
+                var pinsCreationDependencys = await _pinsRepository.GetCreationDepedencys();
 
                 var recognitionTypes = pinsCreationDependencys.RecognitionTypes;
                 var applicationSetting = pinsCreationDependencys.ApplicationSetting;
@@ -296,7 +296,7 @@ namespace SchoolRecognition.Controllers
                 if (ModelState.IsValid)
                 {
                     model.IsActive = true;
-                    var result = await _pinsRepository.CreateMultiplePinsAsync(model);
+                    var result = await _pinsRepository.CreateMultiple(model);
 
                     if (result)
                     {
@@ -333,7 +333,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var recognitionType = await _pinsRepository.GetPinsSingleOrDefaultAsync(id.Value);
+                var recognitionType = await _pinsRepository.Get(id.Value);
 
                 if (recognitionType == null)
                 {
@@ -361,7 +361,7 @@ namespace SchoolRecognition.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _pinsRepository.DeletePinAsync(model.Id);
+                    await _pinsRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Pin removed from system!");
                     return RedirectToAction("Index", "RecognitionTypes");

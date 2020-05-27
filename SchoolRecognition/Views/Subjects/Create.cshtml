@@ -5,9 +5,9 @@
 @section styles{
 
     @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
-        <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
-        <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />*@
+    <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
+    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />*@
 
 }
 
@@ -130,7 +130,8 @@
     @*<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
     @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
     @*<script src="~/lib/select2/dist/js/select2.full.min.js"></script>*@
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
     <script>
         $(document).ready(function () {
             $('select.form-control').select2({
@@ -191,5 +192,5 @@
 
 
 }
-<script type="text/javascript" src="~/js/linkClick.js"></script>
+
 

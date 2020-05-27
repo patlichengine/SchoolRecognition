@@ -40,7 +40,7 @@ namespace SchoolRecognition.Controllers
             try
             {
 
-                var applicationSetting = await _applicationSettingsRepository.GetApplicationSettingsSingleOrDefaultAsync();
+                var applicationSetting = await _applicationSettingsRepository.Get();
 
                 return View(applicationSetting);
             }
@@ -61,7 +61,7 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
-                var applicationSetting = await _applicationSettingsRepository.GetApplicationSettingsSingleOrDefaultAsync();
+                var applicationSetting = await _applicationSettingsRepository.Get();
                 var model = _mapper.Map<ApplicationSettingsCreateDto>(applicationSetting);
                 return View(model);
             }
@@ -85,7 +85,7 @@ namespace SchoolRecognition.Controllers
 
 
                     //Set Pins as active 
-                    var result = await _applicationSettingsRepository.UpdateApplicationSettingAsync(model);
+                    var result = await _applicationSettingsRepository.Update(model);
 
                     if (result != null)
                     {

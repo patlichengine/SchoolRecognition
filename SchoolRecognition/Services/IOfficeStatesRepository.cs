@@ -11,15 +11,16 @@ namespace SchoolRecognition.Services
     public interface IOfficeStatesRepository
     {
 
-        Task<IEnumerable<OfficeStatesViewDto>> GetAllOfficeStatesAsync();
-        Task<CustomPagedList<OfficeStatesViewDto>> GetAllOfficeStatesAsPagedListAsync(OfficeStatesResourceParams resourceParams);
-        Task<OfficeStatesViewDto> GetOfficeStatesSingleOrDefaultAsync(Guid id);
-        Task<OfficeStatesViewDto> GetOfficeStatesByOfficeIdSingleOrDefaultAsync(Guid officeId);
-        Task<Guid?> CreateOfficeStateAsync(OfficeStatesCreateDto _obj);
-        Task<OfficeStatesViewDto> UpdateOfficeStateAsync(OfficeStatesCreateDto _obj);
-        Task DeleteOfficeStateAsync(Guid id); //return type is void
+        Task<IEnumerable<OfficeStatesViewDto>> List();
+        Task<PagedList<OfficeStatesViewDto>> PagedList(OfficeStatesResourceParams resourceParams);
+        Task<OfficeStatesViewDto> Get(Guid id);
+        Task<Guid?> Create(OfficeStatesCreateDto _obj);
+        Task<IEnumerable<Guid?>> CreateMultiple(OfficeStatesCreateMultipleDto _obj);
+        Task<OfficeStatesViewDto> Update(OfficeStatesCreateDto _obj);
+        Task Delete(Guid id); //return type is void
         ///
-        Task<bool> CheckIfOfficeStateExists(Guid statedId, Guid officeId);
-        Task<bool> CheckIfOfficeStateExists(Guid id, Guid statedId, Guid officeId);
+        Task<bool> Exists(Guid statedId, Guid officeId);
+        Task<bool> Exists(Guid id, Guid statedId, Guid officeId);
+        Task<OfficeStatesCreationDependecyDto> GetCreationDependencys();
     }
 }

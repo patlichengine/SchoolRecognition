@@ -65,39 +65,9 @@
                             <span asp-validation-for="OfficeTypeId" class="text-danger"></span>
                         </div>
 
-                        <div class="row">
-
-                            <div class="col-md-6">
-
-                                <div class="form-group">
-                                    <label asp-for="OfficeName">*Name:</label>
-                                    <input minlength="2" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-6">
-
-
-                                <div class="form-group">
-                                    <label>*Date Created:</label>
-                                    <input type="text" asp-for="DateCreated" class="form-control" placeholder="Date Created/Established" required />
-                                    <span asp-validation-for="StateAssigned" class="text-danger"></span>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <h5 style="font-weight: 100">Assign Office to State</h5>
-
                         <div class="form-group">
-                            <label asp-for="StateAssigned">*State Assigned</label>
-                            <select asp-for="StateAssigned" asp-items="@states.ToList()" class="form-control" required>
-                                <option value="">--Select State---</option>
-                            </select>
-                            <span asp-validation-for="StateAssigned" class="text-danger"></span>
+                            <label asp-for="OfficeName">*Name:</label>
+                            <input minlength="2" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
                         </div>
 
 

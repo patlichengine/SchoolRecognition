@@ -11,17 +11,18 @@ namespace SchoolRecognition.Services
     public interface IOfficesRepository
     {
 
-        Task<IEnumerable<OfficesViewDto>> GetAllOfficesAsync();
-        Task<CustomPagedList<OfficesViewDto>> GetAllOfficesAsPagedListAsync(OfficesResourceParams resourceParams);
-        Task<OfficesViewDto> GetOfficesSingleOrDefaultAsync(Guid id);
-        Task<OfficesViewDto> GetOfficesAllSchoolsAsync(Guid id);
-        Task<OfficeViewPagedListSchoolsDto> GetOfficesSchoolsAsPagedListAsync(Guid id, SchoolsResourceParams resourceParams);
-        Task<Guid?> CreateOfficeAsync(OfficesCreateDto _obj);
-        Task<OfficesViewDto> UpdateOfficeAsync(OfficesCreateDto _obj);
-        Task DeleteOfficeAsync(Guid id); //return type is void
+        Task<IEnumerable<OfficesViewDto>> List();
+        Task<IEnumerable<OfficesViewDto>> ListByOfficeTypeId(Guid officeTypeId);
+        Task<PagedList<OfficesViewDto>> PagedList(OfficesResourceParams resourceParams);
+        Task<OfficesViewDto> Get(Guid id);
+        Task<OfficeViewPagedListSchoolsDto> GetIncludingPagedListOfSchools(Guid id, SchoolsResourceParams resourceParams);
+        Task<OfficeViewPagedListOfficeLocalGovernmentsDto> GetIncludingPagedListOfOfficeLocalGovernments(Guid id, OfficeLocalGovernmentsResourceParams resourceParams);
+        Task<Guid?> Create(OfficesCreateDto _obj);
+        Task<OfficesViewDto> Update(OfficesCreateDto _obj);
+        Task Delete(Guid id); //return type is void
         //
-        Task<bool> CheckIfOfficeExists(string officeName);
-        Task<bool> CheckIfOfficeExists(Guid id, string officeName);
-        Task<OfficesCreationDependecyDto> GetOfficeCreationDepedencys();
+        Task<bool> Exists(string officeName);
+        Task<bool> Exists(Guid id, string officeName);
+        Task<OfficesCreationDependecyDto> GetCreationDependencys();
     }
 }

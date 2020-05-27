@@ -72,9 +72,9 @@
                                 <tr role="row">
                                     <td>@item.RecognitionTypeName</td>
                                     <td>@item.RecognitionTypeCode</td>
-                                    <td>@item.IsActivePinsCount.ToString("#,##0")</td>
-                                    <td>@item.IsInUsePinsCount.ToString("#,##0")</td>
-                                    <td>@item.PinsCount.ToString("#,##0")</td>
+                                    <td>@item.TotalActivePins.ToString("#,##0")</td>
+                                    <td>@item.TotalInUsePins.ToString("#,##0")</td>
+                                    <td>@item.TotalPins.ToString("#,##0")</td>
                                     <td class="text-center p-1">
                                         <a asp-action="ViewPins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="View Pins">
                                             <i class="fas fa-desktop"></i>

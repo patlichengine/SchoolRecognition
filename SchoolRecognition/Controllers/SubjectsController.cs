@@ -51,8 +51,8 @@ namespace SchoolRecognition.Controllers
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "SubjectName",
                 };
-                //Instantiate CustomPagedList
-                CustomPagedList<SubjectsViewDto> subjects = CustomPagedList<SubjectsViewDto>
+                //Instantiate PagedList
+                PagedList<SubjectsViewDto> subjects = PagedList<SubjectsViewDto>
                          .Create(Enumerable.Empty<SubjectsViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -69,7 +69,7 @@ namespace SchoolRecognition.Controllers
                         break;
                 }
 
-                var result = await _subjectsRepository.GetAllSubjectsAsPagedListAsync(resourceParams);
+                var result = await _subjectsRepository.PagedList(resourceParams);
 
                 if (result != null)
                 {
@@ -145,14 +145,14 @@ namespace SchoolRecognition.Controllers
 
 
                     //Check if entry with similar data already exists
-                    if (await _subjectsRepository.CheckIfSubjectExists(model.SubjectCode, model.LongName, model.ShortName))
+                    if (await _subjectsRepository.Exists(model.SubjectCode, model.LongName, model.ShortName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Subject with the same Name already exists in the system...");
                         return PartialView(model);
                     }
 
-                    var result = await _subjectsRepository.CreateSubjectAsync(model);
+                    var result = await _subjectsRepository.Create(model);
 
                     if (result != null)
                     {
@@ -190,7 +190,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var subject = await _subjectsRepository.GetSubjectsSingleOrDefaultAsync(id.Value);
+                var subject = await _subjectsRepository.Get(id.Value);
 
                 if (subject == null)
                 {
@@ -229,7 +229,7 @@ namespace SchoolRecognition.Controllers
                 {
 
                     //Check if entry with similar data already exists
-                    if (await _subjectsRepository.CheckIfSubjectExists(model.Id, model.SubjectCode, model.LongName, model.ShortName))
+                    if (await _subjectsRepository.Exists(model.Id, model.SubjectCode, model.LongName, model.ShortName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Subject with the same Name already exists in the system...");
@@ -237,7 +237,7 @@ namespace SchoolRecognition.Controllers
                     }
 
                     //Set Pins as active 
-                    var result = await _subjectsRepository.UpdateSubjectAsync(model);
+                    var result = await _subjectsRepository.Update(model);
 
                     if (result != null)
                     {
@@ -273,7 +273,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var subject = await _subjectsRepository.GetSubjectsSingleOrDefaultAsync(id.Value);
+                var subject = await _subjectsRepository.Get(id.Value);
 
                 if (subject == null)
                 {
@@ -301,7 +301,7 @@ namespace SchoolRecognition.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _subjectsRepository.DeleteSubjectAsync(model.Id);
+                    await _subjectsRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Subject removed from system!");
                     return RedirectToAction("Index", "Subjects");

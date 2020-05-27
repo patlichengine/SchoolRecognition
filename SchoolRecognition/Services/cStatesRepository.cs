@@ -56,7 +56,7 @@ namespace SchoolRecognition.Services
         #endregion
 
 
-        public async Task<IEnumerable<StatesViewDto>> GetAllStatesAsync()
+        public async Task<IEnumerable<StatesViewDto>> List()
         {
 
             //Instantiate Return Value
@@ -87,10 +87,10 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<CustomPagedList<StatesViewDto>> GetAllStatesAsPagedListAsync(StatesResourceParams resourceParams)
+        public async Task<PagedList<StatesViewDto>> PagedList(StatesResourceParams resourceParams)
         {
             //Instantiate Return Value
-            CustomPagedList<StatesViewDto> returnValue = CustomPagedList<StatesViewDto>
+            PagedList<StatesViewDto> returnValue = PagedList<StatesViewDto>
                         .Create(Enumerable.Empty<StatesViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -143,7 +143,7 @@ namespace SchoolRecognition.Services
 
                     });
 
-                    returnValue = await CustomPagedList<StatesViewDto>.CreateAsync(mappedResult,
+                    returnValue = await PagedList<StatesViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -160,8 +160,76 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+        public async Task<StatesViewDto> Get(Guid id)
+        {
 
-        public async Task<StatesViewPagedListLocalGovernmentsDto> GetStatesLocalGovernmentsAsPagedListAsync(Guid id, LocalGovernmentsResourceParams resourceParams)
+            //Instantiate Return Value
+            StatesViewDto returnValue = null;
+            try
+            {
+                if (id != Guid.Empty)
+                {
+                    var dbResult = await _context
+                        .States
+                        .Include(x => x.LocalGovernments)
+                        //.ThenInclude(y => y.State)
+                        //.Include(x => x.LocalGovernments)
+                        .ThenInclude(y => y.Schools)
+                        .ThenInclude(z => z.Category)
+                        .Include(x => x.OfficeStates)
+                        .ThenInclude(y => y.Office)
+                        .ThenInclude(z => z.OfficeType)
+                        .Include(x => x.OfficeStates)
+                        .ThenInclude(y => y.State)
+                        .Select(x => new StatesViewDto()
+                        {
+                            Id = x.Id,
+                            StateName = x.Name,
+                            StateCode = x.Code,
+                            LocalGovernmentsCount = x.LocalGovernments != null ? x.LocalGovernments.Count() : 0,
+                            OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                            //StateLGAs = x.LocalGovernments.Select(x=> new LocalGovernmentsViewDto() { 
+                            //    Id = x.Id,
+                            //    LgaName = x.Name,
+                            //    LgaCode = x.Code,
+                            //    StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
+                            //    SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
+                            //}),
+
+                            SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0,
+                            StateOfficeStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                            {
+                                Id = y.Id,
+                                StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
+                                StateName = y.State != null ? y.State.Name : null,
+                                StateCode = y.State != null ? y.State.Code : null,
+                                OfficeName = y.Office != null ? y.Office.Name : null,
+                                OfficeAddress = y.Office != null ? y.Office.Address : null,
+                            })
+
+                        })
+                        .Where(x => x.Id == id).SingleOrDefaultAsync();
+
+
+                    returnValue = dbResult;
+
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<StatesViewPagedListLocalGovernmentsDto> GetIncludingPagedListOfLocalGovernments(Guid id, LocalGovernmentsResourceParams resourceParams)
         {
 
 
@@ -170,7 +238,7 @@ namespace SchoolRecognition.Services
             StatesViewPagedListLocalGovernmentsDto returnValue = null;
 
             //Instantiate Return Value
-            CustomPagedList<LocalGovernmentsViewDto> returnValueLocalGovernments = CustomPagedList<LocalGovernmentsViewDto>
+            PagedList<LocalGovernmentsViewDto> returnValueLocalGovernments = PagedList<LocalGovernmentsViewDto>
                         .Create(Enumerable.Empty<LocalGovernmentsViewDto>().AsQueryable(),
                             resourceParams.PageNumber,
                             resourceParams.PageSize);
@@ -232,7 +300,7 @@ namespace SchoolRecognition.Services
                         SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
                     });
 
-                    returnValueLocalGovernments = await CustomPagedList<LocalGovernmentsViewDto>.CreateAsync(mappedResult,
+                    returnValueLocalGovernments = await PagedList<LocalGovernmentsViewDto>.CreateAsync(mappedResult,
                         resourceParams.PageNumber,
                         resourceParams.PageSize);
 
@@ -286,78 +354,9 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+         
 
-
-        public async Task<StatesViewDto> GetStatesSingleOrDefaultAsync(Guid id)
-        {
-
-            //Instantiate Return Value
-            StatesViewDto returnValue = null;
-            try
-            {
-                if (id != Guid.Empty)
-                {
-                    var dbResult = await _context
-                        .States
-                        .Include(x => x.LocalGovernments)
-                        //.ThenInclude(y => y.State)
-                        //.Include(x => x.LocalGovernments)
-                        .ThenInclude(y => y.Schools)
-                        .ThenInclude(z => z.Category)
-                        .Include(x => x.OfficeStates)
-                        .ThenInclude(y => y.Office)
-                        .ThenInclude(z => z.OfficeType)
-                        .Include(x => x.OfficeStates)
-                        .ThenInclude(y => y.State)
-                        .Select(x => new StatesViewDto()
-                        {
-                            Id = x.Id,
-                            StateName = x.Name,
-                            StateCode = x.Code,
-                            LocalGovernmentsCount = x.LocalGovernments != null ? x.LocalGovernments.Count() : 0,
-                            OfficeStatesCount= x.OfficeStates != null ? x.OfficeStates.Count() : 0,
-                            //StateLGAs = x.LocalGovernments.Select(x=> new LocalGovernmentsViewDto() { 
-                            //    Id = x.Id,
-                            //    LgaName = x.Name,
-                            //    LgaCode = x.Code,
-                            //    StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
-                            //    SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
-                            //}),
-
-                            SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0,
-                            StateOfficeStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
-                            {
-                                Id = y.Id,
-                                StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
-                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
-                                StateName = y.State != null ? y.State.Name : null,
-                                StateCode = y.State != null ? y.State.Code : null,
-                                OfficeName = y.Office != null ? y.Office.Name : null,
-                                OfficeAddress = y.Office != null ? y.Office.Address : null,
-                            })
-
-                        })
-                        .Where(x => x.Id == id).SingleOrDefaultAsync();
-
-
-                    returnValue = dbResult;
-
-
-                    return returnValue;
-                }
-                else
-                {
-                    throw new ArgumentNullException(nameof(id));
-                }
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-        public async Task<Guid?> CreateStateAsync(StatesCreateDto _obj)
+        public async Task<Guid?> Create(StatesCreateDto _obj)
         {
             //Instantiate Return Value
             Guid? returnValue = null;
@@ -385,7 +384,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<StatesViewDto> UpdateStateAsync(StatesCreateDto _obj)
+        public async Task<StatesViewDto> Update(StatesCreateDto _obj)
         {
 
             //Instantiate Return Value
@@ -415,7 +414,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task DeleteStateAsync(Guid id)
+        public async Task Delete(Guid id)
         {
             try
             {
@@ -442,7 +441,7 @@ namespace SchoolRecognition.Services
             }
         }
 
-        public async Task<bool> CheckIfStateExists(string stateName)
+        public async Task<bool> Exists(string stateName)
         {
 
             //Instantiate Return Value
@@ -472,7 +471,7 @@ namespace SchoolRecognition.Services
             }
         }
         
-        public async Task<bool> CheckIfStateExists(Guid id, string stateName)
+        public async Task<bool> Exists(Guid id, string stateName)
         {
 
             //Instantiate Return Value

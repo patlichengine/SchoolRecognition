@@ -12,20 +12,20 @@ namespace SchoolRecognition.Services
     public interface IPinsRepository
     {
 
-        Task<IEnumerable<PinsViewDto>> GetAllPinsAsync();
-        Task<CustomPagedList<PinsViewDto>> GetAllPinsAsPagedListAsync(PinsResourceParams resourceParams);
-        Task<PinsViewDto> GetPinsSingleOrDefaultAsync(Guid id);
-        Task<PinsViewDto> GetPinsAllPinHistoriesAsync(Guid id);
-        Task<PinsViewDto> GetPinsAllSchoolPaymentsAsync(Guid id);
-        Task<PinsViewPagedListPinHistoriesDto> GetPinsPinHistoriesAsPagedListAsync(Guid id, PinHistoriesResourceParams resourceParams);
+        Task<IEnumerable<PinsViewDto>> List();
+        Task<PagedList<PinsViewDto>> PagedList(PinsResourceParams resourceParams);
+        Task<PinsViewDto> Get(Guid id);
+        Task<PinsViewDto> GetIncludingListOfPinHistories(Guid id);
+        Task<PinsViewDto> GetIncludingListOfSchoolPayments(Guid id);
+        Task<PinsViewPagedListPinHistoriesDto> GetIncludingPagedListOfPinHistories(Guid id, PinHistoriesResourceParams resourceParams);
         
-        Task<Guid?> CreatePinsAsync(PinsCreateDto _obj);
-        Task<bool> CreateMultiplePinsAsync(PinsCreateDto _obj);
-        Task<PinsViewDto> UpdatePinAsync(PinsUpdateDto _obj);
-        Task DeletePinAsync(Guid id); //return type is void
+        Task<Guid?> Create(PinsCreateDto _obj);
+        Task<bool> CreateMultiple(PinsCreateDto _obj);
+        Task<PinsViewDto> Update(PinsUpdateDto _obj);
+        Task Delete(Guid id); //return type is void
         //
-        Task<int> CheckNumberOfActivePinsNOTInUseAsync();
-        Task<PinsStatisticsSummaryDto> GetPinsStatisticSummaryAsync();
-        Task<PinsCreationDependecyDto> GetPinsCreationDepedencys();
+        Task<int> CheckTotalActivePinsNOTInUse();
+        Task<PinsStatisticsSummaryDto> Summary();
+        Task<PinsCreationDependecyDto> GetCreationDepedencys();
     }
 }

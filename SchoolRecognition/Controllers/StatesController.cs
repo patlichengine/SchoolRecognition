@@ -44,7 +44,7 @@ namespace SchoolRecognition.Controllers
             try
             {
 
-                var states = await _statesRepository.GetAllStatesAsync();
+                var states = await _statesRepository.List();
 
                 return PartialView(states);
             }
@@ -82,8 +82,8 @@ namespace SchoolRecognition.Controllers
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "LgaName",
                 };
-                //Instantiate CustomPagedList
-                CustomPagedList<LocalGovernmentsViewDto> lgas = CustomPagedList<LocalGovernmentsViewDto>
+                //Instantiate PagedList
+                PagedList<LocalGovernmentsViewDto> lgas = PagedList<LocalGovernmentsViewDto>
                          .Create(Enumerable.Empty<LocalGovernmentsViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -106,7 +106,7 @@ namespace SchoolRecognition.Controllers
                         break;
                 }
 
-                var result = await _statesRepository.GetStatesLocalGovernmentsAsPagedListAsync(id, resourceParams);
+                var result = await _statesRepository.GetIncludingPagedListOfLocalGovernments(id, resourceParams);
 
                 if (result == null)
                 {
@@ -177,14 +177,14 @@ namespace SchoolRecognition.Controllers
                 {
 
                     //Check if entry with similar data already exists
-                    if (await _statesRepository.CheckIfStateExists(model.StateName))
+                    if (await _statesRepository.Exists(model.StateName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An State with the same description already exists in the system...");
                         return PartialView(model);
                     }
 
-                    var result = await _statesRepository.CreateStateAsync(model);
+                    var result = await _statesRepository.Create(model);
 
                     if (result != null)
                     {
@@ -222,7 +222,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var state = await _statesRepository.GetStatesSingleOrDefaultAsync(id.Value);
+                var state = await _statesRepository.Get(id.Value);
                 var model = _mapper.Map<StatesCreateDto>(state);
                 return PartialView(model);
             }
@@ -246,7 +246,7 @@ namespace SchoolRecognition.Controllers
 
 
                     //Check if entry with similar data already exists
-                    if (await _statesRepository.CheckIfStateExists(model.Id, model.StateName))
+                    if (await _statesRepository.Exists(model.Id, model.StateName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An State with the same description already exists in the system...");
@@ -254,7 +254,7 @@ namespace SchoolRecognition.Controllers
                     }
 
                     //Set Pins as active 
-                    var result = await _statesRepository.UpdateStateAsync(model);
+                    var result = await _statesRepository.Update(model);
 
                     if (result != null)
                     {
@@ -290,7 +290,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var state = await _statesRepository.GetStatesSingleOrDefaultAsync(id.Value);
+                var state = await _statesRepository.Get(id.Value);
 
                 if (state == null)
                 {
@@ -318,7 +318,7 @@ namespace SchoolRecognition.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _statesRepository.DeleteStateAsync(model.Id);
+                    await _statesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "State removed from system!");
                     return RedirectToAction("Index", "States");

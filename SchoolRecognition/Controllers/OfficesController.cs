@@ -57,8 +57,8 @@ namespace SchoolRecognition.Controllers
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "DateCreated",
                 };
-                //Instantiate CustomPagedList
-                CustomPagedList<OfficesViewDto> offices = CustomPagedList<OfficesViewDto>
+                //Instantiate PagedList
+                PagedList<OfficesViewDto> offices = PagedList<OfficesViewDto>
                          .Create(Enumerable.Empty<OfficesViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -81,7 +81,7 @@ namespace SchoolRecognition.Controllers
                         break;
                 }
 
-                var result = await _officesRepository.GetAllOfficesAsPagedListAsync(resourceParams);
+                var result = await _officesRepository.PagedList(resourceParams);
 
                 if (result != null)
                 {
@@ -147,8 +147,8 @@ namespace SchoolRecognition.Controllers
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "Name",
                 };
-                //Instantiate CustomPagedList
-                CustomPagedList<SchoolsViewDto> pins = CustomPagedList<SchoolsViewDto>
+                //Instantiate PagedList
+                PagedList<SchoolsViewDto> pins = PagedList<SchoolsViewDto>
                          .Create(Enumerable.Empty<SchoolsViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -171,7 +171,7 @@ namespace SchoolRecognition.Controllers
                         break;
                 }
 
-                var result = await _officesRepository.GetOfficesSchoolsAsPagedListAsync(id, resourceParams);
+                var result = await _officesRepository.GetIncludingPagedListOfSchools(id, resourceParams);
 
                 if (result != null)
                 {
@@ -222,7 +222,7 @@ namespace SchoolRecognition.Controllers
             try
             {
                 //
-                var creationDependencys = await _officesRepository.GetOfficeCreationDepedencys();
+                var creationDependencys = await _officesRepository.GetCreationDependencys();
                 var officeTypes = creationDependencys.OfficeTypes;
                 var states = creationDependencys.States;
                 //
@@ -257,7 +257,7 @@ namespace SchoolRecognition.Controllers
 
             try
             {
-                var creationDependencys = await _officesRepository.GetOfficeCreationDepedencys();
+                var creationDependencys = await _officesRepository.GetCreationDependencys();
                 var officeTypes = creationDependencys.OfficeTypes;
                 var states = creationDependencys.States;
                 //
@@ -280,14 +280,14 @@ namespace SchoolRecognition.Controllers
 
 
                     //Check if entry with similar data already exists
-                    if (await _officesRepository.CheckIfOfficeExists(model.OfficeName))
+                    if (await _officesRepository.Exists(model.OfficeName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
                         return View(model);
                     }
 
-                    var result = await _officesRepository.CreateOfficeAsync(model);
+                    var result = await _officesRepository.Create(model);
 
                     if (result != null)
                     {
@@ -319,7 +319,7 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
-                var creationDependencys = await _officesRepository.GetOfficeCreationDepedencys();
+                var creationDependencys = await _officesRepository.GetCreationDependencys();
                 var officeTypes = creationDependencys.OfficeTypes;
                 var states = creationDependencys.States;
                 //
@@ -330,7 +330,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var office = await _officesRepository.GetOfficesSingleOrDefaultAsync(id.Value);
+                var office = await _officesRepository.Get(id.Value);
 
                 if (office == null)
                 {
@@ -385,7 +385,7 @@ namespace SchoolRecognition.Controllers
             try
             {
 
-                var creationDependencys = await _officesRepository.GetOfficeCreationDepedencys();
+                var creationDependencys = await _officesRepository.GetCreationDependencys();
                 var officeTypes = creationDependencys.OfficeTypes;
                 var states = creationDependencys.States;
                 //
@@ -408,7 +408,7 @@ namespace SchoolRecognition.Controllers
                 {
 
                     //Check if entry with similar data already exists
-                    if (await _officesRepository.CheckIfOfficeExists(model.Id, model.OfficeName))
+                    if (await _officesRepository.Exists(model.Id, model.OfficeName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
@@ -416,7 +416,7 @@ namespace SchoolRecognition.Controllers
                     }
 
                     //Set Pins as active 
-                    var result = await _officesRepository.UpdateOfficeAsync(model);
+                    var result = await _officesRepository.Update(model);
 
                     if (result != null)
                     {
@@ -452,7 +452,7 @@ namespace SchoolRecognition.Controllers
                     return NotFound();
                 }
 
-                var office = await _officesRepository.GetOfficesSingleOrDefaultAsync(id.Value);
+                var office = await _officesRepository.Get(id.Value);
 
                 if (office == null)
                 {
@@ -480,7 +480,7 @@ namespace SchoolRecognition.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _officesRepository.DeleteOfficeAsync(model.Id);
+                    await _officesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Office removed from system!");
                     return RedirectToAction("Index", "Offices");
