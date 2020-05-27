@@ -1,0 +1,247 @@
+﻿@model SchoolRecognition.Models.SchoolsPinEntryDto
+
+
+@{
+    ViewData["Title"] = "School PIN Entry";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title text-bold text-danger">@ViewData["Title"]</h3>
+                </div>
+                <div class="card-body">
+                    <div class="col-8">
+                        <form enctype="multipart/form-data" asp-action="">
+
+
+
+                            <div class="col-md-10">
+                                <div class="form-group">
+                                    <label asp-for="SerialPin" class="control-label"></label>
+                                    <input asp-for="SerialPin" id="serialpinid" style="text-transform:uppercase" autocomplete="off" placeholder="School Serial Pin" class="form-control" />
+                                    <span asp-validation-for="SerialPin" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="schoolid" value="" name="SchoolId" />
+
+
+
+                            <div class="form-group" id="ButtonDiv">
+
+                                <input type="submit" value="submit" id="btnSave" class="btn btn-sm btn-primary rounded-0 text-uppercase" />
+
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.login-box -->
+
+@section Scripts {
+
+
+    <link href="~/css/jquery-confirm.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.js"></script>
+
+    <script type="text/javascript">
+
+        var schoolname = "";
+        globalschoolid=""
+        //$(function () {
+        //    var time = new Date().getHours();
+        //    if (time < 2) {
+        //        greeting = "Good morning";
+        //         toastr.info(greeting);
+        //    } else if (time < 5) {
+        //        greeting = "Good day";
+        //         toastr.info(greeting);
+        //    } else {
+        //        greeting = "Good evening";
+        //        toastr.info(greeting);
+        //    }
+        //});
+
+
+
+
+       
+               
+
+      
+        
+
+        
+
+        
+        /*Validate serial pin*/
+        $("#serialpinid").on('blur', function (e) {
+            e.preventDefault();
+             var lengthCount = this.value.length;
+            var serialpintext = $(this).val();
+           
+             if (lengthCount == 14) {
+
+                 if ((serialpintext.indexOf('GR') >= 0 || serialpintext.indexOf('SR') >= 0)) {
+
+                     $.ajax({
+                         url: '@Url.Content("~/")' + 'api/pins/serial/' + serialpintext,
+                         type: 'GET',
+                         dataType: 'json',
+                         success: function (response) {
+                             if (response != null) {
+                                 if (response.SchoolId != null) {
+                                     
+                                     //information about the school
+
+                                     globalschoolid = response.SchoolId
+                                     
+                                     
+
+                                 }
+                             }
+                         },
+                             error: function (xhr, ajaxOptions, thrownError) {
+                                 toastr.info(/*xhr.statusText + "\r\n" +*/ xhr.responseText);
+                                 return false;
+                             }
+
+                         })
+                     }
+                 
+                 else {
+                     toastr.info('The Pin supplied is not valid. Contact the Admin');
+                     return false;
+                 }
+
+
+
+             }
+             else {
+                  toastr.info('The Pin supplied is not valid. Contact the Administrator');
+             }
+
+
+
+
+        });
+
+
+        function LoadSchoolInformation(schoolid)
+        {
+
+            $.ajax({
+                url: '@Url.Content("~/")' + 'api/Schools/' + schoolid,
+                type: 'GET',
+                //dataType: 'json',
+                success: function (callback) {
+                    if (callback != null) {
+
+                        console.log(callback.Name+'mmmmmmmmmmmmm');
+
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toastr.info(/*xhr.statusText + "\r\n" +*/ xhr.responseText);
+                    return false;
+                }
+            })
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    //inplemenet a login function using ajax
+   $("#btnSave").click(function (e) {
+            e.preventDefault();
+
+                                /*validation of Formdata for General Recgnition*/
+                if ($("#serialpinid").val() == "") {
+                 toastr.info("Serial Pin is required");
+                    return false;
+                }
+
+            /*Submit button to submit form data to controller fr General Recgntion*/
+                $.confirm({
+                    title: 'Confirm!',
+                    width : 50,
+                    height:50,
+                   useBootstrap: false,
+                    content: '' +
+                        '<p style="color:red"><b>Please confirm the pin supplied is valid</b></p>',
+
+
+                    buttons: {
+                        confirm: function () {
+                            var formdata = new FormData(); //FormData object
+                            formdata.append("SerialPin", $("#serialpinid").val());
+                            formdata.append("SchoolId", $("#schoolid").val());
+                          
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Action("SchoolsPinEntry", "School")',
+                                data: formdata,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    if (data.status) {
+                                        console.log(globalschoolid);
+                                        window.location.href = '@Url.Action("SchoolProfile", "School")?schoolid=' + globalschoolid;
+
+                                    }
+                                    if (data.status) {
+
+                                        addedfiles = [];
+                                        imagePreviewContainer.innerHTML = '';
+
+
+                                    } else {
+
+                                       // toastr.info("");
+                                    }
+                                },
+
+                            });
+                        },
+
+                    }
+                });
+
+
+
+            });
+    </script>
+
+
+}
+
+

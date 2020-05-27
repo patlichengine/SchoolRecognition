@@ -1,0 +1,253 @@
+﻿@model IEnumerable<SchoolRecognition.Models.PinsViewDto>
+@{
+    var recognitionType = (RecognitionTypesViewPinsDto)ViewData["RecognitionType"];
+    ViewData["Title"] = recognitionType.RecognitionTypeName + " Pins";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section styles{
+    @*<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />*@
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="ManagePins" asp-action="Index">Manage Pins</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active disabled" id="custom-tabs-three-home-tab" data-toggle="pill" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">
+                                @ViewData["Title"]
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                        <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+
+                            <div class="clearfix mb-3">
+                                <div class="float-right">
+                                    <a asp-area="" asp-action="GeneratePins" asp-route-id="@recognitionType.Id" class="btn btn-secondary text-white">
+                                        <i class="fas fa-receipt"></i>
+                                        Generate Pins
+                                    </a>
+                                </div>
+                            </div>
+
+
+                            <div class="row mb-2">
+                                <div class="col">
+                                </div>
+                                <div class="col-8">
+
+                                    <form asp-action="ViewPins"asp-route-id="@recognitionType.Id" method="get" class="md-form mb-3" id="searchForm">
+
+                                        <div class="input-group">
+                                            <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewBag.SearchQuery" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
+                                            @*<div class="input-group-prepend">
+                            <span class="input-group-text md-addon" id="material-addon1">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>*@
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-md btn-outline-primary" type="submit">
+                                                    <i class="fas fa-search"></i>
+                                                    Search
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+
+                                    </form>
+
+                                </div>
+
+                                <div class="col-md-12 mb-1">
+
+
+                                    <a href="@Url.Action("ViewPins", "ManagePins", new { id  = recognitionType.Id , sortOrder = "serial_number", searchQuery = ViewBag.SearchQuery,  pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
+                                        Name Ascending
+                                        <i class="fas fa-sort-up"></i>
+                                    </a>
+
+                                    <a href="@Url.Action("ViewPins", "ManagePins", new { id  = recognitionType.Id , sortOrder = "serial_number_desc", searchQuery = ViewBag.SearchQuery,  pageNumber = ViewBag.CurrentPage})" class="btn btn-light btn-xs">
+                                        Name Descending
+                                        <i class="fas fa-sort-down"></i>
+                                    </a>
+                                    <a href="@Url.Action("ViewPins", "ManagePins", new { id  = recognitionType.Id , sortOrder = "date", searchQuery = ViewBag.SearchQuery, pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
+                                        Date Generated Ascending
+                                        <i class="fas fa-sort-up"></i>
+                                    </a>
+                                    <a href="@Url.Action("ViewPins", "ManagePins", new { id  = recognitionType.Id ,  sortOrder = "date_desc", searchQuery = ViewBag.SearchQuery, pageNumber = ViewBag.CurrentPage })" class="btn btn-light btn-xs">
+                                        Date Generated Descending
+                                        <i class="fas fa-sort-down"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <table class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <td>Date Generated</td>
+                                        <td>Serial Number</td>
+                                        <td>Created By</td>
+                                        <td>Active</td>
+                                        <td>In Use</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr role="row">
+                                            <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
+                                            <td>@item.SerialNumber</td>
+                                            <td>@item.CreatedByUser</td>
+                                            <td>
+                                                <a href="#" class="btn btn-xs disabled @(item.IsActive ? "btn-success" : "btn-danger")">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="btn btn-xs disabled @(item.IsInUse ? "btn-success" : "btn-danger")">
+                                                    <i class="fas fa-check"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+
+
+                            @{
+                                var prevDisabled = ViewBag.CurrentPage <= 1 ? "disabled" : "";
+                                var nextDisabled = ViewBag.CurrentPage >= ViewBag.FinalPage ? "disabled" : "";
+                                //var disableAll =
+                            }
+                            <div class="row mt-2">
+                                <div class="col">
+                                    @String.Format("Showing {0} to {1} of {2} ", (ViewBag.LowerLimit + 1), ViewBag.UpperLimit, ViewBag.Count)
+                                </div>
+                                <div class="col-8">
+
+                                    <ul class="pagination">
+                                        <li class="page-item @prevDisabled">
+                                            <a asp-controller="ManagePins" asp-action="ViewPins"
+                                               asp-route-id="@recognitionType.Id"
+                                               asp-route-sortOrder="@ViewBag.SortOrder"
+                                               asp-route-searchQuery="@ViewBag.SearchQuery"
+                                               asp-route-pageNumber=""
+                                               class="page-link">
+                                                <i class="fas fa-angle-double-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item @prevDisabled">
+                                            <a asp-controller="ManagePins" asp-action="ViewPins"
+                                               asp-route-id="@recognitionType.Id"
+                                               asp-route-sortOrder="@ViewBag.SortOrder"
+                                               asp-route-searchQuery="@ViewBag.SearchQuery"
+                                               asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
+                                               class="page-link">
+                                                <i class="fas fa-angle-left"></i>
+                                            </a>
+                                        </li>
+                                        @foreach (var item in ViewBag.PaginationIndices)
+                                        {
+                                            <li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
+                                                <a asp-controller="ManagePins" asp-action="ViewPins"
+                                                   asp-route-id="@recognitionType.Id"
+                                                   asp-route-sortOrder="@ViewBag.SortOrder"
+                                                   asp-route-searchQuery="@ViewBag.SearchQuery"
+                                                   asp-route-pageNumber="@item"
+                                                   class="page-link">
+                                                    @item
+                                                </a>
+                                            </li>
+
+                                            @*<li class="@(item == ViewBag.CurrentPage ? "page-item active" : "page-item")">
+                            <a href="@Url.Action("Index", "Pins", new { sortOrder = ViewBag.SortOrder, searchQuery = ViewBag.SearchQuery, pageNumber = item })"
+                               class="page-link">
+                                @item
+                            </a>
+                        </li>*@
+
+                                        }
+                                        <li class="page-item @nextDisabled">
+                                            <a asp-controller="ManagePins" asp-action="ViewPins"
+                                               asp-route-id="@recognitionType.Id"
+                                               asp-route-sortOrder="@ViewBag.SortOrder"
+                                               asp-route-searchQuery="@ViewBag.SearchQuery"
+                                               asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
+                                               class="page-link">
+                                                <i class="fas fa-angle-right"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item @nextDisabled">
+                                            <a asp-controller="ManagePins" asp-action="ViewPins"
+                                               asp-route-id="@recognitionType.Id"
+                                               asp-route-sortOrder="@ViewBag.SortOrder"
+                                               asp-route-searchQuery="@ViewBag.SearchQuery"
+                                               asp-route-pageNumber="@ViewBag.FinalPage"
+                                               class="page-link">
+                                                <i class="fas fa-angle-double-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    @*<script src="~/lib/datatables/datatables.min.js"></script>
+    <script>
+        $(document).ready( function () {
+            $('#datatable-1').DataTable({
+                "order": [[ 0, "desc" ]]
+            });
+        } );
+    </script>*@
+}
+
