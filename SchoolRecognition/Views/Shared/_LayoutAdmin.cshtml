@@ -48,7 +48,7 @@
     <script src="~/lib/toastr/toastr.min.js"></script>
     <!-- AdminLTE App -->
     <script src="~/js/waeclte.min.js" asp-append-version="true"></script>
-    
+
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
@@ -66,8 +66,8 @@
             var lastLink = localStorage.getItem('lastLink');
             var currentLink = $(this).attr('href');
 
-            console.log(lastLink);
-            console.log(currentLink);
+            console.log(lastLink, "last");
+            console.log(currentLink, "current");
             if (currentLink) {
                 if (currentLink == '#') {
                 } else {
@@ -80,7 +80,7 @@
         });
 
 
-            //});
+                //});
 
     </script>
     @RenderSection("Scripts", required: false)

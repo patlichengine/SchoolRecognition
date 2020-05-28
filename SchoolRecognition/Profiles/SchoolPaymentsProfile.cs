@@ -41,14 +41,14 @@ namespace SchoolRecognition.Profiles
                     opt.MapFrom(src => $"{ src.Pin.SerialPin}");
                 })
                 .ForMember(
-                dest => dest.PinRecognitionTypeName,
+                dest => dest.RecognitionTypeName,
                 opt =>
                 {
                     opt.PreCondition(src => (src.Pin != null && src.Pin.RecognitionType != null));
                     opt.MapFrom(src => $"{ src.Pin.RecognitionType.Name}");
                 })
                 .ForMember(
-                dest => dest.PinRecognitionTypeCode,
+                dest => dest.RecognitionTypeCode,
                 opt =>
                 {
                     opt.PreCondition(src => (src.Pin != null && src.Pin.RecognitionType != null));

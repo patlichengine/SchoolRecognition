@@ -1,4 +1,6 @@
-﻿using SchoolRecognition.Models;
+﻿using SchoolRecognition.Helpers;
+using SchoolRecognition.Models;
+using SchoolRecognition.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +10,18 @@ namespace SchoolRecognition.Services
 {
     public interface ICentresRepository
     {
-        Task<CentresDto> GetCentreByCentreNumber(string centreNumber);
 
-        Task<IEnumerable<CentresDto>> GetAllCentres();        
-
-        //Task<CentresDto> UpdateCentre(Guid id, CentresDto centre);       
-
-        //Task<bool> CentreExists(Guid Id);
-        //Task<bool> Save();
+        Task<IEnumerable<CentresViewDto>> List();
+        Task<PagedList<CentresViewDto>> PagedList(CentresResourceParams resourceParams);
+        Task<CentresViewDto> Get(Guid id);
+        Task<CentresViewDto> GetByCentreNumber(string centerNo);
+        Task<Guid?> Create(CentresCreateDto _obj);
+        Task<CentresViewDto> Update(CentresCreateDto _obj);
+        Task Delete(Guid id); //return type is void
+        ///
+        Task<bool> Exists(string centreName);
+        Task<bool> Exists(Guid id, string centreName);
+        Task<bool> Exists(string centreName, string centreNo);
+        Task<bool> Exists(Guid id, string centreName, string centreNo);
     }
 }

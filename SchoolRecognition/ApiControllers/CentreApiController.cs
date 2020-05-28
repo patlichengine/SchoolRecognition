@@ -29,11 +29,11 @@ namespace SchoolRecognition.ApiControllers
 
         }
         [HttpGet]
-        public ActionResult<IEnumerable<CentresDto>> Get()
+        public ActionResult<IEnumerable<CentresCreateDto>> Get()
         {
 
 
-            var result = _centre.GetAllCentres().Result;
+            var result = _centre.List().Result;
 
             return Ok(result);
         }
@@ -50,7 +50,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _centre.GetCentreByCentreNumber(centrenumber).Result;
+            var result = _centre.GetByCentreNumber(centrenumber).Result;
             if (result == null)
             {
                 return NotFound();

@@ -70,7 +70,7 @@ namespace SchoolRecognition.Models
         public virtual PagedList<OfficeLocalGovernmentsViewDto> OfficeLgas { get; set; }
     }
 
-    public class OfficeViewPagedListSchoolsDto
+    public class OfficesViewPagedListSchoolsDto
     {
         public Guid Id { get; set; }
         public string OfficeName { get; set; }

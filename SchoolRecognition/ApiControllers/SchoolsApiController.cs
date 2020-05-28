@@ -23,9 +23,9 @@ namespace SchoolRecognition.ApiControllers
 
         // GET: api/Schools
         [HttpGet]
-        public ActionResult <IEnumerable<SchoolsDto>> Get()
+        public ActionResult <IEnumerable<SchoolsViewDto>> Get()
         {
-            var result = _schoolsRepository.GetAllSchools().Result;
+            var result = _schoolsRepository.List().Result;
 
             return Ok(result);
         }
@@ -39,7 +39,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _schoolsRepository.GetSchoolsById(schoolId).Result;
+            var result = _schoolsRepository.Get(schoolId).Result;
             if (result == null)
             {
                 return NotFound();
@@ -49,26 +49,23 @@ namespace SchoolRecognition.ApiControllers
 
         // POST: api/Schools
         [HttpPost]
-        public ActionResult<SchoolsDto> Post(CreateSchoolsDto createSchoolsDto)
+        public ActionResult<SchoolsCreateDto> Post(SchoolsCreateDto createSchoolsDto)
         {
             var result = _schoolsRepository.Create(createSchoolsDto).Result;
             //Return the named user using the specified URI name
 
             var final = CreatedAtRoute("GetSchool",
-                new { userId = result.Id }, result);
+                new { userId = result }, result);
             return Ok(final);
         }
 
         // PUT: api/Schools/5
         [HttpPut("{id}")]
-        public ActionResult Put(Guid id, UpdateSchoolsDto updateSchoolsDto)
+        public ActionResult Put(Guid id, SchoolsCreateDto updateSchoolsDto)
         {
-            if (!_schoolsRepository.SchoolsExists(id).Result)
-            {
-                return NotFound();
-            }
+  
 
-            var result = _schoolsRepository.Update(id, updateSchoolsDto).Result;
+            var result = _schoolsRepository.Update(updateSchoolsDto).Result;
 
             if (result == null)
             {
@@ -82,12 +79,7 @@ namespace SchoolRecognition.ApiControllers
         [HttpDelete("{id}")]
         public ActionResult Delete(Guid schoolId)
         {
-            if (!_schoolsRepository.SchoolsExists(schoolId).Result)
-            {
-                return NotFound();
-            }
-
-            var result = _schoolsRepository.DeleteSchools(schoolId);
+            var result = _schoolsRepository.Delete(schoolId);
             if (result == null)
             {
                 return NotFound();

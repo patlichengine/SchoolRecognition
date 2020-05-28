@@ -45,7 +45,7 @@ namespace SchoolRecognition.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var result = await schoolCategories.GetAllCategory();
+            var result = await schoolCategories.List();
 
             return PartialView(result);
         }
@@ -133,7 +133,7 @@ namespace SchoolRecognition.Controllers
         {
 
 
-            var result = schoolCategories.GetAllCategory().Result;
+            var result = schoolCategories.List().Result;
 
             return new JsonResult(new { data = result });
 

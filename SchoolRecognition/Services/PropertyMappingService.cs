@@ -114,8 +114,10 @@ namespace SchoolRecognition.Services
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {
                //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
-               { "TypeDescription", new PropertyMappingValue(new List<string>() { "Description" } )},
-               { "TypeDescriptionDesc", new PropertyMappingValue(new List<string>() { "Description" } , true)},
+               { "ReceiptNo", new PropertyMappingValue(new List<string>() { "ReceiptNo" } )},
+               { "ReceiptNoDesc", new PropertyMappingValue(new List<string>() { "ReceiptNo" } , true)},
+               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" } )},
+               { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" } , true)},
           };
         
         

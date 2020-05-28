@@ -21,7 +21,7 @@ namespace SchoolRecognition.Controllers
         // GET: School
         public async Task<IActionResult> Index()
         {
-            var result = await _schoolsRepository.GetAllSchools();
+            var result = await _schoolsRepository.List();
             return PartialView(result);
         }
 
@@ -40,7 +40,7 @@ namespace SchoolRecognition.Controllers
         // POST: School/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<SchoolsDto>> Create(CreateSchoolsDto createSchoolsDto)
+        public async Task<ActionResult<SchoolsViewDto>> Create(SchoolsCreateDto createSchoolsDto)
         {
             try
             {
@@ -55,9 +55,9 @@ namespace SchoolRecognition.Controllers
         }
 
         // GET: School/Edit/5
-        public async Task<ActionResult<SchoolsDto>> Edit(Guid id)
+        public async Task<ActionResult<SchoolsViewDto>> Edit(Guid id)
         {
-            var model = await _schoolsRepository.GetSchoolsById(id);
+            var model = await _schoolsRepository.Get(id);
 
             if (model == null)
             {
@@ -70,12 +70,12 @@ namespace SchoolRecognition.Controllers
         // POST: School/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, UpdateSchoolsDto school)
+        public async Task<IActionResult> Edit(Guid id, SchoolsCreateDto school)
         {
             try
             {
                 // TODO: Add update logic here
-                await _schoolsRepository.Update(id, school);
+                await _schoolsRepository.Update(school);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -88,7 +88,7 @@ namespace SchoolRecognition.Controllers
         // GET: School/Delete/5
         public ActionResult Delete(Guid id)
         {
-            _schoolsRepository.DeleteSchools(id);
+            _schoolsRepository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 

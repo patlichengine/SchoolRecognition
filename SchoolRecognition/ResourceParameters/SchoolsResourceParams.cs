@@ -19,7 +19,7 @@ namespace SchoolRecognition.ResourceParameters
             set => _pageSize = (value > maxPageSize) ? maxPageSize : value;
         }
 
-        public string OrderBy { get; set; } = "Name";
+        public string OrderBy { get; set; } = "SchoolName";
         public string Fields { get; set; }
     }
 }

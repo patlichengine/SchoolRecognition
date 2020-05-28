@@ -37,7 +37,7 @@ namespace SchoolRecognition.ApiControllers
         {
 
 
-            var result = _schoolCategories.GetAllCategory().Result;
+            var result = _schoolCategories.List().Result;
 
             return Ok(result);
 

@@ -3,9 +3,12 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SchoolRecognition.DbContexts;
 using SchoolRecognition.Entities;
+using SchoolRecognition.Helpers;
 using SchoolRecognition.Models;
+using SchoolRecognition.ResourceParameters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -13,16 +16,38 @@ namespace SchoolRecognition.Services
 {
     public class cSchoolsRepository : ISchoolsRepository, IDisposable
     {
+
+        //private readonly ConnectionString _connectionString;
+        //private IPinsRepository _pinService;
         private readonly SchoolRecognitionContext _context;
         private readonly IMapper _mapper;
+        private readonly IPropertyMappingService _propertyMappingService;
 
-        public cSchoolsRepository(SchoolRecognitionContext  context, IMapper mapper)
+        //public cRecognitionTypesRepository(ConnectionString connectionString)
+        //{
+        //    //_connectionString = connectionString;
+        //    //_pinService = new cPinsRepository(_connectionString);
+
+        //}
+
+        public cSchoolsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
         }
 
-      
+
+
+
+        #region Base Methods
+
+        async Task<bool> Save()
+        {
+            return await Task.Run(async () => {
+                return (await _context.SaveChangesAsync() >= 0);
+            });
+        }
 
         public void Dispose()
         {
@@ -38,203 +63,440 @@ namespace SchoolRecognition.Services
             }
         }
 
-       
-        // save category
-        public async Task<bool> Save()
-        {
-            return await Task.Run(async () =>
-            {
-                return (await _context.SaveChangesAsync() >= 0);
-            });
 
+
+        #endregion
+
+        public async Task<IEnumerable<SchoolsViewDto>> List()
+        {
+            //Instantiate Return Value
+            IEnumerable<SchoolsViewDto> returnValue = new List<SchoolsViewDto>();
+            try
+            {
+                var dbResult = await _context.Schools
+                    .Include(x=>x.Category)
+                    .Include(x => x.Office)
+                    .Include(x=>x.Lg)
+                    .ThenInclude(x=>x.State)
+                    .Select(x => new SchoolsViewDto()
+                    {
+                        Id = x.Id,
+                        SchoolName = x.Name,
+                        Address = x.Address,
+                        EmailAddress = x.EmailAddress,
+                        PhoneNo = x.PhoneNo,
+                        YearEstablished = x.YearEstablished,
+                        IsRecognised = x.IsRecognised,
+                        IsVetted = x.IsVetted,
+                        IsInspected = x.IsInspected,
+                        IsCompleted = x.IsCompleted,
+                        IsRecommended = x.IsRecommended,
+                        HasDeficientSubject = x.HasDeficientSubject,
+                        HasDeficientFacilitiy = x.HasDeficientFacilitiy,
+                        //SchoolCategory
+                        CategoryId = x.CategoryId,
+                        SchoolCategoryName = x.Category != null ? x.Category.Name : null,
+                        SchoolCategoryCode = x.Category != null ? x.Category.Code : null,
+                        //Office
+                        OfficeId = x.OfficeId,
+                        OfficeName = x.Office != null ? x.Office.Name : null,
+                        //LGA
+                        LgId = x.LgId,
+                        LgaName = x.Lg != null ? x.Lg.Name : null,
+                        LgaCode = x.Lg != null ? x.Lg.Code : null,
+                        //State
+                        StateName = x.Lg != null & x.Lg.State != null ? x.Lg.State.Name : null,
+                        StateCode = x.Lg != null & x.Lg.State != null ? x.Lg.State.Code : null,
+
+                    }).ToListAsync();
+
+                returnValue = dbResult;
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
-     
-        //Get category by Id
-        public async Task<SchoolsDto> GetSchoolsById(Guid id)
+        public async Task<PagedList<SchoolsViewDto>> PagedList(SchoolsResourceParams resourceParams)
         {
-            return await Task.Run(async () =>
+            //Instantiate Return Value
+            PagedList<SchoolsViewDto> returnValue = PagedList<SchoolsViewDto>
+                        .Create(Enumerable.Empty<SchoolsViewDto>().AsQueryable(),
+                            resourceParams.PageNumber,
+                            resourceParams.PageSize);
+
+            try
             {
-                if (id == Guid.Empty)
+                if (resourceParams != null)
                 {
-                    throw new ArgumentNullException(nameof(id));
+
+                    var dbResult = _context.Schools
+                    .Include(x => x.Category)
+                    .Include(x => x.Office)
+                    .Include(x => x.Lg)
+                    .ThenInclude(x => x.State) as IQueryable<Schools>;
+                    //Search
+                    if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
+                    {
+
+                        var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
+
+                        dbResult = dbResult.Where(
+                            a => a.Name.ToUpper().Contains(searchQuery)
+                            || a.EmailAddress.ToUpper().Contains(searchQuery)
+                            || a.PhoneNo.ToUpper().Contains(searchQuery)
+                            || (a.YearEstablished != null ? a.YearEstablished.Value.ToString() : "").ToUpper().Contains(searchQuery)
+                            || (a.Category != null ? a.Category.Name : "").ToUpper().Contains(searchQuery)
+                            || (a.Category != null ? a.Category.Code : "").ToUpper().Contains(searchQuery)
+                        );
+                    }
+                    //Ordering
+                    if (!string.IsNullOrWhiteSpace(resourceParams.OrderBy))
+                    {
+                        // get property mapping dictionary
+                        var recognitionTypePropertyMappingDictionary =
+                            _propertyMappingService.GetPropertyMapping<SchoolsViewDto, Schools>();
+
+                        dbResult = dbResult.ApplySort(resourceParams.OrderBy,
+                            recognitionTypePropertyMappingDictionary);
+                    }
+
+                    var mappedResult = dbResult.Select(x => new SchoolsViewDto()
+                    {
+                        Id = x.Id,
+                        SchoolName = x.Name,
+                        Address = x.Address,
+                        EmailAddress = x.EmailAddress,
+                        PhoneNo = x.PhoneNo,
+                        YearEstablished = x.YearEstablished,
+                        IsRecognised = x.IsRecognised,
+                        IsVetted = x.IsVetted,
+                        IsInspected = x.IsInspected,
+                        IsCompleted = x.IsCompleted,
+                        IsRecommended = x.IsRecommended,
+                        HasDeficientSubject = x.HasDeficientSubject,
+                        HasDeficientFacilitiy = x.HasDeficientFacilitiy,
+                        //SchoolCategory
+                        CategoryId = x.CategoryId,
+                        SchoolCategoryName = x.Category != null ? x.Category.Name : null,
+                        SchoolCategoryCode = x.Category != null ? x.Category.Code : null,
+                        //Office
+                        OfficeId = x.OfficeId,
+                        OfficeName = x.Office != null ? x.Office.Name : null,
+                        //LGA
+                        LgId = x.LgId,
+                        LgaName = x.Lg != null ? x.Lg.Name : null,
+                        LgaCode = x.Lg != null ? x.Lg.Code : null,
+                        //State
+                        StateName = x.Lg != null & x.Lg.State != null ? x.Lg.State.Name : null,
+                        StateCode = x.Lg != null & x.Lg.State != null ? x.Lg.State.Code : null,
+
+
+                    });
+
+                    returnValue = await PagedList<SchoolsViewDto>.CreateAsync(mappedResult,
+                        resourceParams.PageNumber,
+                        resourceParams.PageSize);
+
+                    return returnValue;
                 }
-
-               
-                
-                var result = await _context.Schools.Include(b => b.Category).Include(o => o.Office).Include(l => l.Lg).FirstOrDefaultAsync(c => c.Id == id );
-                //return the mapped object
-                return _mapper.Map<SchoolsDto>(result);
-            });
-        }
-
-        //Get all Category
-        public async Task<IEnumerable<SchoolsDto>> GetAllSchools()
-        {
-            return await Task.Run(async () =>
-            {
-                var result = await _context.Schools.Include(b => b.Category).Include(o => o.Office).Include(l => l.Lg).ToListAsync();
-                return _mapper.Map<IEnumerable<SchoolsDto>>(result);
-
-            });
-        }
-
-
-        //Create School Section
-        public async Task<SchoolsDto> Create(CreateSchoolsDto schools)
-        {
-            return await Task.Run(async () =>
-            {
-                if (schools == null)
+                else
                 {
-                    throw new ArgumentNullException(nameof(schools));
+                    throw new ArgumentNullException(nameof(resourceParams));
                 }
-                var schoolsEntity = _mapper.Map<Schools>(schools);
-                schoolsEntity.Id = Guid.NewGuid();
-              
-                _context.Schools.Add(schoolsEntity);
-
-                //call the save method
-                bool saveResult = await Save();
-
-                return _mapper.Map<SchoolsDto>(schoolsEntity);
-            });
-        }
-
-        public async Task<SchoolsDto> Update(Guid id, UpdateSchoolsDto categories)
-        {
-            return await Task.Run(async () =>
+            }
+            catch (Exception ex)
             {
-                if (categories == null)
-                {
-                    throw new ArgumentNullException(nameof(categories));
-                }
 
-                var user = await _context.Schools.Include(b => b.Category).Include(o => o.Office).Include(l => l.Lg).FirstOrDefaultAsync(c => c.Id == id);
-
-                if (user == null)
-                {
-                    throw new ArgumentNullException(nameof(user));
-                }
-                var categoryEntity =   _mapper.Map(user, user);
-
-                
-
-
-                _context.Schools.Update(categoryEntity);
-                bool save = await Save();
-
-                return _mapper.Map<SchoolsDto>(categoryEntity);
-            });
+                throw ex;
+            }
         }
 
+        public async Task<SchoolsViewDto> GetBySchoolName(string schoolName)
+        {
 
+            //Instantiate Return Value
+            SchoolsViewDto returnValue = null;
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(schoolName))
+                {
+                    var dbResult = _context.Schools
+                    .Include(x => x.Category)
+                    .Include(x => x.Office)
+                    .Include(x => x.Lg)
+                    .ThenInclude(x => x.State)
+                    .Include(x => x.PinHistories)
+                    .Include(x => x.SchoolClassAllocations)
+                    .ThenInclude(y => y.Class) 
+                    .Include(x=>x.SchoolDeficiencies)
+                    .Include(x=>x.SchoolFacilities)
+                    .ThenInclude(y=>y.FacilitySetting)
+                    .Include(x=>x.SchoolFacilities)
+                    .ThenInclude(y=>y.CreatedByNavigation)
+                    .Include(x=>x.SchoolPayments)
+                    .ThenInclude(y=>y.CreatedByNavigation)
+                    .Include(x=>x.SchoolPayments)
+                    .ThenInclude(y=>y.Pin)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.Title)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.Category)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.SchoolStaffDegrees)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.SchoolStaffSubjects)
+                    as IQueryable<Schools>;
+
+                    var schools = await dbResult
+                        .Where(x => x.Name == schoolName).SingleOrDefaultAsync();
+                    returnValue = _mapper.Map<SchoolsViewDto>(schools);
+                    //
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(schoolName));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
         
-
-        public async Task<bool> SchoolsExists(Guid catId)
+        public async Task<SchoolsViewDto> Get(Guid id)
         {
-            return await Task.Run(async () =>
+
+            //Instantiate Return Value
+            SchoolsViewDto returnValue = null;
+            try
             {
-                if (catId == Guid.Empty)
+                if (id != Guid.Empty)
                 {
-                    throw new ArgumentNullException(nameof(catId));
+                    var dbResult = _context.Schools
+                    .Include(x => x.Category)
+                    .Include(x => x.Office)
+                    .Include(x => x.Lg)
+                    .ThenInclude(x => x.State)
+                    .Include(x => x.PinHistories)
+                    .Include(x => x.SchoolClassAllocations)
+                    .ThenInclude(y => y.Class) 
+                    .Include(x=>x.SchoolDeficiencies)
+                    .Include(x=>x.SchoolFacilities)
+                    .ThenInclude(y=>y.FacilitySetting)
+                    .Include(x=>x.SchoolFacilities)
+                    .ThenInclude(y=>y.CreatedByNavigation)
+                    .Include(x=>x.SchoolPayments)
+                    .ThenInclude(y=>y.CreatedByNavigation)
+                    .Include(x=>x.SchoolPayments)
+                    .ThenInclude(y=>y.Pin)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.Title)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.Category)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.SchoolStaffDegrees)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.SchoolStaffSubjects)
+                    as IQueryable<Schools>;
+
+                    var schools = await dbResult
+                        .Where(x => x.Id == id).SingleOrDefaultAsync();
+                    returnValue = _mapper.Map<SchoolsViewDto>(schools);
+                    //
+                    return returnValue;
                 }
-
-                return await _context.Schools.AnyAsync(a => a.Id == catId);
-            });
-        }
-
-        public async Task<SchoolsDto> DeleteSchools(Guid schoolId)
-        {
-            return await Task.Run(async () =>
-            {
-                var user = await GetSchoolsById(schoolId);
-              //  var user = await _context.Schools.FirstOrDefaultAsync(c => c.Id == schoolId);
-                if (user == null)
-                {
-                    throw new ArgumentNullException(nameof(schoolId));
-                }
-
-                _context.Remove(user);
-                await Save();
-
-                return _mapper.Map<SchoolsDto>(user);
-            });
-        }
-
-        public async Task<SchoolCategoryDto> GetCategoryById(Guid id)
-        {
-            return await Task.Run(async () =>
-            {
-                if (id == Guid.Empty)
-                {
-                    throw new ArgumentNullException(nameof(id));
-                }
-
-                var result = await _context.SchoolCategories.FirstOrDefaultAsync(c => c.Id == id);
-                //return the mapped object
-                return _mapper.Map<SchoolCategoryDto>(result);
-            });
-        }
-
-        public async Task<IEnumerable<SchoolCategoryDto>> GetAllCategory()
-        {
-            return await Task.Run(async () =>
-            {
-                var result = await _context.SchoolCategories.ToListAsync<SchoolCategories>();
-                return _mapper.Map<IEnumerable<SchoolCategoryDto>>(result);
-
-            });
-        }
-
-        public async Task<OfficesViewDto> GetOfficesById(Guid id)
-        {
-            return await Task.Run(async () =>
-            {
-                if (id == Guid.Empty)
+                else
                 {
                     throw new ArgumentNullException(nameof(id));
                 }
+            }
+            catch (Exception ex)
+            {
 
-                var result = await _context.Offices.FirstOrDefaultAsync(c => c.Id == id);
-                //return the mapped object
-                return _mapper.Map<OfficesViewDto>(result);
-            });
+                throw ex;
+            }
         }
 
-        public async Task<IEnumerable<OfficesViewDto>> GetAllOffices()
+        public async Task<Guid?> Create(SchoolsCreateDto _obj)
         {
-            return await Task.Run(async () =>
+            //Instantiate Return Value
+            Guid? returnValue = null;
+            try
             {
-                var result = await _context.Offices.ToListAsync();
-                return _mapper.Map<IEnumerable<OfficesViewDto>>(result);
+                if (_obj != null && _obj.Id == Guid.Empty)
+                {
+                    Schools entity = _mapper.Map<Schools>(_obj);
+                    //
+                    entity.Id = Guid.NewGuid();
+                    await _context.Schools.AddAsync(entity);
+                    await this.Save();
 
-            });
+                    return returnValue = entity.Id;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(_obj));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
-        public async Task<LocalGovernmentsDto> GetLocalGovernmentsById(Guid id)
+        public async Task<SchoolsViewDto> Update(SchoolsCreateDto _obj)
         {
-            return await Task.Run(async () =>
+
+            //Instantiate Return Value
+            SchoolsViewDto returnValue = null;
+            try
             {
-                if (id == Guid.Empty)
+                if (_obj != null && _obj.Id != Guid.Empty)
+                {
+                    var entity = _mapper.Map<Schools>(_obj);
+
+                    _context.Update(entity);
+                    await this.Save();
+
+                    returnValue = _mapper.Map<SchoolsViewDto>(entity);
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(_obj));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task Delete(Guid id)
+        {
+            try
+            {
+                if (id != Guid.Empty)
+                {
+                    var entity = await _context.Schools.Where(x => x.Id == id).SingleOrDefaultAsync();
+                    if (entity != null)
+                    {
+                        _context.Remove(entity);
+                        await this.Save();
+
+                    }
+
+                }
+                else
                 {
                     throw new ArgumentNullException(nameof(id));
                 }
-
-                var result = await _context.LocalGovernments.FirstOrDefaultAsync(c => c.Id == id);
-                //return the mapped object
-                return _mapper.Map<LocalGovernmentsDto>(result);
-            });
-        }
-
-        public async Task<IEnumerable<LocalGovernmentsDto>> GetAllLocalGovernments()
-        {
-            return await Task.Run(async () =>
+            }
+            catch (Exception ex)
             {
-                var result = await _context.LocalGovernments.ToListAsync();
-                return _mapper.Map<IEnumerable<LocalGovernmentsDto>>(result);
 
-            });
+                throw ex;
+            }
         }
+
+        public async Task<bool> Exists(string schoolName)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (!String.IsNullOrWhiteSpace(schoolName))
+                {
+
+                    var searchQuery = schoolName.Trim().ToUpper();
+                    var dbResult = await _context.Schools.AnyAsync(x => x.Name.Trim().ToUpper() == searchQuery);
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(schoolName));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<bool> Exists(string schoolName, string schoolAddress)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (!String.IsNullOrWhiteSpace(schoolName))
+                {
+
+                    var schoolNameQuery = schoolName.Trim().ToUpper();
+                    var schoolAddressQuery = schoolName.Trim().ToUpper();
+                    var dbResult = await _context.Schools.AnyAsync(x => x.Name.Trim().ToUpper() == schoolNameQuery && x.Address.Trim().ToUpper() == schoolAddressQuery);
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(schoolName));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<bool> Exists(Guid id, string schoolName, string schoolAddress)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (!String.IsNullOrWhiteSpace(schoolName) && id != Guid.Empty)
+                {
+
+                    var schoolNameQuery = schoolName.Trim().ToUpper();
+                    var schoolAddressQuery = schoolName.Trim().ToUpper();
+                    bool dbResult = await _context.Schools.Where(x => x.Id != id).AnyAsync(x => x.Name.Trim().ToUpper() == schoolNameQuery && x.Address.Trim().ToUpper() == schoolAddressQuery);
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
     }
 }

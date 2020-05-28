@@ -313,11 +313,11 @@ namespace SchoolRecognition.Services
         }
 
 
-        public async Task<OfficeViewPagedListSchoolsDto> GetIncludingPagedListOfSchools(Guid id, SchoolsResourceParams resourceParams)
+        public async Task<OfficesViewPagedListSchoolsDto> GetIncludingPagedListOfSchools(Guid id, SchoolsResourceParams resourceParams)
         {
 
             //Instantiate Return Value
-            OfficeViewPagedListSchoolsDto returnValue = null;
+            OfficesViewPagedListSchoolsDto returnValue = null;
 
             //Instantiate Return Value
             PagedList<SchoolsViewDto> returnValueSchools = PagedList<SchoolsViewDto>
@@ -348,7 +348,7 @@ namespace SchoolRecognition.Services
                     .ThenInclude(x => x.Office)
                     .Where(x => x.Id == id) as IQueryable<Offices>;
 
-                    var office = await dbResult.Select(x => new OfficeViewPagedListSchoolsDto()
+                    var office = await dbResult.Select(x => new OfficesViewPagedListSchoolsDto()
                     {
                         Id = x.Id,
                         OfficeName = x.Name,
@@ -763,5 +763,7 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+        //
+
     }
 }

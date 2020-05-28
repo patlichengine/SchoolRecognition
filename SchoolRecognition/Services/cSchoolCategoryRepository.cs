@@ -68,7 +68,7 @@ namespace SchoolRecognition.Services
         }
 
         //Get all Category
-        public async Task<IEnumerable<SchoolCategoryDto>> GetAllCategory()
+        public async Task<IEnumerable<SchoolCategoryDto>> List()
         {
             return await Task.Run(async () =>
             {
@@ -161,7 +161,7 @@ namespace SchoolRecognition.Services
             });
         }
 
-        public Task<IEnumerable<SchoolsDto>> GetAllSchoolsForACategory()
+        public Task<IEnumerable<SchoolsViewDto>> GetAllSchoolsForACategory()
         {
             throw new NotImplementedException();
         }

@@ -10,30 +10,71 @@ namespace SchoolRecognition.Profiles
     {
         public SchoolsProfile()
         {
-            CreateMap<Entities.Schools, Models.SchoolsDto>()
-               .ForMember( dest => dest.Name,opt => opt.MapFrom(src => $"{src.Name}"))
-                 .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => $"{src.Category.Id}"))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => $"{src.Category.Name}"))
-                  .ForMember(dest => dest.LgId, opt => opt.MapFrom(src => $"{src.Lg.Id}"))
-                  .ForMember(dest => dest.LgName, opt => opt.MapFrom(src => $"{src.Lg.Name}"))
-                   .ForMember(dest => dest.OfficeId, opt => opt.MapFrom(src => $"{src.Office.Id}"))
-                  .ForMember(dest => dest.OfficeName, opt => opt.MapFrom(src => $"{src.Office.Name}"))
-                .ForMember(dest => dest.PhoneNo, opt => opt.MapFrom(src => $"{src.PhoneNo}"))
-            .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address}"));
+            CreateMap<Entities.Schools, Models.SchoolsViewDto>()
+               .ForMember(
+                dest => dest.SchoolName,
+                opt => opt.MapFrom(src => $"{src.Name}"))
+               //SchoolCategory
+               .ForMember(
+                dest => dest.SchoolCategoryName,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Category != null));
+                    opt.MapFrom(src => $"{src.Category.Name}");
+                })
+               .ForMember(
+                dest => dest.SchoolCategoryCode,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Category != null));
+                    opt.MapFrom(src => $"{src.Category.Code}");
+                })
+               //Office
+               .ForMember(
+                dest => dest.OfficeName,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Office != null));
+                    opt.MapFrom(src => $"{src.Office.Name}");
+                })
+               //LGA
+               .ForMember(
+                dest => dest.LgaName,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Lg != null));
+                    opt.MapFrom(src => $"{src.Lg.Name}");
+                })
+               .ForMember(
+                dest => dest.LgaCode,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Lg != null));
+                    opt.MapFrom(src => $"{src.Lg.Code}");
+                })
+               //State
+               .ForMember(
+                dest => dest.StateName,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Lg != null && src.Lg.StateId != null));
+                    opt.MapFrom(src => $"{src.Lg.State.Name}");
+                })
+               .ForMember(
+                dest => dest.StateCode,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Lg != null && src.Lg.StateId != null));
+                    opt.MapFrom(src => $"{src.Lg.State.Code}");
+                });
 
-            CreateMap<Models.CreateSchoolsDto, Entities.Schools>();
-            CreateMap<Models.UpdateSchoolsDto, Entities.Schools>();
 
 
-            CreateMap<Entities.Offices, Models.OfficesViewDto>();
-            CreateMap<Entities.SchoolCategories, Models.SchoolCategoryDto>();
-            CreateMap<Entities.LocalGovernments, Models.LocalGovernmentsDto>();
 
-            CreateMap<Models.SchoolsDto, Entities.Schools>();
-
-            CreateMap<Models.OfficesViewDto, Entities.Offices>();
-            CreateMap<Models.SchoolCategoryDto, Entities.SchoolCategories>();
-            CreateMap<Models.LocalGovernmentsDto, Entities.LocalGovernments>();
+            CreateMap<Models.SchoolsCreateDto, Entities.Schools>()
+               .ForMember(
+                dest => dest.Name,
+                opt => opt.MapFrom(src => $"{src.SchoolName}"));
 
         }
     }

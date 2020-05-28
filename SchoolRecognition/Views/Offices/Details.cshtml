@@ -1,6 +1,6 @@
 ﻿@model PagedList<SchoolsViewDto>
 @{
-    var office = (OfficeViewPagedListSchoolsDto)ViewData["Office"];
+    var office = (OfficesViewPagedListSchoolsDto)ViewData["Office"];
     var pages = (IEnumerable<int>)ViewData["Pages"];
     ViewData["Title"] = office.OfficeName;
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
