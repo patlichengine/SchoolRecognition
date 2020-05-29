@@ -173,10 +173,6 @@
     </script>
     <script>
         // add the rule here
-        jQuery.validator.setDefaults({
-            debug: true,
-            success: "valid"
-        });
         $.validator.addMethod("valueNotEquals", function (value, element, arg) {
             return arg !== value;
         }, "Select a valid value!");

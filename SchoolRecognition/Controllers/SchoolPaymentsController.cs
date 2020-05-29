@@ -263,6 +263,13 @@ namespace SchoolRecognition.Controllers
                         _flashMessage.Danger("Oops...Something went wrong!", "Attempted operation with incomplete or invalid data!");
                         return PartialView(model);
                     }
+
+                    if (String.IsNullOrWhiteSpace(model.SchoolName) && await _schoolsRepository.Exists(model.SchoolName))
+                    {
+
+                        _flashMessage.Danger("Duplicate Data Entry!", "A SCHOOL with this NAME has already exists in the system...");
+                        return PartialView(model);
+                    }
                     var result = await _schoolPaymentsRepository.Create(model);
 
                     if (result != null)
@@ -318,8 +325,8 @@ namespace SchoolRecognition.Controllers
             ViewBag.OfficeLocalGovernments = officeLocalGovernments.OrderBy(x => x.LocalGovernmentCode).Select(x =>
              new SelectListItem()
              {
-                 Text = $"{x.LocalGovernmentCode} {x.LocalGovernmentName} - {x.StateCode} {x.StateName}",
-                 Value = x.Id.ToString(),
+                 Text = $"{x.LocalGovernmentCode} {x.LocalGovernmentName} [ {x.StateCode} {x.StateName} ]",
+                 Value = x.LocalGovernmentId.ToString(),
              }).ToList();
 
             #endregion

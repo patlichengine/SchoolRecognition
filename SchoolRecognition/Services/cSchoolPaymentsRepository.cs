@@ -20,6 +20,8 @@ namespace SchoolRecognition.Services
         private readonly SchoolRecognitionContext _context;
         private readonly IMapper _mapper;
         private readonly IPropertyMappingService _propertyMappingService;
+        private readonly ISchoolsRepository _schoolsRepository;
+        private readonly IPinsRepository _pinsRepository;
 
         //public cRecognitionTypesRepository(ConnectionString connectionString)
         //{
@@ -28,11 +30,13 @@ namespace SchoolRecognition.Services
 
         //}
 
-        public cSchoolPaymentsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService)
+        public cSchoolPaymentsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService, ISchoolsRepository schoolsRepository, IPinsRepository pinsRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
+            _schoolsRepository = schoolsRepository ?? throw new ArgumentNullException(nameof(schoolsRepository));
+            _pinsRepository = pinsRepository ?? throw new ArgumentNullException(nameof(pinsRepository));
         }
 
 
@@ -240,13 +244,36 @@ namespace SchoolRecognition.Services
         {
             //Instantiate Return Value
             Guid? returnValue = null;
+            Guid? schoolId = null;
             try
             {
                 if (_obj != null && _obj.Id == Guid.Empty)
                 {
-                    SchoolPayments entity = _mapper.Map<SchoolPayments>(_obj);
+                    IEnumerable<PinsViewDto> activePinsNOTInUse = await _pinsRepository.ListActivePinsNOTInUseByRecognitionTypeId(_obj.RecognitionTypeId.Value);
+                    List<PinsViewDto> listOfActivePinsNOTInUse = activePinsNOTInUse.ToList();
                     //
+                    int totalListOfActivePinsNOTInUse = listOfActivePinsNOTInUse.Count();
+
+                    Random random = new Random();
+                    int randomNumber = random.Next(-1, totalListOfActivePinsNOTInUse);
+
+                    var pin = listOfActivePinsNOTInUse[randomNumber];
+
+
+                    SchoolPayments entity = _mapper.Map<SchoolPayments>(_obj);
+                    schoolId = _obj.SchoolId;
+                    //
+                    if (_obj.SchoolId == null || (_obj.SchoolId != null && _obj.SchoolId.Value == Guid.Empty))
+                    {
+                        SchoolsCreateDto schoolObj = _mapper.Map<SchoolsCreateDto>(_obj);
+
+                        schoolId = await _schoolsRepository.Create(schoolObj);
+                    }
                     entity.Id = Guid.NewGuid();
+                    entity.PinId = pin.Id;
+                    entity.DateCreated = DateTime.Now;
+                    entity.SchoolId = schoolId;
+
                     await _context.SchoolPayments.AddAsync(entity);
                     await this.Save();
 
@@ -394,17 +421,21 @@ namespace SchoolRecognition.Services
                     Name = x.Name
 
                 }).ToListAsync();
-                
+
 
                 var officeLocalGovernments = await _context.OfficeLocalGovernments
-                    .Include(x=>x.LocalGovernment)
+                    .Include(x => x.LocalGovernment)
+                    .ThenInclude(y => y.State)
                     .Select(x => new OfficeLocalGovernmentsViewDto()
-                {
-                    Id = x.Id,
-                    LocalGovernmentCode = x.LocalGovernment != null ? x.LocalGovernment.Code : null,
-                    LocalGovernmentName = x.LocalGovernment != null ? x.LocalGovernment.Name : null,
+                    {
+                        Id = x.Id,
+                        LocalGovernmentId  = x.LocalGovernmentId != null ? x.LocalGovernmentId.Value : Guid.Empty,
+                        LocalGovernmentCode = x.LocalGovernment != null ? x.LocalGovernment.Code : null,
+                        LocalGovernmentName = x.LocalGovernment != null ? x.LocalGovernment.Name : null,
+                        StateCode = x.LocalGovernment != null && x.LocalGovernment.State != null ? x.LocalGovernment.State.Code : null,
+                        StateName = x.LocalGovernment != null && x.LocalGovernment.State != null ? x.LocalGovernment.State.Name : null,
 
-                }).ToListAsync();
+                    }).ToListAsync();
 
 
                 returnValue.SchoolCategorys = schoolCategorys;

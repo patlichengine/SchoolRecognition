@@ -20,6 +20,9 @@ namespace SchoolRecognition.Profiles
                 dest => dest.PaymentReceiptImage,
                 opt => opt.MapFrom(src => $"{src.ReceiptImage}"))
                 .ForMember(
+                dest => dest.AmountPaid,
+                opt => opt.MapFrom(src => src.Amount))
+                .ForMember(
                 dest => dest.SchoolName,
                 opt =>
                 {
@@ -54,6 +57,20 @@ namespace SchoolRecognition.Profiles
                     opt.PreCondition(src => (src.Pin != null && src.Pin.RecognitionType != null));
                     opt.MapFrom(src => $"{ src.Pin.RecognitionType.Code}");
                 });
+
+
+            CreateMap<SchoolPaymentsCreateDto, SchoolPayments>()
+                .ForMember(
+                dest => dest.ReceiptNo,
+                opt => opt.MapFrom(src => $"{src.PaymentReceiptNo}"))
+                .ForMember(
+                dest => dest.ReceiptImage,
+                opt => opt.MapFrom(src => $"{src.PaymentReceiptImage}"))
+                .ForMember(
+                dest => dest.Amount,
+                opt => opt.MapFrom(src => src.AmountPaid));
+
+            CreateMap<SchoolPaymentsCreateDto, SchoolsCreateDto>();
         }
     }
 }

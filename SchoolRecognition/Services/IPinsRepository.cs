@@ -13,6 +13,7 @@ namespace SchoolRecognition.Services
     {
 
         Task<IEnumerable<PinsViewDto>> List();
+        Task<IEnumerable<PinsViewDto>> ListActivePinsNOTInUseByRecognitionTypeId(Guid recognitionTypeId);
         Task<PagedList<PinsViewDto>> PagedList(PinsResourceParams resourceParams);
         Task<PinsViewDto> Get(Guid id);
         Task<PinsViewDto> GetIncludingListOfPinHistories(Guid id);
