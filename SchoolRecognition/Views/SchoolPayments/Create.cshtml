@@ -1,18 +1,13 @@
 ﻿@model SchoolPaymentsCreateDto
 @{
-    var schoolCategorys = (IEnumerable<SelectListItem>)ViewData["SchoolCategorys"];
+    //var schoolCategorys = (IEnumerable<SelectListItem>)ViewData["SchoolCategorys"];
     var recognitionTypes = (IEnumerable<SelectListItem>)ViewData["RecognitionTypes"];
     ViewData["Title"] = "Make Payment";
     //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-@section styles{
-
-    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
-    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
-    <link href="~/lib/fileuploads/css/dropify.css" rel="stylesheet" />
-}
+<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+<link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
+<link href="~/lib/fileuploads/css/dropify.css" rel="stylesheet" />
 
 
 <!-- Content Header (Page header) -->
@@ -49,7 +44,10 @@
                 <div class="card-body" style="min-height:350px">
 
 
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Create" enctype="multipart/form-data" method="post">
+
+
+                        <small class="text-muted mt-1 mb-2">All fields marked <b class="text-dark">*</b> are required!</small>
 
                         @Html.AntiForgeryToken()
 
@@ -64,13 +62,17 @@
                             <span asp-validation-for="RecognitionTypeId" class="text-danger"></span>
                         </div>
 
+                        <div id="dvReconitionTypeInputs"></div>
+
+
+                        <h5 style="font-weight: 100">Payment Details</h5>
                         <div class="row">
 
                             <div class="col-md-4">
 
                                 <div class="form-group">
                                     <label asp-for="AmountPaid">*Amount Paid:</label>
-                                    <input min="1" maxlength="100000" type="number" asp-for="AmountPaid" class="form-control" placeholder="Enter Amount Paid" required>
+                                    <input min="1" max="10000000" type="number" asp-for="AmountPaid" class="form-control" placeholder="Enter Amount Paid" required>
                                 </div>
 
                             </div>
@@ -91,6 +93,7 @@
 
                             <label for="receiptImage">Reciept Image</label>
                             <input type="file" class="dropify" name="receiptImage" accept="image/jpg, image/png, image/gif, image/jpeg" data-height="300" />
+
 
                         </div>
 
@@ -119,7 +122,6 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/loading_icon.js"></script>
     @*<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
@@ -148,27 +150,153 @@
         });
     </script>
     <script>
+        $(function () {
+            $('#RecognitionTypeId').change(function () {
+
+                var _recognitionType = $('#RecognitionTypeId option:selected').html();
+
+                var _url = '@Url.Action("ResolvePartialView")'
+
+                console.log(_recognitionType);
+
+                return $.ajax({
+                    type: 'GET',
+                    url: _url,
+                    data: "recognitionTypeName=" + _recognitionType,
+                    success: function (data) {
+
+                        $('#dvReconitionTypeInputs').html(data);
+                    }
+                 });
+            });
+        });
+    </script>
+    <script>
         // add the rule here
-         $.validator.addMethod("valueNotEquals", function(value, element, arg){
-          return arg !== value;
-         }, "Select a valid value!");
+        jQuery.validator.setDefaults({
+            debug: true,
+            success: "valid"
+        });
+        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+            return arg !== value;
+        }, "Select a valid value!");
         $("form").validate({
             rules: {
                 RecognitionTypeId: {
                     required: true,
+                    valueNotEquals: ""
                     //min: 1
-                }
+                },
+                AmountPaid: {
+                    required: true,
+                    min: 1,
+                    max: 100000
+                },
+                PaymentReceiptNo: {
+                    required: true,
+                    minlength: 5,
+                    maxlength: 20
+                },
+                receiptImage: {
+                    required: true,
+                    accept: "image/*"
+                },
+                //School Information
+                SchoolName: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 300
+                },
+                YearEstablished: {
+                    required: true,
+                    min: 1500,
+                    max: 9999
+                },
+                Address: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 500
+                },
+                LgId: {
+                    required: true,
+                    valueNotEquals: ""
+                    //min: 1
+                },
+                PhoneNo: {
+                    required: true,
+                    minlength: 4,
+                    maxlength: 20
+                },
+                EmailAddress: {
+                    required: true,
+                    email: true
+                },
+                //Centre Information
+                CentreNo: {
+                    required: true,
+                    minlength: 7,
+                    maxlength: 7
+                },
+
             },
             messages: {
                 RecognitionTypeId: {
                     required: "This field is required!",
-                    valueNotEquals: ""
-                }
+                    valueNotEquals: "Select a valid option!"
+                },
+                AmountPaid: {
+                    required: "This field is required!",
+                    min: "This field must be a positive number!",
+                    max: "This field must be less than 10,000,000!"
+                },
+                PaymentReceiptNo: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 5 characters!",
+                    maxlength: "This field must have less than 20 characters!",
+                },
+                receiptImage: {
+                    required: "This field is required!",
+                    accept: "This field only accepts image files!",
+                },
+                //School Information
+                SchoolName: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 10 characters!",
+                    maxlength: "This field must have less than 300 characters!",
+                },
+                YearEstablished: {
+                    required: "This field is required!",
+                    min: "This field must be greater than 1500!",
+                    max: "This field must be less 9999!"
+                },
+                Address: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 3 characters!",
+                    maxlength: "This field must have less than 500 characters!",
+                },
+                LgId: {
+                    required: "This field is required!",
+                    valueNotEquals: "Select a valid input!"
+                    //min: 1
+                },
+                PhoneNo: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 4 characters!",
+                    maxlength: "This field must have less than 20 characters!",
+                },
+                EmailAddress: {
+                    required: "This field is required!",
+                    email: "This field must be a valid email address!"
+                },
+                //Centre Information
+                CentreNo: {
+                    required: "This field is required!",
+                    minlength: "Invalid Centre Number!",
+                    maxlength: "Invalid Centre Number!",
+                },
             }
         });
     </script>
-
-}
 
 <script type="text/javascript" src="~/js/linkClick.js"></script>
 

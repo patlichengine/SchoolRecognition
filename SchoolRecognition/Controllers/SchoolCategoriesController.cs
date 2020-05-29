@@ -56,7 +56,7 @@ namespace SchoolRecognition.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<SchoolCategoryDto>> Create(CreateSchoolCategoryDto model)
+        public async Task<ActionResult<SchoolCategorysViewDto>> Create(SchoolCategorysCreateDto model)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +71,7 @@ namespace SchoolRecognition.Controllers
         }
 
         //[HttpGet("{id}")]
-        public async Task<ActionResult<SchoolCategoryDto>> Edit(Guid id)
+        public async Task<ActionResult<SchoolCategorysViewDto>> Edit(Guid id)
         {
 
 

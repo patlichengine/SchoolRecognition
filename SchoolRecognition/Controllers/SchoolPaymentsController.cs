@@ -18,6 +18,7 @@ using SchoolRecognition.ResourceParameters;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Http;
 using Humanizer;
+using NToastNotify;
 
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -29,20 +30,24 @@ namespace SchoolRecognition.Controllers
     public class SchoolPaymentsController : Controller
     {
         private IFlashMessage _flashMessage;
+        private readonly IToastNotification _toastNotification;
         private IRecognitionTypesRepository _recognitionTypesRepository;
         private ISchoolPaymentsRepository _schoolPaymentsRepository;
         private ISchoolsRepository _schoolsRepository;
         private ISchoolCategoryRepository _schoolCategorysRepository;
         private ICentresRepository _centresRepository;
         private readonly IMapper _mapper;
+        private byte[] paymentReceiptImage = new byte[] { };
 
         //
         private int _defaultFileSizeLimit = 1100000;
 
-        public SchoolPaymentsController(IFlashMessage flashMessage, IRecognitionTypesRepository recognitionTypesRepository, ISchoolPaymentsRepository schoolPaymentsRepository, ISchoolCategoryRepository schoolCategorysRepository, ISchoolsRepository schoolsRepository, ICentresRepository centresRepository, IMapper mapper)
+        public SchoolPaymentsController(IFlashMessage flashMessage, IToastNotification toastNotification, IRecognitionTypesRepository recognitionTypesRepository, ISchoolPaymentsRepository schoolPaymentsRepository, ISchoolCategoryRepository schoolCategorysRepository, ISchoolsRepository schoolsRepository, ICentresRepository centresRepository, IMapper mapper)
         {
             _flashMessage = flashMessage ??
                 throw new ArgumentNullException(nameof(mapper));
+            _toastNotification = toastNotification ??
+                throw new ArgumentNullException(nameof(toastNotification));
             _recognitionTypesRepository = recognitionTypesRepository ??
                throw new ArgumentNullException(nameof(recognitionTypesRepository));
             _schoolPaymentsRepository = schoolPaymentsRepository ??
@@ -181,31 +186,24 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
-
                 #region SelectLists
 
-                var schoolCategorys = await _schoolCategorysRepository.List();
-                //
-                ViewData["SchoolCategorys"] = schoolCategorys.OrderBy(x => x.Name).Select(x =>
-                 new SelectListItem()
-                 {
-                     Text = x.Name,
-                     Value = x.Id.ToString(),
-                 }).ToList();
-
                 var recognitionTypes = await _recognitionTypesRepository.List();
+
                 //
-                ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
+                ViewBag.RecognitionTypes = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
                  new SelectListItem()
                  {
                      Text = $"{x.RecognitionTypeName}",
                      Value = x.Id.ToString(),
                  }).ToList();
 
+
                 #endregion
 
+
                 _flashMessage.Info("Hint:", "All uploaded files must be less than {0}", (_defaultFileSizeLimit).Bytes().Humanize("0.00"));
-                return View();
+                return PartialView();
             }
             catch (Exception)
             {
@@ -220,69 +218,170 @@ namespace SchoolRecognition.Controllers
         {
 
 
-
-
             #region SelectLists
 
-            var schoolCategorys = await _schoolCategorysRepository.List();
-            //
-            ViewData["SchoolCategorys"] = schoolCategorys.OrderBy(x => x.Name).Select(x =>
-             new SelectListItem()
-             {
-                 Text = x.Name,
-                 Value = x.Id.ToString(),
-             }).ToList();
-
             var recognitionTypes = await _recognitionTypesRepository.List();
+
             //
-            ViewData["RecognitionTypes"] = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
+            ViewBag.RecognitionTypes = recognitionTypes.OrderBy(x => x.RecognitionTypeName).Select(x =>
              new SelectListItem()
              {
                  Text = $"{x.RecognitionTypeName}",
                  Value = x.Id.ToString(),
              }).ToList();
 
+
             #endregion
 
             try
             {
+                if (receiptImage == null)
+                {
+
+                    _flashMessage.Danger("Oops...Something went wrong!", "Upload a valid RECEIPT IMAGE!");
+                    return PartialView(model);
+                }
                 if (receiptImage != null && receiptImage.Length > _defaultFileSizeLimit)
                 {
                     _flashMessage.Danger("File is too large!", "Your file is {0}! File must be less than {1}", (receiptImage.Length).Bytes().Humanize("0.00"), (_defaultFileSizeLimit).Bytes().Humanize("0.00"));
-                    return View(model);
+                    return PartialView(model);
                 }
                 if (ModelState.IsValid)
                 {
 
 
                     //Check if entry with similar data already exists
-                    if (await _schoolsRepository.Exists(model.SchoolName))
+                    if (await _schoolPaymentsRepository.Exists(model.PaymentReceiptNo))
                     {
 
-                        _flashMessage.Danger("Duplicate Data Entry!", "An School with the same Name already exists in the system...");
-                        return View(model);
+                        _flashMessage.Danger("Duplicate Data Entry!", "A RECEIPT with this Reciept Number has already been used in the system...");
+                        return PartialView(model);
                     }
+                    if (model.SchoolId == null && String.IsNullOrWhiteSpace(model.SchoolName))
+                    {
 
+                        _flashMessage.Danger("Oops...Something went wrong!", "Attempted operation with incomplete or invalid data!");
+                        return PartialView(model);
+                    }
                     var result = await _schoolPaymentsRepository.Create(model);
 
                     if (result != null)
                     {
-                        _flashMessage.Confirmation("Operation Completed", "New SchoolPayment Added Successfully!");
+                        _flashMessage.Confirmation("Operation Completed", "New Payment Made Successfully!");
                         return RedirectToAction("Index", "SchoolPayments");
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        return PartialView(model);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return View(model);
+                return PartialView(model);
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+
+
+
+        #region SelectListResolver
+
+
+        [Route("resolve_recognition_type")]
+        [HttpGet]
+        public async Task<IActionResult> ResolvePartialView(string recognitionTypeName)
+        {
+
+
+            #region SelectLists
+
+            var creationDependencys = await _schoolPaymentsRepository.GetCreationDependencys();
+
+
+            var schoolCategorys = creationDependencys.SchoolCategorys;
+            var officeLocalGovernments = creationDependencys.OfficeLocalGovernments;
+
+            //
+            ViewBag.SchoolCategorys = schoolCategorys.OrderBy(x => x.Name).Select(x =>
+             new SelectListItem()
+             {
+                 Text = x.Name,
+                 Value = x.Id.ToString(),
+             }).ToList();
+
+
+            //
+            ViewBag.OfficeLocalGovernments = officeLocalGovernments.OrderBy(x => x.LocalGovernmentCode).Select(x =>
+             new SelectListItem()
+             {
+                 Text = $"{x.LocalGovernmentCode} {x.LocalGovernmentName} - {x.StateCode} {x.StateName}",
+                 Value = x.Id.ToString(),
+             }).ToList();
+
+            #endregion
+
+            if (!String.IsNullOrWhiteSpace(recognitionTypeName))
+            {
+
+                string _recognitionTypeName = recognitionTypeName.ToLower().MakeAlphaNumeric();
+
+                _recognitionTypeName = _recognitionTypeName.Camelize();
+                string partialView = $"_{_recognitionTypeName}";
+
+                if (_recognitionTypeName == "derecognition")
+                {
+
+                    _toastNotification.AddInfoToastMessage($"Payment for {_recognitionTypeName} is not supported as the moment!");
+
+                }
+
+                return PartialView(partialView);
+            }
+
+            return BadRequest();
+        }
+        
+
+
+        [Route("resolve_centre")]
+        [HttpGet]
+        public async Task<IActionResult> ValidateCentreNo(string centreNo)
+        {
+
+
+
+            if (!String.IsNullOrWhiteSpace(centreNo))
+            {
+
+                var centre = await _centresRepository.GetByCentreNumber(centreNo);
+
+                if (centre == null)
+                {
+
+
+                    _toastNotification.AddErrorToastMessage($"Invalid Centre Number!");
+
+                    return NotFound();
+                }
+
+                var result = new 
+                {
+                    SchoolName = centre.CentreName
+                };
+
+                return Json(result);
+            }
+
+            return BadRequest();
+        }
+
+
+
+        #endregion
+
     }
 }

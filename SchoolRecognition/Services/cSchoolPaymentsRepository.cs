@@ -380,5 +380,44 @@ namespace SchoolRecognition.Services
             }
         }
 
+        public async Task<SchoolPaymentsCreationDependecyDto> GetCreationDependencys()
+        {
+            //Instantiate Return Value
+            SchoolPaymentsCreationDependecyDto returnValue = new SchoolPaymentsCreationDependecyDto();
+            try
+            {
+
+                var schoolCategorys = await _context.SchoolCategories.Select(x => new SchoolCategorysViewDto()
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    Name = x.Name
+
+                }).ToListAsync();
+                
+
+                var officeLocalGovernments = await _context.OfficeLocalGovernments
+                    .Include(x=>x.LocalGovernment)
+                    .Select(x => new OfficeLocalGovernmentsViewDto()
+                {
+                    Id = x.Id,
+                    LocalGovernmentCode = x.LocalGovernment != null ? x.LocalGovernment.Code : null,
+                    LocalGovernmentName = x.LocalGovernment != null ? x.LocalGovernment.Name : null,
+
+                }).ToListAsync();
+
+
+                returnValue.SchoolCategorys = schoolCategorys;
+                returnValue.OfficeLocalGovernments = officeLocalGovernments;
+                
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

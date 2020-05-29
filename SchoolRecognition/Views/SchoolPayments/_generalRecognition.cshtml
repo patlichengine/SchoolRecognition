@@ -1,0 +1,92 @@
+﻿@model SchoolPaymentsCreateDto
+
+<hr />
+<h5 style="font-weight: 100">School Information</h5>
+
+<div class="form-group">
+    <label asp-for="CategoryId">School Category</label>
+    <select asp-for="CategoryId" asp-items="ViewBag.SchoolCategorys" class="form-control" required>
+        <option value="">--Select School Category---</option>
+    </select>
+    <span asp-validation-for="CategoryId" class="text-danger"></span>
+</div>
+<div class="row">
+
+    <div class="col-md-8">
+
+        <div class="form-group">
+            <label asp-for="SchoolName" class="control-label">School Name</label>
+            <input asp-for="SchoolName" minlength="10" maxlength="300" class="form-control" placeholder="Enter Name of School" autocomplete="off" />
+            <span asp-validation-for="SchoolName" class="text-danger"></span>
+        </div>
+
+    </div>
+    <div class="col-md-4">
+
+        <div class="form-group">
+            <label asp-for="YearEstablished" class="control-label">*Year Established</label>
+            <input min="1500" max="9999" asp-for="YearEstablished" class="form-control" placeholder="Enter Year Established" autocomplete="off" />
+            <span asp-validation-for="YearEstablished" class="text-danger"></span>
+        </div>
+
+    </div>
+
+</div>
+<div class="row">
+
+    <div class="col-md-6">
+
+        <div class="form-group">
+            <label asp-for="Address" class="control-label">*Address</label>
+            <input minlength="3" maxlength="500" asp-for="Address" class="form-control" placeholder="Enter School Address" autocomplete="off" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+
+        <div class="form-group">
+            <label asp-for="LgId">LGA</label>
+            <select asp-for="LgId" asp-items="ViewBag.OfficeLocalGovernments" class="form-control" required>
+                <option value="">--Select Local Government---</option>
+            </select>
+            <span asp-validation-for="LgId" class="text-danger"></span>
+        </div>
+
+    </div>
+
+</div>
+<div class="row">
+
+    <div class="col-md-6">
+
+        <div class="form-group">
+            <label asp-for="PhoneNo" class="control-label">*Phone No.</label>
+            <input minlength="4" maxlength="20" type="tel" asp-for="PhoneNo" class="form-control" placeholder="Enter Phone Number" autocomplete="off" />
+            <span asp-validation-for="PhoneNo" class="text-danger"></span>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+
+        <div class="form-group">
+            <label asp-for="EmailAddress" class="control-label">Email</label>
+            <input type="email" asp-for="EmailAddress" class="form-control" placeholder="Enter Email Address" autocomplete="off" />
+            <span asp-validation-for="EmailAddress" class="text-danger"></span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<hr />
+<script>
+    $(document).ready(function () {
+        $('select.form-control').select2({
+            theme: 'bootstrap4'
+        });
+        //$('.select2me').select2();
+
+    });
+</script>

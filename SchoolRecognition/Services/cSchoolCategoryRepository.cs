@@ -52,7 +52,7 @@ namespace SchoolRecognition.Services
 
      
         //Get category by Id
-        public async Task<SchoolCategoryDto> GetCategoryById(Guid id)
+        public async Task<SchoolCategorysViewDto> GetCategoryById(Guid id)
         {
             return await Task.Run(async () =>
             {
@@ -63,17 +63,17 @@ namespace SchoolRecognition.Services
 
                 var result = await _context.SchoolCategories.FirstOrDefaultAsync(c => c.Id == id);
                 //return the mapped object
-                return _mapper.Map<SchoolCategoryDto>(result);
+                return _mapper.Map<SchoolCategorysViewDto>(result);
             });
         }
 
         //Get all Category
-        public async Task<IEnumerable<SchoolCategoryDto>> List()
+        public async Task<IEnumerable<SchoolCategorysViewDto>> List()
         {
             return await Task.Run(async () =>
             {
                 var result = await _context.SchoolCategories.ToListAsync<SchoolCategories>();
-                return _mapper.Map<IEnumerable<SchoolCategoryDto>>(result);
+                return _mapper.Map<IEnumerable<SchoolCategorysViewDto>>(result);
 
             });
         }
@@ -83,7 +83,7 @@ namespace SchoolRecognition.Services
 
        
 
-        public async Task<SchoolCategoryDto> Create(CreateSchoolCategoryDto categories)
+        public async Task<SchoolCategorysViewDto> Create(SchoolCategorysCreateDto categories)
         {
             return await Task.Run(async () =>
             {
@@ -100,11 +100,11 @@ namespace SchoolRecognition.Services
                 //call the save method
                 bool saveResult = await Save();
 
-                return _mapper.Map<SchoolCategoryDto>(categoryEntity);
+                return _mapper.Map<SchoolCategorysViewDto>(categoryEntity);
             });
         }
 
-        public async Task<SchoolCategoryDto> Update(Guid id, UpdateSchoolCategoryDto categories)
+        public async Task<SchoolCategorysViewDto> Update(Guid id, UpdateSchoolCategoryDto categories)
         {
             return await Task.Run(async () =>
             {
@@ -126,12 +126,12 @@ namespace SchoolRecognition.Services
                 _context.SchoolCategories.Update(val);
                 bool save = await Save();
 
-                return _mapper.Map<SchoolCategoryDto>(val);
+                return _mapper.Map<SchoolCategorysViewDto>(val);
             });
         }
 
 
-        public async Task<SchoolCategoryDto> DeleteSchoolCategory(Guid catId)
+        public async Task<SchoolCategorysViewDto> DeleteSchoolCategory(Guid catId)
         {
             return await Task.Run(async () =>
             {
@@ -144,7 +144,7 @@ namespace SchoolRecognition.Services
                 _context.SchoolCategories.Remove(user);
                 await Save();
 
-                return _mapper.Map<SchoolCategoryDto>(user);
+                return _mapper.Map<SchoolCategorysViewDto>(user);
             });
         }
 

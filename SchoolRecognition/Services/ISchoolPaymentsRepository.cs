@@ -21,6 +21,8 @@ namespace SchoolRecognition.Services
         ///
         Task<bool> Exists(string receiptNo);
         Task<bool> Exists(Guid id, string receiptNo);
+        //
+        Task<SchoolPaymentsCreationDependecyDto> GetCreationDependencys();
 
     }
 }

@@ -21,7 +21,6 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="SchoolPayments" asp-action="Index">Manage Payments</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -40,7 +39,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">List of @ViewData["Title"]</h3>
+                    <h3 class="card-title">List of Payments for Recognition</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -49,8 +48,8 @@
                     <div class="clearfix mb-3">
                         <div class="float-right">
                             <a asp-area="" asp-action="Create" class="btn btn-light">
-                                <i class="fas fa-plus"></i>
-                                New SchoolPayment
+                                <i class="fas fa-credit-card"></i>
+                                Make New Payment
                             </a>
                         </div>
                     </div>
@@ -114,12 +113,13 @@
 
                         <thead>
                             <tr role="row">
-                                <td>Date</td>
+                                <td data-toggle="tooltip" data-placement="top" title="Payment Date">Date</td>
                                 <td data-toggle="tooltip" data-placement="top" title="Recognition Type">RT</td>
                                 <td>School</td>
-                                <td>PIN Number</td>
-                                <td data-toggle="tooltip" data-placement="top" title="Amount Paid">Amount</td>
+                                <td>PIN No.</td>
+                                <td data-toggle="tooltip" data-placement="top" title="Amount Paid">Amt.</td>
                                 <td>Receipt No.</td>
+                                <td>Created By</td>
                                 <td></td>
                             </tr>
                         </thead>
@@ -133,7 +133,7 @@
                                 <td>@item.PinSerialNumber</td>
                                 <td>@(item.AmountPaid != null ? item.AmountPaid.Value.ToString("#,##0") : "NOT STATED")</td>
                                 <td>@item.PaymentReceiptNo</td>
-
+                                <td>@(item.CreatedByUser!= null ? item.CreatedByUser : "NOT STATED")</td>
                                 <td class="text-center p-1">
                                     <a asp-action="Details" asp-controller="SchoolPayments" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
                                         <i class="fas fa-desktop"></i>
@@ -146,7 +146,7 @@
                             @if (Model.TotalCount < 1)
                             {
                                 <tr>
-                                    <td class="text-center" colspan="7">
+                                    <td class="text-center" colspan="8">
                                         No data available in table
                                     </td>
                                 </tr>

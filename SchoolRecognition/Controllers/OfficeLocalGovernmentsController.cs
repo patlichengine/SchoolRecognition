@@ -274,7 +274,7 @@ namespace SchoolRecognition.Controllers
 
 
 
-        #region SelectListResolver
+        #region Helpers
 
 
         [Route("list_offices")]

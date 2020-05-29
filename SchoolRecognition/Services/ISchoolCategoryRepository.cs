@@ -14,18 +14,18 @@ namespace SchoolRecognition.Services
 
 
 
-        public Task<SchoolCategoryDto> GetCategoryById(Guid id);
+        public Task<SchoolCategorysViewDto> GetCategoryById(Guid id);
 
-        public Task<IEnumerable<SchoolCategoryDto>> List();
+        public Task<IEnumerable<SchoolCategorysViewDto>> List();
         public Task<IEnumerable<SchoolsViewDto>> GetAllSchoolsForACategory();
 
 
-        public Task<SchoolCategoryDto> Create(CreateSchoolCategoryDto categories);
+        public Task<SchoolCategorysViewDto> Create(SchoolCategorysCreateDto categories);
 
-        public Task<SchoolCategoryDto> Update(Guid id, UpdateSchoolCategoryDto categories);
+        public Task<SchoolCategorysViewDto> Update(Guid id, UpdateSchoolCategoryDto categories);
 
 
-        public Task<SchoolCategoryDto> DeleteSchoolCategory(Guid catId);
+        public Task<SchoolCategorysViewDto> DeleteSchoolCategory(Guid catId);
 
         public Task<bool> SchoolCategoriesExists(Guid catId);
         public Task<bool> Save();

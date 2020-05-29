@@ -33,7 +33,7 @@ namespace SchoolRecognition.ApiControllers
 
         // GET: api/SchoolCategories
         [HttpGet]
-        public ActionResult<IEnumerable<SchoolCategoryDto>> Get()
+        public ActionResult<IEnumerable<SchoolCategorysViewDto>> Get()
         {
 
 
@@ -74,7 +74,7 @@ namespace SchoolRecognition.ApiControllers
 
         // POST: api/SchoolCategories
         [HttpPost]
-        public ActionResult<SchoolCategoryDto>  Post(CreateSchoolCategoryDto school)
+        public ActionResult<SchoolCategorysCreateDto>  Post(SchoolCategorysCreateDto school)
         {
 
             var result = _schoolCategories.Create(school).Result;

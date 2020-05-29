@@ -10,7 +10,7 @@ namespace SchoolRecognition.Profiles
     {
         public SchoolCategoryProfile()
         {
-            CreateMap<Entities.SchoolCategories, Models.SchoolCategoryDto>()
+            CreateMap<Entities.SchoolCategories, Models.SchoolCategorysViewDto>()
                .ForMember(
                     dest => dest.Name,
                     opt => opt.MapFrom(src => $"{src.Name}"))
@@ -18,8 +18,8 @@ namespace SchoolRecognition.Profiles
                     dest => dest.Code,
                     opt => opt.MapFrom(src => $"{src.Code}"));
 
-            CreateMap<Models.CreateSchoolCategoryDto, Entities.SchoolCategories>();
-            CreateMap<Models.UpdateSchoolCategoryDto, Entities.SchoolCategories>();
+            CreateMap<Models.SchoolCategorysCreateDto, Entities.SchoolCategories>();
+            CreateMap<Models.SchoolCategorysCreateDto, Entities.SchoolCategories>();
 
           
         }
