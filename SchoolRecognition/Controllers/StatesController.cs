@@ -173,6 +173,8 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Create");
+
                 if (ModelState.IsValid)
                 {
 
@@ -181,7 +183,7 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An State with the same description already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
 
                     var result = await _statesRepository.Create(model);
@@ -189,16 +191,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New State Added Successfully!");
-                        return RedirectToAction("Index", "States");
+                        url = Url.Action("Index", "States");
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {

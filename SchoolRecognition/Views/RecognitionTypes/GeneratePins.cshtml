@@ -4,14 +4,11 @@
     var maximumNumberOfPinsToGenerate = (int)ViewData["MaximumNumberOfPinsToGenerate"];
     ViewData["Title"] = "Generate Pins"; ;
 }
-@section styles{
 
-    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
-    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
+<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+<link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
 
-}
+
 
 
 <!-- Content Header (Page header) -->
@@ -23,8 +20,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="RecognitionTypes" asp-action="Index">Manage Pins</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="RecognitionTypes" asp-action="Index" data-toggle="link">Manage Pins</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -92,52 +89,52 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/js/loading_icon.js"></script>
-    <script src="~/lib/select2/dist/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('select.form-control').select2({
-                theme: 'bootstrap4'
-            });
-            //$('.select2me').select2();
 
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/js/loading_icon.js"></script>
+<script src="~/lib/select2/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select.form-control').select2({
+            theme: 'bootstrap4'
         });
-    </script>
-    <script>
-        // add the rule here
-        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-            return arg !== value;
-        }, "Select a valid value!");
-        $("form").validate({
-            rules: {
-                RecognitionTypeId: {
-                    required: true,
-                    //min: 1
-                    valueNotEquals: ""
-                },
-                NoOfPinToGenerate: {
-                    required: true,
-                    min: 1,
-                    max: @maximumNumberOfPinsToGenerate
-                },
+        //$('.select2me').select2();
 
+    });
+</script>
+<script>
+    // add the rule here
+    $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        return arg !== value;
+    }, "Select a valid value!");
+    $("form").validate({
+        rules: {
+            RecognitionTypeId: {
+                required: true,
+                //min: 1
+                valueNotEquals: ""
             },
-            messages: {
-                RecognitionTypeId: {
-                    required: "This field is required!",
-                    valueNotEquals: "Select a valid value!"
-                },
-                NoOfPinToGenerate: {
-                    required: "This field is required!",
-                    min: "Select a valid value greater than 0!",
-                    max: "Select a valid value less than @maximumNumberOfPinsToGenerate!",
-                },
-            }
-        });
-    </script>
+            NoOfPinToGenerate: {
+                required: true,
+                min: 1,
+                max: @maximumNumberOfPinsToGenerate
+            },
 
-}
+        },
+        messages: {
+            RecognitionTypeId: {
+                required: "This field is required!",
+                valueNotEquals: "Select a valid value!"
+            },
+            NoOfPinToGenerate: {
+                required: "This field is required!",
+                min: "Select a valid value greater than 0!",
+                max: "Select a valid value less than @maximumNumberOfPinsToGenerate!",
+            },
+        }
+    });
+</script>
+
+
 <script type="text/javascript" src="~/js/linkClick.js"></script>
 

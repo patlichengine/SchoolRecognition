@@ -1,14 +1,10 @@
 ﻿@model ApplicationSettingsViewDto
 @{
     ViewData["Title"] = "Application Settings";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 
-@section styles{
-    @*<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />*@
-
-}
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -19,7 +15,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -48,7 +44,7 @@
                 </div>
                 <div class="card-body clearfix">
                     <div class="float-right">
-                        <a asp-area="" asp-controller="ApplicationSettings" asp-action="Update" class="btn btn-light">
+                        <a asp-area="" asp-controller="ApplicationSettings" asp-action="Update" data-toggle="link" class="btn btn-light">
                             <i class="fas fa-users-cog"></i>
                             Change Settings
                         </a>
@@ -121,15 +117,4 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    @*<script src="~/lib/datatables/datatables.min.js"></script>
-        <script>
-                $(document).ready( function () {
-                    $('#datatable-1').DataTable({
-                        responsive: true,
-                        "order": [[ 0, "desc" ]]
-                    });
-                } );
-        </script>*@
-}
-
+<script src="~/js/linkClick.js"></script>

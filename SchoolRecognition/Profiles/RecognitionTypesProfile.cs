@@ -18,7 +18,28 @@ namespace SchoolRecognition.Profiles
                 opt => opt.MapFrom(src => $"{src.Name}"))
                 .ForMember(
                 dest => dest.RecognitionTypeCode,
-                opt => opt.MapFrom(src => $"{src.Code}"));
+                opt => opt.MapFrom(src => $"{src.Code}"))
+                .ForMember(
+                dest => dest.TotalPins,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Pins != null));
+                    opt.MapFrom(src => src.Pins.Count());
+                })
+                .ForMember(
+                dest => dest.TotalActivePins,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Pins != null));
+                    opt.MapFrom(src => src.Pins.Count(x => x.IsActive == true));
+                })
+                .ForMember(
+                dest => dest.TotalPins,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Pins != null));
+                    opt.MapFrom(src => src.Pins.Count(x => x.IsInUse == true));
+                });
 
             CreateMap<RecognitionTypes, RecognitionTypesViewPagedListPinsDto>()
                 .ForMember(
@@ -26,7 +47,28 @@ namespace SchoolRecognition.Profiles
                 opt => opt.MapFrom(src => $"{src.Name}"))
                 .ForMember(
                 dest => dest.RecognitionTypeCode,
-                opt => opt.MapFrom(src => $"{src.Code}"));
+                opt => opt.MapFrom(src => $"{src.Code}"))
+                .ForMember(
+                dest => dest.TotalPins,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Pins != null));
+                    opt.MapFrom(src => src.Pins.Count());
+                })
+                .ForMember(
+                dest => dest.TotalActivePins,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Pins != null));
+                    opt.MapFrom(src => src.Pins.Count(x => x.IsActive == true));
+                })
+                .ForMember(
+                dest => dest.TotalPins,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.Pins != null));
+                    opt.MapFrom(src => src.Pins.Count(x => x.IsInUse == true));
+                });
 
             CreateMap<RecognitionTypesCreateDto, RecognitionTypes>()
                 .ForMember(

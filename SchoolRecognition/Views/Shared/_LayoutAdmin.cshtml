@@ -55,19 +55,24 @@
         })
     </script>
 
+
     <script type="text/javascript">
-        var defaultHtml = '<h3 class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Loading...</h3> <h4 class="timeline-header no-border"><a href="#">If the page does not load, click here</a></h4>';
+        //var defaultHtml = '<h3 class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Loading...</h3> <h4 class="timeline-header no-border"><a href="#">If the page does not load, click here</a></h4>';
+
+        var defaultHtml = '<div class="container centered p-5"><div class="d-flex justify-content-center"><div class="loader text-info">Loading...</div></div></div>';
+
 
         //$(function () {
         $('a[data-toggle="link"]').click(function (e) {
+
+            $('.content-wrapper').html(defaultHtml);
             localStorage.setItem('lastLink', $(e.target).attr('href'));
             //alert("Checked");
             //goto the last page if it exists
             var lastLink = localStorage.getItem('lastLink');
             var currentLink = $(this).attr('href');
 
-            console.log(lastLink, "last");
-            console.log(currentLink, "current");
+        
             if (currentLink) {
                 if (currentLink == '#') {
                 } else {

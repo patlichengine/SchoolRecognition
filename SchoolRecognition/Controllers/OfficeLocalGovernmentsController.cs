@@ -114,7 +114,7 @@ namespace SchoolRecognition.Controllers
                 ViewData["SearchQuery"] = searchQuery;
 
 
-                return View(pins);
+                return PartialView(pins);
             }
             catch (Exception)
             {
@@ -150,7 +150,7 @@ namespace SchoolRecognition.Controllers
                      Value = x.Id.ToString(),
                  }).ToList();
 
-                return View();
+                return PartialView();
             }
             catch (Exception)
             {
@@ -179,6 +179,8 @@ namespace SchoolRecognition.Controllers
                      Value = x.Id.ToString(),
                  }).ToList();
                 //
+                var url = Url.Action("CreateMultiple");
+
                 ViewData["States"] = states.OrderBy(x => x.StateCode).Select(x =>
                  new SelectListItem()
                  {
@@ -191,23 +193,24 @@ namespace SchoolRecognition.Controllers
                     if (model.LocalGovernmentIds == null || model.LocalGovernmentIds.Count() == 0)
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "You cannot send an empty list to the database!");
-                        return View(model);
+                        return Json(url);
                     }
                     var result = await _officeLocalGovernmentsRepository.CreateMultiple(model);
 
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "Local Governments Assigned to Office Successfully!");
-                        return RedirectToAction("Details", "Offices", new { id = model.OfficeId });
+                        url = Url.Action("Details", "Offices", new { id = model.OfficeId });
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return View(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -240,7 +243,7 @@ namespace SchoolRecognition.Controllers
 
 
 
-                return View(officeLocalGovernment);
+                return PartialView(officeLocalGovernment);
             }
             catch (Exception)
             {
@@ -256,15 +259,17 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Delete", new {  id = model.Id});
                 if (ModelState.IsValid)
                 {
                     await _officeLocalGovernmentsRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "LocalGovernment removed from Office's control!");
-                    return RedirectToAction("Details", "Offices", new { id = model.OfficeId });
+                    url = Url.Action("Details", "Offices", new { id = model.OfficeId });
+                    return Json(url);
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
-                return View(model);
+                return Json(url);
             }
             catch (Exception)
             {

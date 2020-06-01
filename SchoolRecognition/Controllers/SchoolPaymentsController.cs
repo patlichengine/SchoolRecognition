@@ -31,6 +31,7 @@ namespace SchoolRecognition.Controllers
     {
         private IFlashMessage _flashMessage;
         private readonly IToastNotification _toastNotification;
+        private IPinsRepository _pinsRepository;
         private IRecognitionTypesRepository _recognitionTypesRepository;
         private ISchoolPaymentsRepository _schoolPaymentsRepository;
         private ISchoolsRepository _schoolsRepository;
@@ -42,12 +43,14 @@ namespace SchoolRecognition.Controllers
         //
         private int _defaultFileSizeLimit = 1100000;
 
-        public SchoolPaymentsController(IFlashMessage flashMessage, IToastNotification toastNotification, IRecognitionTypesRepository recognitionTypesRepository, ISchoolPaymentsRepository schoolPaymentsRepository, ISchoolCategoryRepository schoolCategorysRepository, ISchoolsRepository schoolsRepository, ICentresRepository centresRepository, IMapper mapper)
+        public SchoolPaymentsController(IFlashMessage flashMessage, IToastNotification toastNotification, IPinsRepository pinsRepository, IRecognitionTypesRepository recognitionTypesRepository, ISchoolPaymentsRepository schoolPaymentsRepository, ISchoolCategoryRepository schoolCategorysRepository, ISchoolsRepository schoolsRepository, ICentresRepository centresRepository, IMapper mapper)
         {
             _flashMessage = flashMessage ??
                 throw new ArgumentNullException(nameof(mapper));
             _toastNotification = toastNotification ??
                 throw new ArgumentNullException(nameof(toastNotification));
+            _pinsRepository = pinsRepository ??
+                throw new ArgumentNullException(nameof(pinsRepository));
             _recognitionTypesRepository = recognitionTypesRepository ??
                throw new ArgumentNullException(nameof(recognitionTypesRepository));
             _schoolPaymentsRepository = schoolPaymentsRepository ??
@@ -232,59 +235,73 @@ namespace SchoolRecognition.Controllers
 
 
             #endregion
-
+            var url = Url.Action("Create");
             try
             {
                 if (receiptImage == null)
                 {
 
                     _flashMessage.Danger("Oops...Something went wrong!", "Upload a valid RECEIPT IMAGE!");
-                    return PartialView(model);
+                    return Json(url);
                 }
                 if (receiptImage != null && receiptImage.Length > _defaultFileSizeLimit)
                 {
                     _flashMessage.Danger("File is too large!", "Your file is {0}! File must be less than {1}", (receiptImage.Length).Bytes().Humanize("0.00"), (_defaultFileSizeLimit).Bytes().Humanize("0.00"));
-                    return PartialView(model);
+                    return Json(url);
                 }
                 if (ModelState.IsValid)
                 {
 
 
+                    if (model.RecognitionTypeId == null)
+                    {
+
+                        _flashMessage.Danger("Oops...Something went wrong!", "Attempted operation with incomplete or invalid data!");
+                        return Json(url);
+                    }
+                    //Check if pins are available
+                    if ((await _pinsRepository.CheckTotalActivePinsNOTInUse(model.RecognitionTypeId.Value)) < 1)
+                    {
+
+                        _flashMessage.Danger("Operation Halted!", "There are no PINS available for this payment!");
+                        return Json(url);
+                    }
                     //Check if entry with similar data already exists
                     if (await _schoolPaymentsRepository.Exists(model.PaymentReceiptNo))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "A RECEIPT with this Reciept Number has already been used in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                     if (model.SchoolId == null && String.IsNullOrWhiteSpace(model.SchoolName))
                     {
 
                         _flashMessage.Danger("Oops...Something went wrong!", "Attempted operation with incomplete or invalid data!");
-                        return PartialView(model);
+                        return Json(url);
                     }
 
                     if (String.IsNullOrWhiteSpace(model.SchoolName) && await _schoolsRepository.Exists(model.SchoolName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "A SCHOOL with this NAME has already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                     var result = await _schoolPaymentsRepository.Create(model);
 
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New Payment Made Successfully!");
-                        return RedirectToAction("Index", "SchoolPayments");
+                        url = Url.Action("Index", "SchoolPayments");
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {

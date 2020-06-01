@@ -60,10 +60,12 @@ namespace SchoolRecognition
                         Duration = 240
                     });
             })
+
                 .AddNewtonsoftJson(setupAction =>
                 {
                     setupAction.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
+                    //setupAction.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 })
                 .AddXmlDataContractSerializerFormatters()
                 .ConfigureApiBehaviorOptions(setupAction =>
@@ -189,9 +191,9 @@ namespace SchoolRecognition
             
     
             services.AddMvc()
-
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNToastNotifyToastr();
+
             services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-CSRF-TOKEN";

@@ -823,14 +823,18 @@ namespace SchoolRecognition.Services
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<int> CheckTotalActivePinsNOTInUse()
+        public async Task<int> CheckTotalActivePinsNOTInUse(Guid recognitionTypeId)
         {
             //Instantiate Return Value
             int returnValue = 0;
             try
             {
-                var dbResult = await _context.Pins.Where(x => x.IsActive == true && x.IsInUse == false).CountAsync();
+                if (recognitionTypeId != Guid.Empty)
+                {
+                    var dbResult = await _context.Pins.Where(x => x.RecognitionTypeId == recognitionTypeId && x.IsActive == true && x.IsInUse == false).CountAsync();
 
+                    returnValue = dbResult;
+                }
 
                 return returnValue;
             }

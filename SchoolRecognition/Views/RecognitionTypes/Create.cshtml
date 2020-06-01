@@ -2,13 +2,6 @@
 @{
     ViewData["Title"] = "New Recognition Type";
 }
-@section styles{
-
-    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
-    @*<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />*@
-
-}
 
 
 <!-- Content Header (Page header) -->
@@ -20,8 +13,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="RecognitionTypes" asp-action="Index">Manage Pins</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="RecognitionTypes" asp-action="Index" data-toggle="link">Manage Pins</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -92,45 +85,43 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/js/loading_icon.js"></script>
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/js/loading_icon.js"></script>
     
-    <script>
-        // add the rule here
-        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
-        //    return arg !== value;
-        //}, "Select a valid value!");
-        $("form").validate({
-            rules: {
-                RecognitionTypeName: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 60
-                },
-                RecognitionTypeCode: {
-                    required: true,
-                    minlength: 1,
-                    maxlength: 2
-                },
-
+<script>
+    // add the rule here
+    //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+    //    return arg !== value;
+    //}, "Select a valid value!");
+    $("form").validate({
+        rules: {
+            RecognitionTypeName: {
+                required: true,
+                minlength: 5,
+                maxlength: 60
             },
-            messages: {
-                RecognitionTypeName: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 5 characters!",
-                    maxlength: "This field must have less than 60 characters!",
-                },
-                RecognitionTypeCode: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 1 characters!",
-                    maxlength: "This field must have less than 2 characters!",
-                }
-            }
-        });
-    </script>
+            RecognitionTypeCode: {
+                required: true,
+                minlength: 1,
+                maxlength: 2
+            },
 
-}
+        },
+        messages: {
+            RecognitionTypeName: {
+                required: "This field is required!",
+                minlength: "This field must have at least 5 characters!",
+                maxlength: "This field must have less than 60 characters!",
+            },
+            RecognitionTypeCode: {
+                required: "This field is required!",
+                minlength: "This field must have at least 1 characters!",
+                maxlength: "This field must have less than 2 characters!",
+            }
+        }
+    });
+</script>
+
 <script type="text/javascript" src="~/js/linkClick.js"></script>
 
 

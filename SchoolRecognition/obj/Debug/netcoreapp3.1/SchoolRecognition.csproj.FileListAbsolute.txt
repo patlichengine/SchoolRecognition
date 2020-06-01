@@ -1545,7 +1545,6 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\M
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\MimeKit.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\BouncyCastle.Crypto.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\SchoolRecognition.csprojAssemblyReference.cache
-C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\SchoolPayments\AddSchoolPayment.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\SchoolPayments\Create.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\SchoolPayments\Index.cshtml.g.cs
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\SchoolPayments\_generalRecognition.cshtml.g.cs

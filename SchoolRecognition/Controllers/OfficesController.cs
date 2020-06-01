@@ -18,6 +18,7 @@ using Vereyon.Web;
 
 namespace SchoolRecognition.Controllers
 {
+
     [Route("manage_offices/council_offices")]
     public class OfficesController : Controller
     {
@@ -114,7 +115,7 @@ namespace SchoolRecognition.Controllers
                 ViewData["SearchQuery"] = searchQuery;
 
 
-                return View(offices);
+                return PartialView(offices);
             }
             catch (Exception)
             {
@@ -204,7 +205,7 @@ namespace SchoolRecognition.Controllers
 
                 pins = result.OfficeSchools;
 
-                return View(pins);
+                return PartialView(pins);
             }
             catch (Exception)
             {
@@ -241,7 +242,7 @@ namespace SchoolRecognition.Controllers
                  }).ToList();
 
 
-                return View();
+                return PartialView();
             }
             catch (Exception)
             {
@@ -275,6 +276,8 @@ namespace SchoolRecognition.Controllers
                      Value = x.Id.ToString(),
                  }).ToList();
 
+                var url = Url.Action("Create");
+
                 if (ModelState.IsValid)
                 {
 
@@ -283,8 +286,8 @@ namespace SchoolRecognition.Controllers
                     if (await _officesRepository.Exists(model.OfficeName))
                     {
 
-                        _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
-                        return View(model);
+                        _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system..."); 
+                        return Json(url);
                     }
 
                     var result = await _officesRepository.Create(model);
@@ -292,16 +295,16 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New Office Added Successfully!");
-                        return RedirectToAction("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
                     }
                     else
                     {
-                        _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly..."); 
+                        return Json(url);
                     }
                 }
-                _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return View(model);
+                _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly..."); 
+                return Json(url);
             }
             catch (Exception)
             {
@@ -367,7 +370,7 @@ namespace SchoolRecognition.Controllers
                      Selected = x.Id == model.StateId
                  }).ToList();
 
-                return View(model);
+                return PartialView(model);
             }
             catch (Exception)
             {
@@ -412,7 +415,7 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
-                        return View(model);
+                        return PartialView(model);
                     }
 
                     //Set Pins as active 
@@ -426,11 +429,11 @@ namespace SchoolRecognition.Controllers
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        return PartialView(model);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return View(model);
+                return PartialView(model);
             }
             catch (Exception)
             {
@@ -462,7 +465,7 @@ namespace SchoolRecognition.Controllers
 
 
 
-                return View(office);
+                return PartialView(office);
             }
             catch (Exception)
             {
@@ -478,15 +481,17 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Delete", new { id = model.Id });
                 if (ModelState.IsValid)
                 {
                     await _officesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Office removed from system!");
-                    return RedirectToAction("Index", "Offices");
+                    url = Url.Action("Index", "Offices");
+                    return Json(url);
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
-                return View(model);
+                return Json(url);
             }
             catch (Exception)
             {

@@ -42,7 +42,7 @@ namespace SchoolRecognition.Controllers
 
                 var applicationSetting = await _applicationSettingsRepository.Get();
 
-                return View(applicationSetting);
+                return PartialView(applicationSetting);
             }
             catch (Exception)
             {
@@ -63,7 +63,7 @@ namespace SchoolRecognition.Controllers
             {
                 var applicationSetting = await _applicationSettingsRepository.Get();
                 var model = _mapper.Map<ApplicationSettingsCreateDto>(applicationSetting);
-                return View(model);
+                return PartialView(model);
             }
             catch (Exception)
             {
@@ -80,9 +80,10 @@ namespace SchoolRecognition.Controllers
 
             try
             {
+
+                var url = Url.Action("Update");
                 if (ModelState.IsValid)
                 {
-
 
                     //Set Pins as active 
                     var result = await _applicationSettingsRepository.Update(model);
@@ -90,16 +91,16 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "Application Settings Updated Successfully!");
-                        return RedirectToAction("Index", "ApplicationSettings");
+                        url = Url.Action("Index", "ApplicationSettings");
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return View(model);
+                return Json(url);
             }
             catch (Exception)
             {

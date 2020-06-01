@@ -161,6 +161,7 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Create");
                 if (ModelState.IsValid)
                 {
 
@@ -169,23 +170,24 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "A Recognition Type with the same values already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                     var result = await _recognitionTypesRepository.Create(model);
 
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New Recognition Type Added Successfully!");
-                        return RedirectToAction("Index", "RecognitionTypes");
+                        url = Url.Action("Index", "RecognitionTypes");
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -279,6 +281,7 @@ namespace SchoolRecognition.Controllers
 
                 ViewData["ApplicationSetting"] = applicationSetting;
 
+                var url = Url.Action("GeneratePins", new { id = model.RecognitionTypeId });
                 if (ModelState.IsValid)
                 {
                     //Set Pins as active 
@@ -288,16 +291,17 @@ namespace SchoolRecognition.Controllers
                     if (result)
                     {
                         _flashMessage.Confirmation("Operation Completed", String.Format("{0} PINs generated", model.NoOfPinToGenerate));
-                        return RedirectToAction("ViewPins", "RecognitionTypes", new { id = model.RecognitionTypeId });
+                        url = Url.Action("ViewPins", "RecognitionTypes", new { id = model.RecognitionTypeId });
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -337,13 +341,14 @@ namespace SchoolRecognition.Controllers
 
             try
             {
+                var url = Url.Action("Update", new { id = model.Id });
                 if (ModelState.IsValid)
                 {
                     //Check if entry with similar data already exists
                     if (await _recognitionTypesRepository.Exists(model.Id, model.RecognitionTypeCode, model.RecognitionTypeName))
                     {
                         _flashMessage.Danger("Duplicate Data Entry!", "A Recognition Type with the same values already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                     //Set Pins as active 
                     var result = await _recognitionTypesRepository.Update(model);
@@ -351,16 +356,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "Recognition Type Updated Successfully!");
-                        return RedirectToAction("ViewPins", "RecognitionTypes", new { id = model.Id });
+                        url = Url.Action("ViewPins", "RecognitionTypes", new { id = model.Id });
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -408,15 +414,17 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Delete", new { id = model.Id });
                 if (ModelState.IsValid)
                 {
                     await _recognitionTypesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Recognition Type removed from system!");
-                    return RedirectToAction("Index", "RecognitionTypes");
+                    url =  Url.Action("Index", "RecognitionTypes");
+                    return Json(url);
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {

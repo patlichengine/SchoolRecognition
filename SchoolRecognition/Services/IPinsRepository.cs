@@ -25,7 +25,7 @@ namespace SchoolRecognition.Services
         Task<PinsViewDto> Update(PinsUpdateDto _obj);
         Task Delete(Guid id); //return type is void
         //
-        Task<int> CheckTotalActivePinsNOTInUse();
+        Task<int> CheckTotalActivePinsNOTInUse(Guid recognitionTypeId);
         Task<PinsStatisticsSummaryDto> Summary();
         Task<PinsCreationDependecyDto> GetCreationDepedencys();
     }
