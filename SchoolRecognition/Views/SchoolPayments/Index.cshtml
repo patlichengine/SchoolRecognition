@@ -5,12 +5,6 @@
     //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-@section styles{
-    @*<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />*@
-
-}
-
-
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
@@ -126,22 +120,22 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr role="row">
-                                <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
-                                <td>@item.RecognitionTypeCode</td>
-                                <td>@item.SchoolName</td>
-                                <td>@item.PinSerialNumber</td>
-                                <td>@(item.AmountPaid != null ? item.AmountPaid.Value.ToString("#,##0") : "NOT STATED")</td>
-                                <td>@item.PaymentReceiptNo</td>
-                                <td>@(item.CreatedByUser!= null ? item.CreatedByUser : "NOT STATED")</td>
-                                <td class="text-center p-1">
-                                    <a asp-action="Details" asp-controller="SchoolPayments" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
-                                        <i class="fas fa-desktop"></i>
-                                        @*View SchoolPayments*@
-                                    </a>
-                        
-                                </td>
-                            </tr>
+                                <tr role="row">
+                                    <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
+                                    <td>@item.RecognitionTypeCode</td>
+                                    <td>@item.SchoolName</td>
+                                    <td>@item.PinSerialNumber</td>
+                                    <td>@(item.AmountPaid != null ? item.AmountPaid.Value.ToString("#,##0") : "NOT STATED")</td>
+                                    <td>@item.PaymentReceiptNo</td>
+                                    <td>@(item.CreatedByUser != null ? item.CreatedByUser : "NOT STATED")</td>
+                                    <td class="text-center p-1">
+                                        <a asp-action="Details" asp-controller="SchoolPayments" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
+                                            <i class="fas fa-desktop"></i>
+                                            @*View SchoolPayments*@
+                                        </a>
+
+                                    </td>
+                                </tr>
                             }
                             @if (Model.TotalCount < 1)
                             {
@@ -191,13 +185,5 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    @*<script src="~/lib/datatables/datatables.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                $('#datatable-1').DataTable({
-                    "order": [[0, "desc"]]
-                });
-            });
-        </script>*@
-}
+
+<script src="~/js/linkClick.js"></script>

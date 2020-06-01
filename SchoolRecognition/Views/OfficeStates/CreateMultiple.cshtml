@@ -4,16 +4,15 @@
     var officeTypes = (IEnumerable<SelectListItem>)ViewData["OfficeTypes"];
     var states = (IEnumerable<SelectListItem>)ViewData["States"];
     ViewData["Title"] = "Assign States to an Office";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-@section styles{
 
-    <link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
-    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
-    <link href="~/lib/bootstrap4-duallistbox/bootstrap-duallistbox.min.css" rel="stylesheet" />
-}
+<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
+<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+<link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
+<link href="~/lib/bootstrap4-duallistbox/bootstrap-duallistbox.min.css" rel="stylesheet" />
+
 
 
 
@@ -111,23 +110,22 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    <script src="~/js/loading_icon.js"></script>
-    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
-    <script src="~/lib/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-    @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
-    <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('select.form-control').select2({
-                theme: 'bootstrap4'
-            });
-            //$('.select2me').select2();
+<script src="~/js/loading_icon.js"></script>
+<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+<script src="~/lib/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+@*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
+<script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select.form-control').select2({
+            theme: 'bootstrap4'
         });
-    </script>
-    <script>
+        //$('.select2me').select2();
+    });
+</script>
+<script>
         $(function () {
             $('#OfficeTypeId').change(function () {
 
@@ -150,8 +148,8 @@
                  });
             });
         });
-    </script>
-    <script>
+</script>
+<script>
         $(function () {
             $('#OfficeId').change(function () {
 
@@ -171,46 +169,46 @@
                  });
             });
         });
-    </script>
-    <script>
+</script>
+<script>
 
-        //Bootstrap Duallistbox
-        $('.duallistbox').bootstrapDualListbox()
-    </script>
-    <script>
-        // add the rule here
-        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
-        //    return arg !== value;
-        //}, "Select a valid value!");
-        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-            return arg !== value;
-        }, "Select a valid value!");
-        $("form").validate({
-            rules: {
-                OfficeId: {
-                    required: true,
-                    valueNotEquals: ""
-                    //min: 1
-                },
-                StateIds: {
-                    required: true,
-                    valueNotEquals: []
-                    //min: 1
-                },
+    //Bootstrap Duallistbox
+    $('.duallistbox').bootstrapDualListbox()
+</script>
+<script>
+    // add the rule here
+    //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+    //    return arg !== value;
+    //}, "Select a valid value!");
+    $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        return arg !== value;
+    }, "Select a valid value!");
+    $("form").validate({
+        rules: {
+            OfficeId: {
+                required: true,
+                valueNotEquals: ""
+                //min: 1
             },
-            messages: {
-                OfficeId: {
-                    required: "This field is required!",
-                    valueNotEquals: "Select a valid value!"
-                },
-                StateIds: {
-                    required: "This field is required!",
-                    valueNotEquals: "Select a valid value!"
-                },
-            }
-        });
-    </script>
-
-}
+            StateIds: {
+                required: true,
+                valueNotEquals: []
+                //min: 1
+            },
+        },
+        messages: {
+            OfficeId: {
+                required: "This field is required!",
+                valueNotEquals: "Select a valid value!"
+            },
+            StateIds: {
+                required: "This field is required!",
+                valueNotEquals: "Select a valid value!"
+            },
+        }
+    });
+</script>
+<script src="~/js/ajaxFormSubmit.js"></script>
+<script src="~/js/linkClick.js"></script>
 
 

@@ -2,13 +2,6 @@
 @{
     ViewData["Title"] = "New Type of Office";
 }
-@section styles{
-
-    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
-    @*<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />*@
-
-}
 
 
 <!-- Content Header (Page header) -->
@@ -94,41 +87,39 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/js/loading_icon.js"></script>
-    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
-    @*<script>
-            $(document).ready(function () {
-                $('select.form-control').select2({
-                    theme: "classic"
-                });
-                //$('.select2me').select2();
+
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/js/loading_icon.js"></script>
+<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+@*<script>
+        $(document).ready(function () {
+            $('select.form-control').select2({
+                theme: "classic"
             });
-        </script>*@
-    <script>
-        // add the rule here
-        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
-        //    return arg !== value;
-        //}, "Select a valid value!");
-        $("form").validate({
-            rules: {
-                TypeDescription: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 100
-                },
-            },
-            messages: {
-                TypeDescription: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 3 characters!",
-                    maxlength: "This field must have less than 100 characters!",
-                }
-            }
+            //$('.select2me').select2();
         });
-    </script>
-
-}
-
-<script type="text/javascript" src="~/js/linkClick.js"></script>
+    </script>*@
+<script>
+    // add the rule here
+    //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+    //    return arg !== value;
+    //}, "Select a valid value!");
+    $("form").validate({
+        rules: {
+            TypeDescription: {
+                required: true,
+                minlength: 3,
+                maxlength: 100
+            },
+        },
+        messages: {
+            TypeDescription: {
+                required: "This field is required!",
+                minlength: "This field must have at least 3 characters!",
+                maxlength: "This field must have less than 100 characters!",
+            }
+        }
+    });
+</script>
+<script src="~/js/ajaxFormSubmit.js"></script>
+<script src="~/js/linkClick.js"></script>

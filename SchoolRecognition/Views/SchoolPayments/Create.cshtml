@@ -122,34 +122,34 @@
 </section>
 <!-- /.content -->
 
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="~/js/loading_icon.js"></script>
-    @*<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
-    <script src="~/lib/select2/dist/js/select2.min.js"></script>
-    <script src="~/lib/fileuploads/js/dropify.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('select.form-control').select2({
-                theme: 'bootstrap4'
-            });
-            //$('.select2me').select2();
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/js/loading_icon.js"></script>
+@*<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
+<script src="~/lib/select2/dist/js/select2.min.js"></script>
+<script src="~/lib/fileuploads/js/dropify.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select.form-control').select2({
+            theme: 'bootstrap4'
+        });
+        //$('.select2me').select2();
 
-        });
-    </script>
-    <script>
-        $('.dropify').dropify({
-            messages: {
-                'default': 'Drag and drop a file here or click',
-                'replace': 'Drag and drop or click to replace',
-                'remove': 'Remove',
-                'error': 'Ooops, something wrong appended.'
-            },
-            error: {
-                'fileSize': 'The file size is too big (2M max).'
-            }
-        });
-    </script>
-    <script>
+    });
+</script>
+<script>
+    $('.dropify').dropify({
+        messages: {
+            'default': 'Drag and drop a file here or click',
+            'replace': 'Drag and drop or click to replace',
+            'remove': 'Remove',
+            'error': 'Ooops, something wrong appended.'
+        },
+        error: {
+            'fileSize': 'The file size is too big (2M max).'
+        }
+    });
+</script>
+<script>
         $(function () {
             $('#RecognitionTypeId').change(function () {
 
@@ -170,130 +170,131 @@
                  });
             });
         });
-    </script>
-    <script>
-        // add the rule here
-        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-            return arg !== value;
-        }, "Select a valid value!");
-        $("form").validate({
-            rules: {
-                RecognitionTypeId: {
-                    required: true,
-                    valueNotEquals: ""
-                    //min: 1
-                },
-                AmountPaid: {
-                    required: true,
-                    min: 1,
-                    max: 100000
-                },
-                PaymentReceiptNo: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 20
-                },
-                receiptImage: {
-                    required: true,
-                    accept: "image/*"
-                },
-                //School Information
-                SchoolName: {
-                    required: true,
-                    minlength: 10,
-                    maxlength: 300
-                },
-                YearEstablished: {
-                    required: true,
-                    min: 1500,
-                    max: 9999
-                },
-                Address: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 500
-                },
-                LgId: {
-                    required: true,
-                    valueNotEquals: ""
-                    //min: 1
-                },
-                PhoneNo: {
-                    required: true,
-                    minlength: 4,
-                    maxlength: 20
-                },
-                EmailAddress: {
-                    required: true,
-                    email: true
-                },
-                //Centre Information
-                CentreNo: {
-                    required: true,
-                    minlength: 7,
-                    maxlength: 7
-                },
-
+</script>
+<script>
+    // add the rule here
+    $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        return arg !== value;
+    }, "Select a valid value!");
+    $("form").validate({
+        rules: {
+            RecognitionTypeId: {
+                required: true,
+                valueNotEquals: ""
+                //min: 1
             },
-            messages: {
-                RecognitionTypeId: {
-                    required: "This field is required!",
-                    valueNotEquals: "Select a valid option!"
-                },
-                AmountPaid: {
-                    required: "This field is required!",
-                    min: "This field must be a positive number!",
-                    max: "This field must be less than 10,000,000!"
-                },
-                PaymentReceiptNo: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 5 characters!",
-                    maxlength: "This field must have less than 20 characters!",
-                },
-                receiptImage: {
-                    required: "This field is required!",
-                    accept: "This field only accepts image files!",
-                },
-                //School Information
-                SchoolName: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 10 characters!",
-                    maxlength: "This field must have less than 300 characters!",
-                },
-                YearEstablished: {
-                    required: "This field is required!",
-                    min: "This field must be greater than 1500!",
-                    max: "This field must be less 9999!"
-                },
-                Address: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 3 characters!",
-                    maxlength: "This field must have less than 500 characters!",
-                },
-                LgId: {
-                    required: "This field is required!",
-                    valueNotEquals: "Select a valid input!"
-                    //min: 1
-                },
-                PhoneNo: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 4 characters!",
-                    maxlength: "This field must have less than 20 characters!",
-                },
-                EmailAddress: {
-                    required: "This field is required!",
-                    email: "This field must be a valid email address!"
-                },
-                //Centre Information
-                CentreNo: {
-                    required: "This field is required!",
-                    minlength: "Invalid Centre Number!",
-                    maxlength: "Invalid Centre Number!",
-                },
-            }
-        });
-    </script>
+            AmountPaid: {
+                required: true,
+                min: 1,
+                max: 100000
+            },
+            PaymentReceiptNo: {
+                required: true,
+                minlength: 5,
+                maxlength: 20
+            },
+            receiptImage: {
+                required: true,
+                accept: "image/*"
+            },
+            //School Information
+            SchoolName: {
+                required: true,
+                minlength: 10,
+                maxlength: 300
+            },
+            YearEstablished: {
+                required: true,
+                min: 1500,
+                max: 9999
+            },
+            Address: {
+                required: true,
+                minlength: 3,
+                maxlength: 500
+            },
+            LgId: {
+                required: true,
+                valueNotEquals: ""
+                //min: 1
+            },
+            PhoneNo: {
+                required: true,
+                minlength: 4,
+                maxlength: 20
+            },
+            EmailAddress: {
+                required: true,
+                email: true
+            },
+            //Centre Information
+            CentreNo: {
+                required: true,
+                minlength: 7,
+                maxlength: 7
+            },
 
-<script type="text/javascript" src="~/js/linkClick.js"></script>
+        },
+        messages: {
+            RecognitionTypeId: {
+                required: "This field is required!",
+                valueNotEquals: "Select a valid option!"
+            },
+            AmountPaid: {
+                required: "This field is required!",
+                min: "This field must be a positive number!",
+                max: "This field must be less than 10,000,000!"
+            },
+            PaymentReceiptNo: {
+                required: "This field is required!",
+                minlength: "This field must have at least 5 characters!",
+                maxlength: "This field must have less than 20 characters!",
+            },
+            receiptImage: {
+                required: "This field is required!",
+                accept: "This field only accepts image files!",
+            },
+            //School Information
+            SchoolName: {
+                required: "This field is required!",
+                minlength: "This field must have at least 10 characters!",
+                maxlength: "This field must have less than 300 characters!",
+            },
+            YearEstablished: {
+                required: "This field is required!",
+                min: "This field must be greater than 1500!",
+                max: "This field must be less 9999!"
+            },
+            Address: {
+                required: "This field is required!",
+                minlength: "This field must have at least 3 characters!",
+                maxlength: "This field must have less than 500 characters!",
+            },
+            LgId: {
+                required: "This field is required!",
+                valueNotEquals: "Select a valid input!"
+                //min: 1
+            },
+            PhoneNo: {
+                required: "This field is required!",
+                minlength: "This field must have at least 4 characters!",
+                maxlength: "This field must have less than 20 characters!",
+            },
+            EmailAddress: {
+                required: "This field is required!",
+                email: "This field must be a valid email address!"
+            },
+            //Centre Information
+            CentreNo: {
+                required: "This field is required!",
+                minlength: "Invalid Centre Number!",
+                maxlength: "Invalid Centre Number!",
+            },
+        }
+    });
+</script>
+
+<script src="~/js/ajaxFormSubmit.js"></script>
+<script src="~/js/linkClick.js"></script>
 
 

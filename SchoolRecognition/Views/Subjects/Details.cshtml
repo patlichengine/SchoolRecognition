@@ -6,11 +6,6 @@
 }
 
 
-@section styles{
-    @*<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />*@
-
-}
-
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <div class="container-fluid">
@@ -20,8 +15,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
                     <li class="breadcrumb-item active">Offices</li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
@@ -58,7 +53,7 @@
                             <h4 class="mt-4 mb-2" style="font-weight: 100">Office Details:</h4>
 
                             <table class="table table-striped table-borderless">
-      
+
                                 <tbody>
                                     <tr>
                                         <td class="p-0">
@@ -137,15 +132,11 @@
 
                                 <div class="float-right">
 
-                                    <a asp-area="" asp-controller="Offices" asp-action="Update" asp-route-id="@office.Id" class="btn btn-light">
+                                    <a asp-area="" asp-controller="Offices" asp-action="Update" asp-route-id="@office.Id" data-toggle="link" class="btn btn-light">
                                         <i class="fas fa-desktop"></i>
                                         Update Office
                                     </a>
-                                    <a asp-area="" asp-controller="OfficeStates" asp-action="Update" asp-route-officeId="@office.Id" class="btn btn-light">
-                                        <i class="fas fa-exchange-alt"></i>
-                                        Re-assign Office
-                                    </a>
-                                    <a asp-area="" asp-controller="Offices" asp-action="Delete" asp-route-id="@office.Id" class="btn btn-danger">
+                                    <a asp-area="" asp-controller="Offices" asp-action="Delete" asp-route-id="@office.Id" data-toggle="link" class="btn btn-danger">
                                         <i class="fas fa-trash-alt"></i>
                                         Delete Office
                                     </a>
@@ -193,19 +184,19 @@
 
 
 
-                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "school_name", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "school_name", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                         Name Ascending
                                         <i class="fas fa-sort-up"></i>
                                     </a>
-                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "school_name_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "school_name_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                         Name Descending
                                         <i class="fas fa-sort-down"></i>
                                     </a>
-                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "year", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "year", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                         Year Established Ascending
                                         <i class="fas fa-sort-up"></i>
                                     </a>
-                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "year_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                    <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "year_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                         Year Established Descending
                                         <i class="fas fa-sort-down"></i>
                                     </a>
@@ -214,7 +205,7 @@
                             </div>
 
                             <table id="datatable-1" class="table table-bordered table-striped table-responsive-md" role="grid" aria-describedby="example1_info">
-                                
+
                                 <thead>
                                     <tr role="row">
                                         <td>Name of School</td>
@@ -235,9 +226,9 @@
                                             @*<td>@(!String.IsNullOrWhiteSpace(item.Address) ? item.Address : "NOT STATED")</td>*@
                                             <td class="text-center p-1">
                                                 @*<a asp-action="ViewOffices" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="View Offices">
-                            <i class="fas fa-desktop"></i>
-                            View Offices
-                        </a>*@
+                                                        <i class="fas fa-desktop"></i>
+                                                        View Offices
+                                                    </a>*@
                                             </td>
                                         </tr>
                                     }
@@ -268,62 +259,12 @@
                                     </div>
                                     <div class="col-8">
 
-                                        <ul class="pagination">
-                                            <li class="page-item @prevDisabled">
-                                                <a asp-controller="Offices" asp-action="Details"
-                                                   asp-route-id="@office.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber=""
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-double-left"></i>
-                                                </a>
-                                            </li>
-                                            <li class="page-item @prevDisabled">
-                                                <a asp-controller="Offices" asp-action="Details"
-                                                   asp-route-id="@office.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@(Model.CurrentPage - 1)"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-left"></i>
-                                                </a>
-                                            </li>
-                                            @foreach (var item in pages)
-                                            {
-                                                <li class="@(item == Model.CurrentPage ? "page-item active" : "page-item")">
-                                                    <a asp-controller="Offices" asp-action="Details"
-                                                       asp-route-id="@office.Id"
-                                                       asp-route-orderBy="@ViewData["OrderBy"]"
-                                                       asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                       asp-route-pageNumber="@item"
-                                                       class="page-link">
-                                                        @item
-                                                    </a>
-                                                </li>
-                                            }
 
-                                            <li class="page-item @nextDisabled">
-                                                <a asp-controller="Offices" asp-action="Details"
-                                                   asp-route-id="@office.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@(Model.CurrentPage + 1)"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-right"></i>
-                                                </a>
-                                            </li>
-                                            <li class="page-item @nextDisabled">
-                                                <a asp-controller="Offices" asp-action="Details"
-                                                   asp-route-id="@office.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@Model.TotalPages"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-double-right"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                        <partial name="_paginationLinks" model='new PaginationLinksDto {
+                                 Pages = pages, PageNumber = Model.CurrentPage, PrevDisabled = prevDisabled,
+                                 NextDisabled = nextDisabled, Controller = "Offices", Action="Details", Id=office.Id, CurrentPage = Model.CurrentPage,
+                                 TotalPages = Model.TotalPages }'>
+
                                     </div>
                                 </div>
                             }
@@ -344,15 +285,4 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    @*<script src="~/lib/datatables/datatables.min.js"></script>
-        <script>
-                $(document).ready( function () {
-                    $('#datatable-1').DataTable({
-                        responsive: true,
-                        "order": [[ 0, "desc" ]]
-                    });
-                } );
-        </script>*@
-}
-
+<script src="~/js/linkClick.js"></script>

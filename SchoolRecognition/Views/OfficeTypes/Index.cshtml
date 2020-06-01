@@ -3,10 +3,8 @@
     ViewData["Title"] = "Manage Offices";
 }
 
-@section styles{
     <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
 
-}
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -117,7 +115,7 @@
             $('#datatable-offices').DataTable({
                 dom: 'Bfrtip',
                 buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
+                    'copy', 'csv', 'excel', 'pdf'
                 ],
                 destroy: true
             });

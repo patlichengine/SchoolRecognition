@@ -6,10 +6,6 @@
     //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-@section styles{
-    @*<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />*@
-
-}
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -174,61 +170,12 @@
                                     </div>
                                     <div class="col-8">
 
-                                        <ul class="pagination">
-                                            <li class="page-item @prevDisabled">
-                                                <a asp-controller="OfficeTypes" asp-action="ViewOffices"
-                                                   asp-route-id="@officeType.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber=""
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-double-left"></i>
-                                                </a>
-                                            </li>
-                                            <li class="page-item @prevDisabled">
-                                                <a asp-controller="OfficeTypes" asp-action="ViewOffices"
-                                                   asp-route-id="@officeType.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@(Model.CurrentPage - 1)"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-left"></i>
-                                                </a>
-                                            </li>
-                                            @foreach (var item in pages)
-                                            {
-                                                <li class="@(item == Model.CurrentPage ? "page-item active" : "page-item")">
-                                                    <a asp-controller="OfficeTypes" asp-action="ViewOffices"
-                                                       asp-route-id="@officeType.Id"
-                                                       asp-route-orderBy="@ViewData["OrderBy"]"
-                                                       asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                       asp-route-pageNumber="@item"
-                                                       class="page-link">
-                                                        @item
-                                                    </a>
-                                                </li>
-                                            }
-                                            <li class="page-item @nextDisabled">
-                                                <a asp-controller="OfficeTypes" asp-action="ViewOffices"
-                                                   asp-route-id="@officeType.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@(Model.CurrentPage + 1)"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-right"></i>
-                                                </a>
-                                            </li>
-                                            <li class="page-item @nextDisabled">
-                                                <a asp-controller="OfficeTypes" asp-action="ViewOffices"
-                                                   asp-route-id="@officeType.Id"
-                                                   asp-route-orderBy="@ViewData["OrderBy"]"
-                                                   asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                   asp-route-pageNumber="@Model.TotalPages"
-                                                   class="page-link">
-                                                    <i class="fas fa-angle-double-right"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
+
+                                        <partial name="_paginationLinks" model='new PaginationLinksDto {
+                                 Pages = pages, PageNumber = Model.CurrentPage, PrevDisabled = prevDisabled,
+                                 NextDisabled = nextDisabled, Controller = "Offices", Action="ViewOffices", Id=officeType.Id, CurrentPage = Model.CurrentPage,
+                                 TotalPages = Model.TotalPages }'>
+
                                     </div>
                                 </div>
                             }
@@ -248,14 +195,4 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    @*<script src="~/lib/datatables/datatables.min.js"></script>
-        <script>
-            $(document).ready( function () {
-                $('#datatable-1').DataTable({
-                    "order": [[ 0, "desc" ]]
-                });
-            } );
-        </script>*@
-}
-
+<script src="~/js/linkClick.js"></script>
