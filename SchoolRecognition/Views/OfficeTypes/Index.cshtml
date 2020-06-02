@@ -15,7 +15,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -38,20 +38,20 @@
                 <!-- /.card-header -->
                 <div class="card-body clearfix">
                     <div class="float-right">
-                        <a asp-area="" asp-controller="Offices" asp-action="Index" class="btn btn-light">
+                        <a asp-area="" asp-controller="Offices" asp-action="Index" data-toggle="link" class="btn btn-light">
                             <i class="fas fa-desktop"></i>
                             View All Offices
                         </a>
 
-                        <a asp-area="" asp-controller="OfficeStates" asp-action="Index" class="btn btn-light">
+                        <a asp-area="" asp-controller="OfficeStates" asp-action="Index" data-toggle="link" class="btn btn-light">
                             <i class="fas fa-exchange-alt"></i>
                             Assign Offices To States
                         </a>
-                        <a asp-area="" asp-controller="OfficeTypes" asp-action="Create" class="btn btn-light">
+                        <a asp-area="" asp-controller="OfficeTypes" asp-action="Create" data-toggle="link" class="btn btn-light">
                             <i class="fas fa-plus"></i>
                             New Type of  Office
                         </a>
-                        <a asp-area="" asp-controller="Offices" asp-action="Create" class="btn btn-light">
+                        <a asp-area="" asp-controller="Offices" asp-action="Create" data-toggle="link" class="btn btn-light">
                             <i class="fas fa-plus"></i>
                             New Office
                         </a>
@@ -77,18 +77,27 @@
                                     <td>@item.TypeDescription</td>
                                     <td>@item.OfficesCount.ToString("#,##0")</td>
                                     <td class="text-center p-1">
-                                        <a asp-action="ViewOffices" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="View Offices">
-                                            <i class="fas fa-desktop"></i>
-                                            @*View Pins*@
-                                        </a>
-                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Update">
-                                            <i class="fas fa-edit"></i>
-                                            @*Generate Pins*@
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                            @*Generate Pins*@
-                                        </a>
+                                        <span data-toggle="tooltip" data-placement="top" title="View Offices">
+                                            <a asp-action="ViewOffices" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="link">
+                                                <i class="fas fa-desktop"></i>
+                                                @*View Pins*@
+                                            </a>
+                                        </span>
+                                        <span data-toggle="tooltip" data-placement="top" title="Update">
+                                            <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="link">
+                                                <i class="fas fa-edit"></i>
+                                                @*Generate Pins*@
+                                            </a>
+                                        </span>
+                                        <span data-toggle="tooltip" data-placement="top" title="Delete">
+
+                                            <a asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="link">
+                                                <i class="fas fa-trash"></i>
+                                                @*Generate Pins*@
+                                            </a>
+                                        </span>
+                                        
+                                        
                                     </td>
                                 </tr>
                             }
@@ -111,7 +120,7 @@
 <script src="~/lib/datatables/datatables.min.js"></script>
   
     <script>
-        $( function () {
+        $(function () {
             $('#datatable-offices').DataTable({
                 dom: 'Bfrtip',
                 buttons: [
@@ -119,6 +128,7 @@
                 ],
                 destroy: true
             });
+        });
     </script>
     <script type="text/javascript" src="~/js/linkClick.js"></script>
 

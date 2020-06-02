@@ -6,9 +6,6 @@
     //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-
-<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-<link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
 <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
 <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
 
@@ -58,33 +55,30 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
-                        <div class="form-group">
-                            <label asp-for="OfficeTypeId">*Type Of Office</label>
-                            <select asp-for="OfficeTypeId" asp-items="@officeTypes.ToList()" class="form-control" required>
-                                <option value="">--Select Type of Office---</option>
-                            </select>
-                            <span asp-validation-for="OfficeTypeId" class="text-danger"></span>
-                        </div>
+                        
 
                         <div class="row">
 
-                            <div class="col-md-6">
+
+                            <div class="col-md-4">
 
                                 <div class="form-group">
-                                    <label asp-for="OfficeName">*Name:</label>
-                                    <input minlength="2" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
+                                    <label asp-for="OfficeTypeId">*Type Of Office</label>
+                                    <select asp-for="OfficeTypeId" asp-items="@officeTypes.ToList()" class="form-control" required>
+                                        <option value="">--Select Type of Office---</option>
+                                    </select>
+                                    <span asp-validation-for="OfficeTypeId" class="text-danger"></span>
                                 </div>
+
 
                             </div>
 
 
-                            <div class="col-md-6">
-
+                            <div class="col-md-8">
 
                                 <div class="form-group">
-                                    <label>*Date Created:</label>
-                                    <input type="text" asp-for="DateCreated" class="form-control" placeholder="Date Created/Established" required />
-                                    <span asp-validation-for="DateCreated" class="text-danger"></span>
+                                    <label asp-for="OfficeName">*Name:</label>
+                                    <input minlength="2" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
                                 </div>
 
                             </div>
@@ -176,44 +170,13 @@
 
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script src="~/js/loading_icon.js"></script>
-<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
-@*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
 <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
 <script>
     $(document).ready(function () {
         $('select.form-control').select2({
             theme: 'bootstrap4'
         });
         //$('.select2me').select2();
-    });
-</script>
-<script>
-    $(function () {
-        $("#DateCreated").val("");
-        $("#DateCreated").datepicker({
-            dateFormat: 'dd-MM-yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: '1900:c+30',
-            //showButtonPanel: true,
-
-            //Properly aligns pop-up calendar
-            beforeShow: function (a, b) {
-                var cnt = 0;
-                var interval = setInterval(function () {
-                    cnt++;
-                    if (b.dpDiv.is(":visible")) {
-                        var parent = b.input.closest("div");
-                        b.dpDiv.position({ my: "left top", at: "left bottom", of: parent });
-                        clearInterval(interval);
-                    } else if (cnt > 50) {
-                        clearInterval(interval);
-                    }
-                }, 10);
-            }
-        });
     });
 </script>
 <script>

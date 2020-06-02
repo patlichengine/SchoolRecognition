@@ -295,7 +295,8 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New Office Added Successfully!");
-                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId }); 
+                        return Json(url);
                     }
                     else
                     {
@@ -407,6 +408,8 @@ namespace SchoolRecognition.Controllers
                  }).ToList();
 
 
+                var url = Url.Action("Update", new { id = model.Id });
+
                 if (ModelState.IsValid)
                 {
 
@@ -415,7 +418,7 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
 
                     //Set Pins as active 
@@ -424,16 +427,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "Office Updated Successfully!");
-                        return RedirectToAction("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {

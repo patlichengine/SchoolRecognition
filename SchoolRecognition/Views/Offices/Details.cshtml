@@ -20,8 +20,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
                     <li class="breadcrumb-item active">Offices</li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
@@ -137,19 +137,19 @@
 
                                 <div class="float-right">
 
-                                    <a asp-area="" asp-controller="Offices" asp-action="Update" asp-route-id="@office.Id" class="btn btn-light">
+                                    <a asp-area="" asp-controller="Offices" asp-action="Update" asp-route-id="@office.Id" data-toggle="link" class="btn btn-light">
                                         <i class="fas fa-desktop"></i>
                                         Update Office
                                     </a>
-                                    <a asp-area="" asp-controller="OfficeStates" asp-action="CreateMultiple" class="btn btn-light">
+                                    <a asp-area="" asp-controller="OfficeStates" asp-action="CreateMultiple" data-toggle="link" class="btn btn-light">
                                         <i class="fas fa-exchange-alt"></i>
                                         Assign States to Office
                                     </a>
-                                    <a asp-area="" asp-controller="OfficeLocalGovernments" asp-action="CreateMultiple" asp-route-officeId="@office.Id" class="btn btn-light">
+                                    <a asp-area="" asp-controller="OfficeLocalGovernments" asp-action="CreateMultiple" asp-route-officeId="@office.Id" data-toggle="link" class="btn btn-light">
                                         <i class="fas fa-exchange-alt"></i>
                                         Assign LGAs to Office
                                     </a>
-                                    <a asp-area="" asp-controller="Offices" asp-action="Delete" asp-route-id="@office.Id" class="btn btn-danger">
+                                    <a asp-area="" asp-controller="Offices" asp-action="Delete" asp-route-id="@office.Id" data-toggle="link" class="btn btn-danger">
                                         <i class="fas fa-trash-alt"></i>
                                         Delete Office
                                     </a>
@@ -199,10 +199,15 @@
                                                     <td>@item.StateName</td>
                                                     <td class="text-center p-1">
 
-                                                        <a asp-controller="OfficeStates" asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                            <i class="fas fa-trash"></i>
-                                                            @*Generate Pins*@
-                                                        </a>
+                                                        <span data-toggle="tooltip" data-placement="top" title="Delete">
+
+                                                            <a asp-controller="OfficeStates" asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="link">
+                                                                <i class="fas fa-trash"></i>
+                                                                @*Generate Pins*@
+                                                            </a>
+
+                                                        </span>
+
                                                     </td>
                                                 </tr>
                                             }
@@ -234,14 +239,20 @@
                                                     <td>@item.StateName</td>
                                                     <td class="text-center p-1">
 
-                                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Update">
-                                                            <i class="fas fa-edit"></i>
-                                                            @*Generate Pins*@
-                                                        </a>
-                                                        <a asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                            <i class="fas fa-trash"></i>
-                                                            @*Generate Pins*@
-                                                        </a>
+                                                        <span data-toggle="tooltip" data-placement="top" title="Update">
+                                                            <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="link">
+                                                                <i class="fas fa-edit"></i>
+                                                                @*Generate Pins*@
+                                                            </a>
+                                                        </span>
+
+                                                        <span data-toggle="tooltip" data-placement="top" title="Delete">
+                                                            <a asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="link">
+                                                                <i class="fas fa-trash"></i>
+                                                                @*Generate Pins*@
+                                                            </a>
+                                                        </span>
+
                                                     </td>
                                                 </tr>
                                             }
@@ -290,19 +301,19 @@
 
 
 
-                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "school_name", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "school_name", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                                 Name Ascending
                                                 <i class="fas fa-sort-up"></i>
                                             </a>
-                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "school_name_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "school_name_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                                 Name Descending
                                                 <i class="fas fa-sort-down"></i>
                                             </a>
-                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "year", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id , orderBy = "year", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                                 Year Established Ascending
                                                 <i class="fas fa-sort-up"></i>
                                             </a>
-                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "year_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                            <a href="@Url.Action("Details", "Offices", new { id  = office.Id ,  orderBy = "year_desc", searchQuery = ViewData["SearchQuery"], pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                                 Year Established Descending
                                                 <i class="fas fa-sort-down"></i>
                                             </a>
@@ -412,4 +423,5 @@
         });
     });
 </script>
+<script src="~/js/ajaxFormGET.js"></script>
 <script src="~/js/linkClick.js"></script>

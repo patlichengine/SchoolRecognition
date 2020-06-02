@@ -43,7 +43,7 @@
 
                     <div class="clearfix mb-3">
                         <div class="float-right">
-                            <a asp-area="" asp-action="GeneratePins" data-toggle="link"  class="btn btn-light">
+                            <a asp-area="" asp-action="GeneratePins" data-toggle="link" class="btn btn-light">
                                 <i class="fas fa-receipt"></i>
                                 Generate Pins
                             </a>
@@ -56,15 +56,15 @@
                         </div>
                         <div class="col-8">
 
-                            <form asp-action="ViewPins"  method="get" class="md-form mb-3" id="searchForm">
+                            <form asp-action="ViewPins" method="get" class="md-form mb-3" id="searchForm">
 
                                 <div class="input-group">
                                     <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewData["SearchQuery"]" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
                                     @*<div class="input-group-prepend">
-                            <span class="input-group-text md-addon" id="material-addon1">
-                                <i class="fas fa-search"></i>
-                            </span>
-                        </div>*@
+                                            <span class="input-group-text md-addon" id="material-addon1">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                        </div>*@
                                     <div class="input-group-prepend">
                                         <button class="btn btn-md btn-light" type="submit">
                                             <i class="fas fa-search"></i>
@@ -120,57 +120,57 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr role="row">
-                                <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
-                                <td>@item.SerialNumber</td>
-                                <td>@item.RecognitionTypeName</td>
-                                <td>
-                                    @if (item.IsActive)
-                                    {
-                                        <i class="fas fa-check text-success"></i>
-                                    }
-                                    else
-                                    {
+                                <tr role="row">
+                                    <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("d-MMM-yyyy") : "NOT STATED")</td>
+                                    <td>@item.SerialNumber</td>
+                                    <td>@item.RecognitionTypeName</td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <i class="fas fa-check text-success"></i>
+                                        }
+                                        else
+                                        {
 
-                                        <i class="fas fa-times text-danger"></i>
-                                    }
-                                </td>
-                                <td>
-                                    @if (item.IsInUse)
-                                    {
-                                        <span>@item.AssignedSchoolName</span>
-                                    }
-                                    else
-                                    {
-                                        <span>NOT ASSIGNED</span>
-                                    }
-                                </td>
-                                <td>
-                                    @if (item.IsInUse)
-                                    {
-                                        <span>@item.AssignedSchoolCategoryName</span>
-                                    }
-                                    else
-                                    {
-                                        <span>NOT ASSIGNED</span>
-                                    }
-                                </td>
-                                <td class="text-center p-1">
-                                    <span data-toggle="tooltip" data-placement="top" title="Details">
-                                        <a asp-action="Details" asp-controller="Pins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="link">
-                                            <i class="fas fa-desktop"></i>
-                                            @*View Pins*@
-                                        </a>
-                                    </span>
-                                    <span data-toggle="tooltip" data-placement="top" title="Delete">
-                                        <a asp-action="Delete" asp-controller="Pins" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="link">
-                                            <i class="fas fa-trash"></i>
-                                            @*Generate Pins*@
-                                        </a>
-                                    </span>
-                                    
-                                </td>
-                            </tr>
+                                            <i class="fas fa-times text-danger"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsInUse)
+                                        {
+                                            <span>@item.AssignedSchoolName</span>
+                                        }
+                                        else
+                                        {
+                                            <span>NOT ASSIGNED</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsInUse)
+                                        {
+                                            <span>@item.AssignedSchoolCategoryName</span>
+                                        }
+                                        else
+                                        {
+                                            <span>NOT ASSIGNED</span>
+                                        }
+                                    </td>
+                                    <td class="text-center p-1">
+                                        <span data-toggle="tooltip" data-placement="top" title="Details">
+                                            <a asp-action="Details" asp-controller="Pins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="link">
+                                                <i class="fas fa-desktop"></i>
+                                                @*View Pins*@
+                                            </a>
+                                        </span>
+                                        <span data-toggle="tooltip" data-placement="top" title="Delete">
+                                            <a asp-action="Delete" asp-controller="Pins" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="link">
+                                                <i class="fas fa-trash"></i>
+                                                @*Generate Pins*@
+                                            </a>
+                                        </span>
+
+                                    </td>
+                                </tr>
                             }
                             @if (Model.TotalCount < 1)
                             {
@@ -221,4 +221,5 @@
 <!-- /.content -->
 
 
-<script type="text/javascript" src="~/js/linkClick.js"></script>
+<script src="~/js/ajaxFormGET.js"></script>
+<script src="~/js/linkClick.js"></script>

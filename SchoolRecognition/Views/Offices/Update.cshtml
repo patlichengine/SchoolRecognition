@@ -23,9 +23,9 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Offices" asp-action="Details" asp-route-id="@Model.Id`">@Model.OfficeName</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Offices" asp-action="Details" asp-route-id="@Model.Id`" data-toggle="link">@Model.OfficeName</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -60,18 +60,32 @@
                         <input type="hidden" asp-for="DateCreated" />
 
 
-                        <div class="form-group">
-                            <label asp-for="OfficeTypeId">*Type Of Office</label>
-                            <select asp-for="OfficeTypeId" asp-items="@officeTypes.ToList()" class="form-control" required>
-                                <option value="">--Select Type of Office---</option>
-                            </select>
-                            <span asp-validation-for="OfficeTypeId" class="text-danger"></span>
-                        </div>
+                        <div class="row">
 
 
-                        <div class="form-group">
-                            <label asp-for="OfficeName">*Name:</label>
-                            <input minlength="2" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
+                            <div class="col-md-4">
+
+                                <div class="form-group">
+                                    <label asp-for="OfficeTypeId">*Type Of Office</label>
+                                    <select asp-for="OfficeTypeId" asp-items="@officeTypes.ToList()" class="form-control" required>
+                                        <option value="">--Select Type of Office---</option>
+                                    </select>
+                                    <span asp-validation-for="OfficeTypeId" class="text-danger"></span>
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="col-md-8">
+
+                                <div class="form-group">
+                                    <label asp-for="OfficeName">*Name:</label>
+                                    <input minlength="2" maxlength="60" asp-for="OfficeName" class="form-control" placeholder="Enter Office Name" required>
+                                </div>
+
+                            </div>
+
                         </div>
 
 
@@ -154,12 +168,11 @@
 </section>
 <!-- /.content -->
 
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script src="~/js/loading_icon.js"></script>
 <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
 @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
 <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
 <script>
     $(document).ready(function () {
         $('select.form-control').select2({

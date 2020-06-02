@@ -339,7 +339,7 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "Office Type Updated Successfully!");
-                        url = Url.Action("ViewPins", "OfficeTypes", new { id = model.Id });
+                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.Id });
                         return Json(url);
                     }
                     else

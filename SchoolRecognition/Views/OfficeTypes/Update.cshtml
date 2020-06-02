@@ -14,8 +14,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -40,7 +40,7 @@
 
                     <small class="text-muted mt-1 mb-2">All fields marked <b class="text-dark">*</b> are required!</small>
 
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Update" method="post">
 
                         @Html.AntiForgeryToken()
 

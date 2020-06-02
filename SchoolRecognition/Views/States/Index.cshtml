@@ -3,7 +3,7 @@
     ViewData["Title"] = "States";
 }
 
-    <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
+<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
 
 
 <!-- Content Header (Page header) -->
@@ -39,7 +39,7 @@
                 <!-- /.card-header -->
                 <div class="card-body clearfix">
                     <div class="float-right">
-                 
+
                         <a asp-area="" asp-controller="States" asp-action="Create" class="btn btn-light">
                             <i class="fas fa-plus"></i>
                             New State
@@ -62,27 +62,27 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr role="row">
-                                <td>@item.StateCode</td>
-                                <td>@item.StateName</td>
-                                <td>@item.OfficeStatesCount.ToString("#,##0")</td>
-                                <td>@item.LocalGovernmentsCount.ToString("#,##0")</td>
-                                <td>@item.SchoolsCount.ToString("#,##0")</td>
-                                <td class="text-center p-1">
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
-                                        <i class="fas fa-desktop"></i>
-                                        @*View Pins*@
-                                    </a>
-                                    <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Update">
-                                        <i class="fas fa-edit"></i>
-                                        @*Generate Pins*@
-                                    </a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
-                                        <i class="fas fa-trash"></i>
-                                        @*Generate Pins*@
-                                    </a>
-                                </td>
-                            </tr>
+                                <tr role="row">
+                                    <td>@item.StateCode</td>
+                                    <td>@item.StateName</td>
+                                    <td>@item.OfficeStatesCount.ToString("#,##0")</td>
+                                    <td>@item.LocalGovernmentsCount.ToString("#,##0")</td>
+                                    <td>@item.SchoolsCount.ToString("#,##0")</td>
+                                    <td class="text-center p-1">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
+                                            <i class="fas fa-desktop"></i>
+                                            @*View Pins*@
+                                        </a>
+                                        <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Update">
+                                            <i class="fas fa-edit"></i>
+                                            @*Generate Pins*@
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                            @*Generate Pins*@
+                                        </a>
+                                    </td>
+                                </tr>
                             }
 
                         </tbody>
@@ -100,14 +100,15 @@
 </section>
 <!-- /.content -->
 
-    <script src="~/lib/datatables/datatables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#datatable-1').DataTable({
-                //"order": [[ 0, "desc" ]]
-                responsive: true,
-                destroy: true;
-            });
+<script src="~/lib/datatables/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#datatable-1').DataTable({
+            //"order": [[ 0, "desc" ]]
+            responsive: true,
+            destroy: true;
         });
-    </script>
-<script type="text/javascript" src="~/js/linkClick.js"></script>
+    });
+</script>
+<script src="~/js/ajaxFormGET.js"></script>
+<script src="~/js/linkClick.js"></script>

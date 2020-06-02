@@ -16,8 +16,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
                     <li class="breadcrumb-item active">Types of Offices</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
@@ -51,10 +51,17 @@
 
                             <div class="clearfix mb-3">
                                 <div class="float-right">
-                                    <a asp-area="" asp-action="CreateOffice" asp-route-id="@officeType.Id" class="btn btn-light">
+
+                                    <a asp-area="" asp-controller="OfficeStates" asp-action="Index" data-toggle="link" class="btn btn-light">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        Assign Offices To States
+                                    </a>
+
+                                    <a asp-area="" asp-action="CreateOffice" asp-route-id="@officeType.Id" data-toggle="link" class="btn btn-light">
                                         <i class="fas fa-plus"></i>
                                         New Office
                                     </a>
+
                                 </div>
                             </div>
 
@@ -91,12 +98,12 @@
                                 <div class="col-md-12 mb-1 ">
 
 
-                                    <a href="@Url.Action("ViewOffices", "OfficeTypes", new { id  = officeType.Id , orderBy = "office_name", searchQuery = ViewData["SearchQuery"],  pageNumber = Model.CurrentPage })" class="btn btn-light btn-xs">
+                                    <a href="@Url.Action("ViewOffices", "OfficeTypes", new { id  = officeType.Id , orderBy = "office_name", searchQuery = ViewData["SearchQuery"],  pageNumber = Model.CurrentPage,  data_toggle="link" })" class="btn btn-light btn-xs">
                                         Name Ascending
                                         <i class="fas fa-sort-up"></i>
                                     </a>
 
-                                    <a href="@Url.Action("ViewOffices", "OfficeTypes", new { id  = officeType.Id , orderBy = "office_name_desc", searchQuery = ViewData["SearchQuery"],  pageNumber = Model.CurrentPage})" class="btn btn-light btn-xs">
+                                    <a href="@Url.Action("ViewOffices", "OfficeTypes", new { id  = officeType.Id , orderBy = "office_name_desc", searchQuery = ViewData["SearchQuery"],  pageNumber = Model.CurrentPage,  data_toggle="link"})" class="btn btn-light btn-xs">
                                         Name Descending
                                         <i class="fas fa-sort-down"></i>
                                     </a>
@@ -125,22 +132,26 @@
                                             <td>@item.OfficeAddress</td>
 
                                             <td class="text-center p-1">
-                                                <a asp-action="Details" asp-controller="Offices" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="tooltip" data-placement="top" title="Details">
-                                                    <i class="fas fa-desktop"></i>
-                                                    @*View Offices*@
-                                                </a>
-                                                <a asp-action="Update" asp-controller="OfficeStates" asp-route-officeId="@item.Id " class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Reassign Office">
-                                                    <i class="fas fa-exchange-alt"></i>
-                                                    @*Generate Offices*@
-                                                </a>
-                                                <a asp-action="Update" asp-controller="Offices" asp-route-id="@item.Id " class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Update">
-                                                    <i class="fas fa-edit"></i>
-                                                    @*Generate Offices*@
-                                                </a>
-                                                <a asp-action="Delete" asp-controller="Offices" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                    <i class="fas fa-trash"></i>
-                                                    @*Generate Offices*@
-                                                </a>
+                                                <span data-toggle="tooltip" data-placement="top" title="Details">
+                                                    <a asp-action="Details" asp-controller="Offices" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="link">
+                                                        <i class="fas fa-desktop"></i>
+                                                        @*View Offices*@
+                                                    </a>
+                                                </span>
+                                                <span data-toggle="tooltip" data-placement="top" title="Update">
+                                                    <a asp-action="Update" asp-controller="Offices" asp-route-id="@item.Id " class="btn btn-light btn-sm" data-toggle="link">
+                                                        <i class="fas fa-edit"></i>
+                                                        @*Generate Offices*@
+                                                    </a>
+                                                </span>
+                                                <span data-toggle="tooltip" data-placement="top" title="Delete">
+
+                                                    <a asp-action="Delete" asp-controller="Offices" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="link">
+                                                        <i class="fas fa-trash"></i>
+                                                        @*Generate Offices*@
+                                                    </a>
+                                                </span>
+
                                             </td>
                                         </tr>
                                     }
@@ -195,4 +206,5 @@
 </section>
 <!-- /.content -->
 
+<script src="~/js/ajaxFormGET.js"></script>
 <script src="~/js/linkClick.js"></script>

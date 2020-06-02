@@ -25,8 +25,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -110,13 +110,12 @@
 </section>
 <!-- /.content -->
 
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 <script src="~/js/loading_icon.js"></script>
 <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
 <script src="~/lib/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
 @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
 <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
 <script>
     $(document).ready(function () {
         $('select.form-control').select2({
