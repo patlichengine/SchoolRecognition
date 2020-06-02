@@ -56,10 +56,7 @@
                         @Html.AntiForgeryToken()
 
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                        <input type="hidden" asp-for="Id" />
-                        @*<input type="hidden" asp-for="OfficeId" />*@
-
+                        
 
                         <div class="form-group">
                             <label for="OfficeTypeId">*Type Of Office</label>
@@ -170,9 +167,10 @@
         });
 </script>
 <script>
-
+     $(document).ready(function () {
     //Bootstrap Duallistbox
-    $('.duallistbox').bootstrapDualListbox()
+        $('.duallistbox').bootstrapDualListbox()
+    });
 </script>
 <script>
     // add the rule here
