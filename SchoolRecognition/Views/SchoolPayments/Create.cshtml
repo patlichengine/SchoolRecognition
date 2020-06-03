@@ -81,7 +81,7 @@
 
                                 <div class="form-group">
                                     <label asp-for="PaymentReceiptNo">*Receipt No:</label>
-                                    <input minlength="5" maxlength="20" asp-for="PaymentReceiptNo" class="form-control" placeholder="Enter Receipt No" required>
+                                    <input minlength="5" maxlength="20" asp-for="PaymentReceiptNo" autocomplete="off" class="form-control" placeholder="Enter Receipt No" required>
                                 </div>
 
 
@@ -91,8 +91,8 @@
 
                         <div class="form-group">
 
-                            <label for="receiptImage">Reciept Image</label>
-                            <input type="file" class="dropify" name="receiptImage" accept="image/jpg, image/png, image/gif, image/jpeg" data-height="300" />
+                            <label for="uploadedFile">Reciept Image</label>
+                            <input type="file" class="dropify" id="uploadedFile" name="uploadedFile" accept="image/jpg, image/png, image/gif, image/jpeg" data-height="300" />
 
 
                         </div>
@@ -156,9 +156,7 @@
                 var _recognitionType = $('#RecognitionTypeId option:selected').html();
 
                 var _url = '@Url.Action("ResolvePartialView")'
-
-                console.log(_recognitionType);
-
+                
                 return $.ajax({
                     type: 'GET',
                     url: _url,
@@ -186,14 +184,14 @@
             AmountPaid: {
                 required: true,
                 min: 1,
-                max: 100000
+                max: 10000000
             },
             PaymentReceiptNo: {
                 required: true,
                 minlength: 5,
                 maxlength: 20
             },
-            receiptImage: {
+            uploadedFile: {
                 required: true,
                 accept: "image/*"
             },
@@ -250,7 +248,7 @@
                 minlength: "This field must have at least 5 characters!",
                 maxlength: "This field must have less than 20 characters!",
             },
-            receiptImage: {
+            uploadedFile: {
                 required: "This field is required!",
                 accept: "This field only accepts image files!",
             },
@@ -293,8 +291,7 @@
         }
     });
 </script>
-
-<script src="~/js/ajaxFormSubmit.js"></script>
+<script src="~/js/ajaxFormUpload.js"></script>
 <script src="~/js/linkClick.js"></script>
 
 

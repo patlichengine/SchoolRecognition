@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,6 +57,7 @@ namespace SchoolRecognition.Models
         public string EmailAddress { get; set; }
         public string PhoneNo { get; set; }
         public long? YearEstablished { get; set; }
+        public IFormFile UploadedFile { get; set; }
 
         #endregion
     }

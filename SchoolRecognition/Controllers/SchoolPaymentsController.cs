@@ -19,6 +19,7 @@ using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Http;
 using Humanizer;
 using NToastNotify;
+using ImageMagick;
 
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -39,6 +40,7 @@ namespace SchoolRecognition.Controllers
         private ICentresRepository _centresRepository;
         private readonly IMapper _mapper;
         private byte[] paymentReceiptImage = new byte[] { };
+        private int defaultCroppedImageWidth = 500;
 
         //
         private int _defaultFileSizeLimit = 1100000;
@@ -217,7 +219,7 @@ namespace SchoolRecognition.Controllers
         [Route("make_payment")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SchoolPaymentsCreateDto model, IFormFile receiptImage)
+        public async Task<IActionResult> Create(SchoolPaymentsCreateDto model, IFormFile uploadedFile)
         {
 
 
@@ -238,15 +240,15 @@ namespace SchoolRecognition.Controllers
             var url = Url.Action("Create");
             try
             {
-                if (receiptImage == null)
+                if (uploadedFile == null)
                 {
 
                     _flashMessage.Danger("Oops...Something went wrong!", "Upload a valid RECEIPT IMAGE!");
                     return Json(url);
                 }
-                if (receiptImage != null && receiptImage.Length > _defaultFileSizeLimit)
+                if (uploadedFile != null && uploadedFile.Length > _defaultFileSizeLimit)
                 {
-                    _flashMessage.Danger("File is too large!", "Your file is {0}! File must be less than {1}", (receiptImage.Length).Bytes().Humanize("0.00"), (_defaultFileSizeLimit).Bytes().Humanize("0.00"));
+                    _flashMessage.Danger("File is too large!", "Your file is {0}! File must be less than {1}", (uploadedFile.Length).Bytes().Humanize("0.00"), (_defaultFileSizeLimit).Bytes().Humanize("0.00"));
                     return Json(url);
                 }
                 if (ModelState.IsValid)
@@ -286,6 +288,29 @@ namespace SchoolRecognition.Controllers
                         _flashMessage.Danger("Duplicate Data Entry!", "A SCHOOL with this NAME has already exists in the system...");
                         return Json(url);
                     }
+
+                    #region Handling Image File
+
+
+                    using (var ms = new MemoryStream())
+                    {
+                                                
+                        uploadedFile.CopyTo(ms);
+
+
+
+                        byte[] fileBytes = ms.ToArray();
+
+                        paymentReceiptImage = ImageFileHelper.CompressAndResizeImageFromMemoryStream(fileBytes, defaultCroppedImageWidth);
+
+
+                        // act on the Base64 data
+                    }
+
+                    #endregion
+
+                    model.PaymentReceiptImage = paymentReceiptImage;
+
                     var result = await _schoolPaymentsRepository.Create(model);
 
                     if (result != null)
