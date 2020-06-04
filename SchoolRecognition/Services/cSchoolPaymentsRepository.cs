@@ -86,7 +86,7 @@ namespace SchoolRecognition.Services
                         Id = x.Id,
                         AmountPaid = x.Amount,
                         PaymentReceiptNo = x.ReceiptNo,
-                        PaymentReceiptImage = x.ReceiptImage,
+                        //PaymentReceiptImage = x.ReceiptImage,
                         DateCreated = x.DateCreated,
                         //Pin
                         PinId = x.PinId,
@@ -168,7 +168,7 @@ namespace SchoolRecognition.Services
                         Id = x.Id,
                         AmountPaid = x.Amount,
                         PaymentReceiptNo = x.ReceiptNo,
-                        PaymentReceiptImage = x.ReceiptImage,
+                        //PaymentReceiptImage = x.ReceiptImage,
                         DateCreated = x.DateCreated,
                         //Pin
                         PinId = x.PinId,
@@ -224,6 +224,7 @@ namespace SchoolRecognition.Services
 
                     var schoolPayments = await dbResult
                         .Where(x => x.Id == id).SingleOrDefaultAsync();
+
                     returnValue = _mapper.Map<SchoolPaymentsViewDto>(schoolPayments);
                     //
                     return returnValue;

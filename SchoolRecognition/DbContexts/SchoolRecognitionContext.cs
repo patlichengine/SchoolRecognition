@@ -28,6 +28,7 @@ namespace SchoolRecognition.DbContexts
         public virtual DbSet<Dblogger> Dblogger { get; set; }
         public virtual DbSet<DegreeTypes> DegreeTypes { get; set; }
         public virtual DbSet<Degrees> Degrees { get; set; }
+        public virtual DbSet<FacilityItemSettings> FacilityItemSettings { get; set; }
         public virtual DbSet<FacilitySettings> FacilitySettings { get; set; }
         public virtual DbSet<FacilityTypes> FacilityTypes { get; set; }
         public virtual DbSet<LocalGovernments> LocalGovernments { get; set; }
@@ -62,7 +63,7 @@ namespace SchoolRecognition.DbContexts
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=NORMAL-PC\\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI");
+                optionsBuilder.UseSqlServer("Server=NORMAL-PC\\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI;");
             }
         }
 
@@ -324,41 +325,32 @@ namespace SchoolRecognition.DbContexts
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<FacilityItemSettings>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
             modelBuilder.Entity<FacilitySettings>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
-                entity.Property(e => e.DateCreated)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.DateCreated).HasColumnType("datetime");
 
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(256);
+                entity.Property(e => e.FacilityItemSettingsId).HasColumnName("FacilityItemSettingsID");
 
                 entity.Property(e => e.FacilityTypeId).HasColumnName("FacilityTypeID");
 
                 entity.Property(e => e.Specification).HasMaxLength(20);
 
                 entity.Property(e => e.SubjectId).HasColumnName("SubjectID");
-
-                entity.HasOne(d => d.CreatedByNavigation)
-                    .WithMany(p => p.FacilitySettings)
-                    .HasForeignKey(d => d.CreatedBy)
-                    .HasConstraintName("FK_FacilitySettings_Users");
-
-                entity.HasOne(d => d.FacilityType)
-                    .WithMany(p => p.FacilitySettings)
-                    .HasForeignKey(d => d.FacilityTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FacilitySettings_FacilityTypes");
-
-                entity.HasOne(d => d.Subject)
-                    .WithMany(p => p.FacilitySettings)
-                    .HasForeignKey(d => d.SubjectId)
-                    .HasConstraintName("FK_FacilitySettings_Subjects");
             });
 
             modelBuilder.Entity<FacilityTypes>(entity =>
@@ -670,7 +662,7 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.FacilitySetting)
                     .WithMany(p => p.SchoolFacilities)
                     .HasForeignKey(d => d.FacilitySettingId)
-                    .HasConstraintName("FK_FacilityInformation_FacilitySettings");
+                    .HasConstraintName("FK_SchoolFacilities_FacilitySettings");
 
                 entity.HasOne(d => d.School)
                     .WithMany(p => p.SchoolFacilities)

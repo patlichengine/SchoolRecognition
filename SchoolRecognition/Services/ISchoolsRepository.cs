@@ -17,14 +17,16 @@ namespace SchoolRecognition.Services
         Task<PagedList<SchoolsViewDto>> PagedList(SchoolsResourceParams resourceParams);
         Task<SchoolsViewDto> Get(Guid id);
         Task<SchoolsViewDto> GetBySchoolName(string schoolName);
+        Task<SchoolsViewPagedListSchoolFacilitiesDto> GetIncludingPagedListOfSchoolFacilities(Guid id, SchoolFacilitiesResourceParams resourceParams);
         Task<Guid?> Create(SchoolsCreateDto _obj);
         Task<SchoolsViewDto> Update(SchoolsCreateDto _obj);
         Task Delete(Guid id); //return type is void
         ///
         Task<bool> Exists(string schoolName);
+        Task<bool> Exists(Guid id, string schoolName);
         Task<bool> Exists(string schoolName, string schoolAddress);
         Task<bool> Exists(Guid id, string schoolName, string schoolAddress);
-
+        Task<SchoolsCreationDependecyDto> GetCreationDependencys();
     }
 
 }

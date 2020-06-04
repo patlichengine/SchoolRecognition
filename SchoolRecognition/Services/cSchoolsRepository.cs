@@ -270,6 +270,157 @@ namespace SchoolRecognition.Services
             }
         }
         
+
+        public async Task<SchoolsViewPagedListSchoolFacilitiesDto> GetIncludingPagedListOfSchoolFacilities(Guid id, SchoolFacilitiesResourceParams resourceParams)
+        {
+
+            //Instantiate Return Value
+            SchoolsViewPagedListSchoolFacilitiesDto returnValue = null;
+
+            //Instantiate Return Value
+            PagedList<SchoolFacilitiesViewDto> returnValueSchoolFacilities = PagedList<SchoolFacilitiesViewDto>
+                        .Create(Enumerable.Empty<SchoolFacilitiesViewDto>().AsQueryable(),
+                            resourceParams.PageNumber,
+                            resourceParams.PageSize);
+            try
+            {
+                if (id != Guid.Empty)
+                {
+                    var dbResult = _context.Schools
+                    .Include(x => x.Category)
+                    .Include(x => x.Office)
+                    .Include(x => x.Lg)
+                    .ThenInclude(x => x.State)
+                    .Include(x => x.PinHistories)
+                    .Include(x => x.SchoolClassAllocations)
+                    .ThenInclude(y => y.Class)
+                    .Include(x => x.SchoolDeficiencies)
+                    .Include(x => x.SchoolFacilities)
+                    .ThenInclude(y => y.FacilitySetting)
+                    .Include(x => x.SchoolFacilities)
+                    .ThenInclude(y => y.CreatedByNavigation)
+                    .Include(x => x.SchoolPayments)
+                    .ThenInclude(y => y.CreatedByNavigation)
+                    .Include(x => x.SchoolPayments)
+                    .ThenInclude(y => y.Pin)
+                    .Include(x => x.SchoolStaffProfiles)
+                    .ThenInclude(y => y.Title)
+                    .Include(x => x.SchoolStaffProfiles)
+                    .ThenInclude(y => y.Category)
+                    .Include(x => x.SchoolStaffProfiles)
+                    .ThenInclude(y => y.SchoolStaffDegrees)
+                    .Include(x => x.SchoolStaffProfiles)
+                    .ThenInclude(y => y.SchoolStaffSubjects)
+                    .Where(x => x.Id == id) as IQueryable<Schools>;
+
+                    var school = await dbResult.Select(x => new SchoolsViewPagedListSchoolFacilitiesDto()
+                      {
+                          Id = x.Id,
+                          SchoolName = x.Name,
+                          Address = x.Address,
+                          EmailAddress = x.EmailAddress,
+                          PhoneNo = x.PhoneNo,
+                          YearEstablished = x.YearEstablished,
+                          IsRecognised = x.IsRecognised,
+                          IsVetted = x.IsVetted,
+                          IsInspected = x.IsInspected,
+                          IsCompleted = x.IsCompleted,
+                          IsRecommended = x.IsRecommended,
+                          HasDeficientSubject = x.HasDeficientSubject,
+                          HasDeficientFacilitiy = x.HasDeficientFacilitiy,
+                          //SchoolCategory
+                          CategoryId = x.CategoryId,
+                          SchoolCategoryName = x.Category != null ? x.Category.Name : null,
+                          SchoolCategoryCode = x.Category != null ? x.Category.Code : null,
+                          //Office
+                          OfficeId = x.OfficeId,
+                          OfficeName = x.Office != null ? x.Office.Name : null,
+                          //LGA
+                          LgId = x.LgId,
+                          LgaName = x.Lg != null ? x.Lg.Name : null,
+                          LgaCode = x.Lg != null ? x.Lg.Code : null,
+                          //State
+                          StateName = x.Lg != null & x.Lg.State != null ? x.Lg.State.Name : null,
+                          StateCode = x.Lg != null & x.Lg.State != null ? x.Lg.State.Code : null,
+
+
+                      })  
+                        .FirstOrDefaultAsync();
+                    //
+                    var queryableSchoolFacilities = dbResult.SelectMany(x => x.SchoolFacilities) as IQueryable<SchoolFacilities>;
+
+
+
+                    //Search
+                    if (!string.IsNullOrWhiteSpace(resourceParams.SearchQuery))
+                    {
+
+                        var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
+
+                        queryableSchoolFacilities = queryableSchoolFacilities.Where(a => a.ValueAupplied.ToString().ToUpper().Contains(searchQuery)             
+                            || (a.DateCreated).ToString().ToUpper().Contains(searchQuery)
+                            || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Surname : null).ToString().ToUpper().Contains(searchQuery)
+                            || (a.CreatedByNavigation != null ? a.CreatedByNavigation.Othernames : null).ToString().ToUpper().Contains(searchQuery)
+                            );
+                    }
+                    //Ordering
+                    if (!string.IsNullOrWhiteSpace(resourceParams.OrderBy))
+                    {
+                        // get property mapping dictionary
+                        var pinsPropertyMappingDictionary =
+                            _propertyMappingService.GetPropertyMapping<SchoolFacilitiesViewDto, SchoolFacilities>();
+
+                        queryableSchoolFacilities = queryableSchoolFacilities.ApplySort(resourceParams.OrderBy,
+                            pinsPropertyMappingDictionary);
+                    }
+                    ///Use LINQ to map pins to pinsviewdto
+                    var mappedResult = queryableSchoolFacilities.Select(x => new SchoolFacilitiesViewDto()
+                    {
+                        Id = x.Id,
+                        SchoolId = x.SchoolId,
+                        FacilitySettingId = x.FacilitySettingId,
+                        ValueAupplied = x.ValueAupplied,
+                        CreatedBy = x.CreatedBy,
+                        DateCreated = x.DateCreated,
+                        //Schools
+                        SchoolName = x.School != null ? x.School.Name : null,
+                        SchoolAddress = x.School != null ? x.School.Address : null,
+                        SchoolEmailAddress = x.School != null ? x.School.EmailAddress : null,
+                        SchoolPhoneNo = x.School != null ? x.School.PhoneNo : null,
+                        YearEstablished = x.School != null ? x.School.YearEstablished : null,
+                        SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Category.Name : null,
+                        //CreatedBy
+
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+
+                    });
+
+                    returnValueSchoolFacilities = await PagedList<SchoolFacilitiesViewDto>.CreateAsync(mappedResult,
+                        resourceParams.PageNumber,
+                        resourceParams.PageSize);
+
+
+                    returnValue = school;
+                    //
+                    returnValue.Facilities = returnValueSchoolFacilities;
+
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
+
         public async Task<SchoolsViewDto> Get(Guid id)
         {
 
@@ -438,6 +589,35 @@ namespace SchoolRecognition.Services
             }
         }
 
+        public async Task<bool> Exists(Guid id, string schoolName)
+        {
+            //Instantiate Return Value
+            bool returnValue = false;
+            try
+            {
+
+                if (!String.IsNullOrWhiteSpace(schoolName) && id != Guid.Empty)
+                {
+
+                    var schoolNameQuery = schoolName.Trim().ToUpper();
+                    bool dbResult = await _context.Schools.Where(x => x.Id != id).AnyAsync(x => x.Name.Trim().ToUpper() == schoolNameQuery);
+                    returnValue = dbResult;
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<bool> Exists(string schoolName, string schoolAddress)
         {
             //Instantiate Return Value
@@ -498,5 +678,48 @@ namespace SchoolRecognition.Services
             }
         }
 
+        public async Task<SchoolsCreationDependecyDto> GetCreationDependencys()
+        {
+            //Instantiate Return Value
+            SchoolsCreationDependecyDto returnValue = new SchoolsCreationDependecyDto();
+            try
+            {
+
+                var schoolCategorys = await _context.SchoolCategories.Select(x => new SchoolCategorysViewDto()
+                {
+                    Id = x.Id,
+                    Code = x.Code,
+                    Name = x.Name
+
+                }).ToListAsync();
+
+
+                var officeLocalGovernments = await _context.OfficeLocalGovernments
+                    .Include(x => x.LocalGovernment)
+                    .ThenInclude(y => y.State)
+                    .Select(x => new OfficeLocalGovernmentsViewDto()
+                    {
+                        Id = x.Id,
+                        LocalGovernmentId = x.LocalGovernmentId != null ? x.LocalGovernmentId.Value : Guid.Empty,
+                        LocalGovernmentCode = x.LocalGovernment != null ? x.LocalGovernment.Code : null,
+                        LocalGovernmentName = x.LocalGovernment != null ? x.LocalGovernment.Name : null,
+                        StateCode = x.LocalGovernment != null && x.LocalGovernment.State != null ? x.LocalGovernment.State.Code : null,
+                        StateName = x.LocalGovernment != null && x.LocalGovernment.State != null ? x.LocalGovernment.State.Name : null,
+
+                    }).ToListAsync();
+
+
+                returnValue.SchoolCategorys = schoolCategorys;
+                returnValue.OfficeLocalGovernments = officeLocalGovernments;
+
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

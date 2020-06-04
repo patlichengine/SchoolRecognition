@@ -763,6 +763,27 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+
+
+
+        public async Task<Guid> GetCurrentUserOfficeId()
+        {
+            Guid returnValue = Guid.Empty;
+            try
+            {
+
+                var dbResult = await _context.Offices.Select(x => x.Id).FirstOrDefaultAsync();
+                returnValue = dbResult;
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         //
 
     }

@@ -32,6 +32,7 @@ namespace SchoolRecognition.Controllers
     {
         private IFlashMessage _flashMessage;
         private readonly IToastNotification _toastNotification;
+        private readonly IOfficesRepository _officesRepository;
         private IPinsRepository _pinsRepository;
         private IRecognitionTypesRepository _recognitionTypesRepository;
         private ISchoolPaymentsRepository _schoolPaymentsRepository;
@@ -45,12 +46,14 @@ namespace SchoolRecognition.Controllers
         //
         private int _defaultFileSizeLimit = 1100000;
 
-        public SchoolPaymentsController(IFlashMessage flashMessage, IToastNotification toastNotification, IPinsRepository pinsRepository, IRecognitionTypesRepository recognitionTypesRepository, ISchoolPaymentsRepository schoolPaymentsRepository, ISchoolCategoryRepository schoolCategorysRepository, ISchoolsRepository schoolsRepository, ICentresRepository centresRepository, IMapper mapper)
+        public SchoolPaymentsController(IFlashMessage flashMessage, IToastNotification toastNotification, IOfficesRepository officesRepository, IPinsRepository pinsRepository, IRecognitionTypesRepository recognitionTypesRepository, ISchoolPaymentsRepository schoolPaymentsRepository, ISchoolCategoryRepository schoolCategorysRepository, ISchoolsRepository schoolsRepository, ICentresRepository centresRepository, IMapper mapper)
         {
             _flashMessage = flashMessage ??
                 throw new ArgumentNullException(nameof(mapper));
             _toastNotification = toastNotification ??
                 throw new ArgumentNullException(nameof(toastNotification));
+            _officesRepository = officesRepository ??
+                throw new ArgumentNullException(nameof(officesRepository));
             _pinsRepository = pinsRepository ??
                 throw new ArgumentNullException(nameof(pinsRepository));
             _recognitionTypesRepository = recognitionTypesRepository ??
@@ -301,7 +304,7 @@ namespace SchoolRecognition.Controllers
 
                         byte[] fileBytes = ms.ToArray();
 
-                        paymentReceiptImage = ImageFileHelper.CompressAndResizeImageFromMemoryStream(fileBytes, defaultCroppedImageWidth);
+                        paymentReceiptImage = ImageFileHelper.CompressAndResizeImageFromByte(fileBytes, defaultCroppedImageWidth);
 
 
                         // act on the Base64 data
@@ -309,6 +312,16 @@ namespace SchoolRecognition.Controllers
 
                     #endregion
 
+                    //Refactor the line of code below when user authentication is enabled
+                    Guid officeId = await _officesRepository.GetCurrentUserOfficeId();
+                    if (officeId == Guid.Empty)
+                    {
+
+                        _flashMessage.Danger("User Authentication Error!", "System cannot authenticate the identity of the current user...");
+                        return Json(url);
+                    }
+
+                    model.OfficeId = officeId;
                     model.PaymentReceiptImage = paymentReceiptImage;
 
                     var result = await _schoolPaymentsRepository.Create(model);

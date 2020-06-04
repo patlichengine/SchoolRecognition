@@ -30,6 +30,10 @@ Scaffold-DbContext “Server=LAPTOP-IFRMU6GH\MSSQLSERVER19;Database=SchoolRecogn
 Scaffold-DbContext "Server=LAPTOP-IFRMU6GH\MSSQLSERVER19;Database=SchoolRecognition;User Id=sa;Password=sa@123;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir test -Tables Offices -f
 
 
+Scaffold-DbContext “Server=NORMAL-PC\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI;” Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities -ContextDir "DbContexts" -f
+
+Scaffold-DbContext "Server=LAPTOP-IFRMU6GH\MSSQLSERVER19;Database=SchoolRecognition;User Id=sa;Password=sa@123;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir test -Tables Offices -f
+
 
 Connection—Sets connection string of the database.
 Provider—Sets which provider to use to connect database.

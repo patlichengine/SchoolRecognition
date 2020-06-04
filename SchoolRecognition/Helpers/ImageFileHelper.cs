@@ -36,7 +36,7 @@ namespace SchoolRecognition.Helpers
 
             return image;
         }
-        public static byte[] CompressAndResizeImageFromMemoryStream(byte[] imageByte, int cropWidth)
+        public static byte[] CompressAndResizeImageFromByte(byte[] imageByte, int cropWidth)
         {
             int _cropWidth = 100;
             if (cropWidth > _cropWidth)
@@ -46,6 +46,12 @@ namespace SchoolRecognition.Helpers
 
             using (MemoryStream stream = new MemoryStream(imageByte))
             {
+
+
+                ImageOptimizer optimizer = new ImageOptimizer();
+
+                stream.Position = 0; // The position needs to be reset.
+                optimizer.LosslessCompress(stream);
 
                 Image imageFile = Image.FromStream(stream);
                 int _cropHeight = imageFile.Height;
@@ -63,11 +69,6 @@ namespace SchoolRecognition.Helpers
 
                 using (MemoryStream mStream = new MemoryStream())
                 {
-
-                    ImageOptimizer optimizer = new ImageOptimizer();
-
-                    mStream.Position = 0; // The position needs to be reset.
-                    optimizer.LosslessCompress(mStream);
 
                     resizedImage.Save(mStream, imageFile.RawFormat);
 

@@ -15,10 +15,10 @@ namespace SchoolRecognition.Profiles
             CreateMap<SchoolPayments, SchoolPaymentsViewDto>()
                 .ForMember(
                 dest => dest.PaymentReceiptNo,
-                opt => opt.MapFrom(src => $"{src.ReceiptNo}"))
+                opt => opt.MapFrom(src => src.ReceiptNo))
                 .ForMember(
                 dest => dest.PaymentReceiptImage,
-                opt => opt.MapFrom(src => $"{src.ReceiptImage}"))
+                opt => opt.MapFrom(src => src.ReceiptImage))
                 .ForMember(
                 dest => dest.AmountPaid,
                 opt => opt.MapFrom(src => src.Amount))
@@ -28,6 +28,27 @@ namespace SchoolRecognition.Profiles
                 {
                     opt.PreCondition(src => (src.School != null));
                     opt.MapFrom(src => $"{ src.School.Name}");
+                })
+                .ForMember(
+                dest => dest.SchoolAddress,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.School != null));
+                    opt.MapFrom(src => $"{ src.School.Address}");
+                })
+                .ForMember(
+                dest => dest.SchoolPhoneNo,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.School != null));
+                    opt.MapFrom(src => $"{ src.School.PhoneNo}");
+                })
+                .ForMember(
+                dest => dest.SchoolEmailAddress,
+                opt =>
+                {
+                    opt.PreCondition(src => (src.School != null));
+                    opt.MapFrom(src => $"{ src.School.EmailAddress}");
                 })
                 .ForMember(
                 dest => dest.SchoolCategoryName,
@@ -62,10 +83,10 @@ namespace SchoolRecognition.Profiles
             CreateMap<SchoolPaymentsCreateDto, SchoolPayments>()
                 .ForMember(
                 dest => dest.ReceiptNo,
-                opt => opt.MapFrom(src => $"{src.PaymentReceiptNo}"))
+                opt => opt.MapFrom(src => src.PaymentReceiptNo))
                 .ForMember(
                 dest => dest.ReceiptImage,
-                opt => opt.MapFrom(src => $"{src.PaymentReceiptImage}"))
+                opt => opt.MapFrom(src => src.PaymentReceiptImage))
                 .ForMember(
                 dest => dest.Amount,
                 opt => opt.MapFrom(src => src.AmountPaid));

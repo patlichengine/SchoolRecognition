@@ -108,7 +108,15 @@ namespace SchoolRecognition.Services
                { "YearEstablished", new PropertyMappingValue(new List<string>() { "YearEstablished" } )},
                { "YearEstablishedDesc", new PropertyMappingValue(new List<string>() { "YearEstablished" } , true)},
           };
-        
+
+
+        private Dictionary<string, PropertyMappingValue> _schoolFacilitiesPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" } )},
+               { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" } , true)},
+          };
+
 
         private Dictionary<string, PropertyMappingValue> _schoolPaymentsPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
@@ -156,6 +164,7 @@ namespace SchoolRecognition.Services
             _propertyMappings.Add(new PropertyMapping<PinsViewDto, Pins>(_pinsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<RecognitionTypesViewDto, RecognitionTypes>(_recognitionTypesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SchoolsViewDto, Schools>(_schoolsPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<SchoolFacilitiesViewDto, SchoolFacilities>(_schoolFacilitiesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SchoolPaymentsViewDto, SchoolPayments>(_schoolPaymentsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<StatesViewDto, States>(_statesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SubjectsViewDto, Subjects>(_subjectsPropertyMapping));

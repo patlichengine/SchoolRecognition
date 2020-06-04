@@ -15,6 +15,7 @@ namespace SchoolRecognition.Services
         Task<IEnumerable<OfficesViewDto>> ListByOfficeTypeId(Guid officeTypeId);
         Task<PagedList<OfficesViewDto>> PagedList(OfficesResourceParams resourceParams);
         Task<OfficesViewDto> Get(Guid id);
+        Task<Guid> GetCurrentUserOfficeId();
         Task<OfficesViewPagedListSchoolsDto> GetIncludingPagedListOfSchools(Guid id, SchoolsResourceParams resourceParams);
         Task<OfficeViewPagedListOfficeLocalGovernmentsDto> GetIncludingPagedListOfOfficeLocalGovernments(Guid id, OfficeLocalGovernmentsResourceParams resourceParams);
         Task<Guid?> Create(OfficesCreateDto _obj);

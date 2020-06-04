@@ -18,6 +18,10 @@ namespace SchoolRecognition.Models
         public String CreatedByUser { get; set; }
         //School
         public String SchoolName { get; set; }
+        public String SchoolAddress { get; set; }
+        public String SchoolEmailAddress { get; set; }
+        public String SchoolPhoneNo { get; set; }
+        public String YearEstablished { get; set; }
         public String SchoolCategoryName { get; set; }
         //Pin
         public String PinSerialNumber { get; set; }

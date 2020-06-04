@@ -118,7 +118,7 @@
                                             <a class="nav-link disabled text-center" href="#">
                                                 Total Pins
                                                 <div class="text-muted">
-                                                    @Model.TotalCount
+                                                    @Model.TotalCount.ToString("#,##0")
                                                 </div>
                                             </a>
                                         </li>
@@ -126,7 +126,7 @@
                                             <a class="nav-link disabled text-center" href="#">
                                                 Active Pins
                                                 <div class="text-muted">
-                                                    @recognitionType.TotalActivePins
+                                                    @recognitionType.TotalActivePins.ToString("#,##0")
                                                 </div>
                                             </a>
                                         </li>
@@ -134,7 +134,7 @@
                                             <a class="nav-link disabled text-center" href="#">
                                                 Used Pins
                                                 <div class="text-muted">
-                                                    @recognitionType.TotalInUsePins
+                                                    @recognitionType.TotalInUsePins.ToString("#,##0")
                                                 </div>
                                             </a>
                                         </li>
