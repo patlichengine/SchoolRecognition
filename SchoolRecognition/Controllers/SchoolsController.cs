@@ -55,7 +55,7 @@ namespace SchoolRecognition.Controllers
                 {
                     PageNumber = pageNumber != null ? pageNumber.Value : 1,
                     SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
-                    OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "DateCreated",
+                    OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "SchoolName",
                 };
                 //Instantiate PagedList
                 PagedList<SchoolsViewDto> schools = PagedList<SchoolsViewDto>
@@ -64,11 +64,11 @@ namespace SchoolRecognition.Controllers
                              resourceParams.PageSize);
                 switch (orderBy)
                 {
-                    case "date_desc":
-                        resourceParams.OrderBy = "DateCreatedDesc";
+                    case "year_est_desc":
+                        resourceParams.OrderBy = "YearEstablishedDesc";
                         break;
-                    case "date":
-                        resourceParams.OrderBy = "DateCreated";
+                    case "year_est":
+                        resourceParams.OrderBy = "YearEstablished";
                         break;
                     case "school_name_desc":
                         resourceParams.OrderBy = "SchoolNameDesc";
@@ -77,7 +77,7 @@ namespace SchoolRecognition.Controllers
                         resourceParams.OrderBy = "SchoolName";
                         break;
                     default:
-                        resourceParams.OrderBy = "DateCreated";
+                        resourceParams.OrderBy = "SchoolName";
                         break;
                 }
 
@@ -365,63 +365,6 @@ namespace SchoolRecognition.Controllers
             }
         }
 
-        // GET: Schools/Delete/5
-        [Route("delete/{id?}")]
-        [HttpGet]
-        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
-        [HttpCacheValidation(MustRevalidate = false)]
-        public async Task<IActionResult> Delete(Guid? id)
-        {
-            try
-            {
-                if (id == null)
-                {
-                    return NotFound();
-                }
-
-                var school = await _schoolsRepository.Get(id.Value);
-
-                if (school == null)
-                {
-                    return NotFound();
-                }
-
-
-
-
-                return PartialView(school);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        // POST: Schools/Delete/5
-        [Route("delete/{id?}")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(SchoolsViewDto model)
-        {
-            try
-            {
-                var url = Url.Action("Delete", new { id = model.Id });
-                if (ModelState.IsValid)
-                {
-                    await _schoolsRepository.Delete(model.Id);
-
-                    _flashMessage.Info("Delete Successful", "School removed from system!");
-                    url = Url.Action("Index", "Schools");
-                    return Json(url);
-                }
-                _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
-                return Json(url);
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
 
     }
 }

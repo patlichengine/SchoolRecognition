@@ -1557,3 +1557,6 @@ C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\r
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\Magick.Native-Q16-x64.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\Magick.Native-Q16-x86.dll
 C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\SchoolPayments\Details.cshtml.g.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Schools\Index.cshtml.g.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Schools\Details.cshtml.g.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition\obj\Debug\netcoreapp3.1\Razor\Views\Schools\Update.cshtml.g.cs

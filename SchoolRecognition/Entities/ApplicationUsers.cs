@@ -12,6 +12,7 @@ namespace SchoolRecognition.Entities
             AuditTrail = new HashSet<AuditTrail>();
             CentreSanctions = new HashSet<CentreSanctions>();
             Centres = new HashSet<Centres>();
+            FacilitySettings = new HashSet<FacilitySettings>();
             Offices = new HashSet<Offices>();
             PinHistories = new HashSet<PinHistories>();
             Pins = new HashSet<Pins>();
@@ -40,6 +41,7 @@ namespace SchoolRecognition.Entities
         public virtual ICollection<AuditTrail> AuditTrail { get; set; }
         public virtual ICollection<CentreSanctions> CentreSanctions { get; set; }
         public virtual ICollection<Centres> Centres { get; set; }
+        public virtual ICollection<FacilitySettings> FacilitySettings { get; set; }
         public virtual ICollection<Offices> Offices { get; set; }
         public virtual ICollection<PinHistories> PinHistories { get; set; }
         public virtual ICollection<Pins> Pins { get; set; }

@@ -20,6 +20,8 @@ namespace SchoolRecognition.Entities
         public DateTime? DateCreated { get; set; }
         public Guid? FacilityItemSettingsId { get; set; }
 
+        public virtual ApplicationUsers CreatedByNavigation { get; set; }
+        public virtual FacilityItemSettings FacilityItemSettings { get; set; }
         public virtual ICollection<SchoolFacilities> SchoolFacilities { get; set; }
     }
 }

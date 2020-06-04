@@ -15,3 +15,7 @@
     }
     //return false;
 });
+//Tooltip
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})

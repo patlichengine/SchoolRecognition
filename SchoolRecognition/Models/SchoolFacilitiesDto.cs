@@ -15,7 +15,13 @@ namespace SchoolRecognition.Models
         public DateTime DateCreated { get; set; }
 
         public string CreatedByUser{ get; set; }
-        //public virtual FacilitySettings FacilitySetting { get; set; }
+        //FacilitySettings
+        public int? FacilitySettingPosition { get; set; }
+        public Guid? SubjectId { get; set; }
+        public string FacilitySettingSpecification { get; set; }
+        public int? FacilitySettingQuantity { get; set; }
+        //FacilityItemSettings
+        public string FacilityItemSettingsDescription { get; set; }
         //School
         public String SchoolName { get; set; }
         public String SchoolAddress { get; set; }

@@ -351,6 +351,16 @@ namespace SchoolRecognition.DbContexts
                 entity.Property(e => e.Specification).HasMaxLength(20);
 
                 entity.Property(e => e.SubjectId).HasColumnName("SubjectID");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.FacilitySettings)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .HasConstraintName("FK_FacilitySettings_ApplicationUsers");
+
+                entity.HasOne(d => d.FacilityItemSettings)
+                    .WithMany(p => p.FacilitySettings)
+                    .HasForeignKey(d => d.FacilityItemSettingsId)
+                    .HasConstraintName("FK_FacilitySettings_FacilityItemSettings");
             });
 
             modelBuilder.Entity<FacilityTypes>(entity =>

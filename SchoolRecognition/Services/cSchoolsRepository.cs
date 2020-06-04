@@ -297,6 +297,7 @@ namespace SchoolRecognition.Services
                     .Include(x => x.SchoolDeficiencies)
                     .Include(x => x.SchoolFacilities)
                     .ThenInclude(y => y.FacilitySetting)
+                    .ThenInclude(z => z.FacilityItemSettings)
                     .Include(x => x.SchoolFacilities)
                     .ThenInclude(y => y.CreatedByNavigation)
                     .Include(x => x.SchoolPayments)
@@ -382,6 +383,13 @@ namespace SchoolRecognition.Services
                         ValueAupplied = x.ValueAupplied,
                         CreatedBy = x.CreatedBy,
                         DateCreated = x.DateCreated,
+                        //FacilitySettings
+                        FacilitySettingPosition = x.FacilitySetting != null ? x.FacilitySetting.Position : null,
+                        SubjectId = x.FacilitySetting != null ? x.FacilitySetting.SubjectId : null,
+                        FacilitySettingSpecification = x.FacilitySetting != null ? x.FacilitySetting.Specification : null,
+                        FacilitySettingQuantity = x.FacilitySetting != null ? x.FacilitySetting.Quantity : null,
+                        //FacilityItemSettings
+                        FacilityItemSettingsDescription = x.FacilitySetting != null && x.FacilitySetting.FacilityItemSettings != null ? x.FacilitySetting.FacilityItemSettings.Description : null,
                         //Schools
                         SchoolName = x.School != null ? x.School.Name : null,
                         SchoolAddress = x.School != null ? x.School.Address : null,
@@ -390,7 +398,6 @@ namespace SchoolRecognition.Services
                         YearEstablished = x.School != null ? x.School.YearEstablished : null,
                         SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Category.Name : null,
                         //CreatedBy
-
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
 
                     });
