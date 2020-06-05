@@ -158,7 +158,7 @@
 
                             <ul class="nav nav-tabs" id="tab-content" role="tablist">
                                 <li class="nav-item">
-                                    <form id="formSchoolPayments" asp-action="ViewSchoolPayments" asp-route-id="@Model.Id" method="post">
+                                    <form id="formSchoolPayments" asp-action="ViewSchoolPayments" asp-route-id="@Model.Id" method="get">
 
                                         <button type="submit" class="nav-link  mr-1">
                                             School Payments
@@ -166,14 +166,14 @@
                                     </form>
                                 </li>
                                 <li class="nav-item">
-                                    <form id="formSchoolSubjects" action="/" method="post">
+                                    <form id="formSchoolSubjects" action="/" method="get">
                                         <button type="submit" class="nav-link mr-1 disabled">
                                             Subjects Offered
                                         </button>
                                     </form>
                                 </li>
                                 <li class="nav-item">
-                                    <form id="formSchoolFacilitys"  asp-action="ViewSchoolFacilitys" asp-route-id="@Model.Id" method="post">
+                                    <form id="formSchoolFacilitys"  asp-action="ViewSchoolFacilitys" asp-route-id="@Model.Id" method="get">
                                         <button type="submit" class="nav-link mr-1">
                                             School Facilities
                                         </button>
@@ -190,7 +190,81 @@
                         </a>
                     </li>*@
                             </ul>
+                            <div class="card-footer">
+                                <div class="row mb-2">
 
+                                    <div class="col-12">
+
+                                        @if (Model.IsInspected)
+                                        {
+                                            <span class="lead mr-2">
+                                                <i class="fas fa-check text-success border-right"></i>
+                                                Inspected
+                                            </span>
+                                        }
+
+                                        @if (Model.IsCompleted)
+                                        {
+                                            <span class="lead mr-2">
+                                                <i class="fas fa-check text-success border-right"></i>
+                                                Is Completed
+                                            </span>
+                                        }
+
+
+                                        @if (Model.IsRecognised)
+                                        {
+                                            <span class="lead mr-2">
+                                                <i class="fas fa-check text-success border-right"></i>
+                                                Is Recognised
+                                            </span>
+                                        }
+
+                                        @if (Model.IsVetted)
+                                        {
+                                            <span class="lead mr-2">
+                                                <i class="fas fa-check text-success border-right"></i>
+                                                Is Vetted
+                                            </span>
+                                        }
+
+                                        @if (Model.IsRecommended)
+                                        {
+                                            <span class="lead mr-2">
+                                                <i class="fas fa-check text-success border-right"></i>
+                                                Is Recommended
+                                            </span>
+                                        }
+
+                                        
+
+                                        @if (Model.HasDeficientFacilitiy)
+                                        {
+                                            <span class="lead mr-2">
+                                                <i class="fas fa-times text-danger border-right"></i>
+                                                Has Deficient Facilities
+                                            </span>
+                                        }
+                                        
+                                        
+
+                                        @if (Model.HasDeficientSubject)
+                                        {
+                                            <span class="lead mr-2">
+                                                <i class="fas fa-times text-danger border-right"></i>
+                                                Has Deficient Subjects
+                                            </span>
+                                        }
+
+
+
+
+                                        
+
+                                    </div>
+
+                                </div>
+                            </div>
                             <div class="tab-content" id="tabContent">
 
                                 <div class="text-center p-5">
@@ -224,7 +298,9 @@
 <script src="~/lib/datatables/datatables.min.js"></script>
 <script>
 
-    var defaultHtml = '<div class="container centered"><div class="d-flex justify-content-center"><div class="loader text-info">Loading...</div></div></div>';
+    
+    var defaultHtml = '<div class="container centered"><div class="d-flex justify-content-center"><div class="loader text-primary">Loading...</div></div></div>';
+
 
 
     $('#formSchoolPayments').submit(function (e) {

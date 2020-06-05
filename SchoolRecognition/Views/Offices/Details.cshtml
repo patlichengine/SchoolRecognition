@@ -20,8 +20,8 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
                     <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
-                    <li class="breadcrumb-item active">Offices</li>
-                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="ViewOffices" data-toggle="link">@Model.OfficeTypeDescription</a></li>
+                    <li class="breadcrumb-item active">@Model.OfficeName</li>
                 </ol>
             </div>
         </div>
@@ -49,6 +49,32 @@
                 </div>
 
                 <div class="card-body">
+
+                    <div class="clearfix mb-2">
+
+                        <div class="float-right">
+
+                            <a asp-area="" asp-controller="Offices" asp-action="Update" asp-route-id="@Model.Id" data-toggle="link" class="btn btn-light">
+                                <i class="fas fa-desktop"></i>
+                                Update Office
+                            </a>
+                            <a asp-area="" asp-controller="OfficeStates" asp-action="CreateMultiple" data-toggle="link" class="btn btn-light">
+                                <i class="fas fa-exchange-alt"></i>
+                                Assign States to Office
+                            </a>
+                            <a asp-area="" asp-controller="OfficeLocalGovernments" asp-action="CreateMultiple" asp-route-ModelId="@Model.Id" data-toggle="link" class="btn btn-light">
+                                <i class="fas fa-exchange-alt"></i>
+                                Assign LGAs to Office
+                            </a>
+                            <a asp-area="" asp-controller="Offices" asp-action="Delete" asp-route-id="@Model.Id" data-toggle="link" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i>
+                                Delete Office
+                            </a>
+
+                        </div>
+
+                    </div>
+
                     <div class="row">
                         <!-- accepted payments column -->
                         <div class="col-md-3 border">
@@ -131,46 +157,30 @@
                         <div class="col-md-9">
 
 
-                            <div class="clearfix mb-2">
 
-                                <div class="float-right">
-
-                                    <a asp-area="" asp-controller="Offices" asp-action="Update" asp-route-id="@Model.Id" data-toggle="link" class="btn btn-light">
-                                        <i class="fas fa-desktop"></i>
-                                        Update Office
-                                    </a>
-                                    <a asp-area="" asp-controller="OfficeStates" asp-action="CreateMultiple" data-toggle="link" class="btn btn-light">
-                                        <i class="fas fa-exchange-alt"></i>
-                                        Assign States to Office
-                                    </a>
-                                    <a asp-area="" asp-controller="OfficeLocalGovernments" asp-action="CreateMultiple" asp-route-ModelId="@Model.Id" data-toggle="link" class="btn btn-light">
-                                        <i class="fas fa-exchange-alt"></i>
-                                        Assign LGAs to Office
-                                    </a>
-                                    <a asp-area="" asp-controller="Offices" asp-action="Delete" asp-route-id="@Model.Id" data-toggle="link" class="btn btn-danger">
-                                        <i class="fas fa-trash-alt"></i>
-                                        Delete Office
-                                    </a>
-
-                                </div>
-
-                            </div>
 
                             <ul class="nav nav-tabs" id="tab-content" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="tab-content-states-tab" data-toggle="pill" href="#tab-content-states" role="tab" aria-controls="tab-content-states" aria-selected="true">
-                                        States Controlled
-                                    </a>
+                                    <form id="formOfficeStates" asp-action="ViewOfficeStates" asp-route-id="@Model.Id" method="get">
+
+                                        <button type="submit" class="nav-link  mr-1">
+                                            States Controlled <span class="badge badge-primary">@Model.TotalOfficeStates</span>
+                                        </button>
+                                    </form>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="tab-content-lgas-tab" data-toggle="pill" href="#tab-content-lgas" role="tab" aria-controls="tab-content-lgas" aria-selected="false">
-                                        Local Governments Controlled
-                                    </a>
+                                    <form id="formOfficeLocalGovernments" asp-action="ViewOfficeLocalGovernments" asp-route-id="@Model.Id" method="get">
+                                        <button type="submit" class="nav-link mr-1">
+                                            LGAs Controlled <span class="badge badge-primary">@Model.TotalOfficeLocalGovernments</span>
+                                        </button>
+                                    </form>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="tab-content-schools-tab" data-toggle="pill" href="#tab-content-schools" role="tab" aria-controls="tab-content-schools" aria-selected="false">
-                                        Schools Managed
-                                    </a>
+                                    <form id="formSchools" asp-action="ViewSchools" asp-route-id="@Model.Id" method="post">
+                                        <button type="submit" class="nav-link mr-1">
+                                            Schools Managed <span class="badge badge-primary">@Model.TotalSchools</span>
+                                        </button>
+                                    </form>
                                 </li>
                             </ul>
 
@@ -178,9 +188,9 @@
 
                                 <div class="text-center p-5">
 
-                                    <small>Office Details</small>
-                                    <h4 class="mt-3" style="font-weight: 100;">@Model.OfficeName</h4>
-                                    <p>@Model.OfficeTypeDescription</p>
+                                    <p>Office Details</p>
+                                    <h3 class="mt-3">@Model.OfficeName</h3>
+                                    <h4 style="font-weight: 100;">@Model.OfficeTypeDescription</h4>
 
                                 </div>
 
@@ -206,20 +216,75 @@
 
 <script src="~/lib/datatables/datatables.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#datatable-1').DataTable({
-            responsive: true,
-            //"order": [[ 0, "desc" ]]
-        });
+
+    var defaultHtml = '<div class="container centered"><div class="d-flex justify-content-center"><div class="loader text-primary">Loading...</div></div></div>';
+
+
+    $('#formOfficeStates').submit(function (e) {
+
+
+        e.preventDefault();
+
+        var _url = document.getElementById("formOfficeStates")[name = "action"];
+
+        /* get the action attribute from the <form action=""> element */
+
+
+        $('#tabContent').html(defaultHtml);
+
+        $.ajax({
+            url: _url,
+            type: 'GET',
+        })
+            .done(function (result) {
+                $('#tabContent').html(result);
+                e.preventDefault();
+            });
     });
-</script>
-<script>
-    $(document).ready(function () {
-        $('#datatable-2').DataTable({
-            responsive: true,
-            //"order": [[ 0, "desc" ]]
-        });
+
+    $('#formOfficeLocalGovernments').submit(function (e) {
+
+
+        e.preventDefault();
+
+        var _url = document.getElementById("formOfficeLocalGovernments")[name = "action"];
+
+        /* get the action attribute from the <form action=""> element */
+
+
+        $('#tabContent').html(defaultHtml);
+
+        $.ajax({
+            url: _url,
+            type: 'GET',
+        })
+            .done(function (result) {
+                $('#tabContent').html(result);
+                e.preventDefault();
+            });
     });
+
+    $('#formSchools').submit(function (e) {
+
+
+        e.preventDefault();
+
+        var _url = document.getElementById("formSchools")[name = "action"];
+
+        /* get the action attribute from the <form action=""> element */
+
+
+        $('#tabContent').html(defaultHtml);
+
+        $.ajax({
+            url: _url,
+            type: 'GET',
+        })
+            .done(function (result) {
+                $('#tabContent').html(result);
+                e.preventDefault();
+            });
+    });
+
 </script>
-<script src="~/js/ajaxFormGET.js"></script>
 <script src="~/js/linkClick.js"></script>

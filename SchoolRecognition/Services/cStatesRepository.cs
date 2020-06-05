@@ -193,7 +193,7 @@ namespace SchoolRecognition.Services
                             //    LgaName = x.Name,
                             //    LgaCode = x.Code,
                             //    StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
-                            //    SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
+                            //    TotalSchools = x.Schools != null ? x.Schools.Count() : 0
                             //}),
 
                             SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0,
@@ -318,7 +318,7 @@ namespace SchoolRecognition.Services
                         //    LgaName = x.Name,
                         //    LgaCode = x.Code,
                         //    StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
-                        //    SchoolsCount = x.Schools != null ? x.Schools.Count() : 0
+                        //    TotalSchools = x.Schools != null ? x.Schools.Count() : 0
                         //}),
 
                         SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0,

@@ -84,9 +84,9 @@ namespace SchoolRecognition.Services
                     //
                     CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                     DateCreated = x.DateCreated,
-                    OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
-                    OfficeLocalGovernmentsCount = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
-                    SchoolsCount = x.Schools != null ? x.Schools.Count() : 0,
+                    TotalOfficeStates = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                    TotalOfficeLocalGovernments = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
+                    TotalSchools = x.Schools != null ? x.Schools.Count() : 0,
 
 
                 }).ToListAsync();
@@ -131,9 +131,9 @@ namespace SchoolRecognition.Services
                         //
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                         DateCreated = x.DateCreated,
-                        OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
-                        OfficeLocalGovernmentsCount = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
-                        SchoolsCount = x.Schools != null ? x.Schools.Count() : 0,
+                        TotalOfficeStates = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                        TotalOfficeLocalGovernments = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
+                        TotalSchools = x.Schools != null ? x.Schools.Count() : 0,
 
 
                     }).ToListAsync();
@@ -208,9 +208,9 @@ namespace SchoolRecognition.Services
                         //
                         CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                         DateCreated = x.DateCreated,
-                        OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
-                        OfficeLocalGovernmentsCount = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
-                        SchoolsCount = x.Schools != null ? x.Schools.Count() : 0,
+                        TotalOfficeStates = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                        TotalOfficeLocalGovernments = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
+                        TotalSchools = x.Schools != null ? x.Schools.Count() : 0,
 
 
                     }); ;
@@ -270,26 +270,10 @@ namespace SchoolRecognition.Services
                             //IsInUse = x.IsInUse,
                             CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
                             DateCreated = x.DateCreated,
-                            OfficeStateStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
-                            {
-                                Id = y.Id,
-                                StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
-                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
-                                StateName = y.State != null ? y.State.Name : null,
-                                StateCode = y.State != null ? y.State.Code : null,
-                                OfficeName = y.Office != null ? y.Office.Name : null,
-                                OfficeAddress = y.Office != null ? y.Office.Address : null,
-                            }),
-                            OfficeLgas = x.OfficeLocalGovernments.Select(y => new OfficeLocalGovernmentsViewDto()
-                            {
-                                Id = y.Id,
-                                LocalGovernmentId = y.LocalGovernmentId != null ? y.LocalGovernmentId.Value : Guid.Empty,
-                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
-                                LocalGovernmentName = y.LocalGovernment != null ? y.LocalGovernment.Name : null,
-                                LocalGovernmentCode = y.LocalGovernment != null ? y.LocalGovernment.Code : null,
-                                OfficeName = y.Office != null ? y.Office.Name : null,
-                                OfficeAddress = y.Office != null ? y.Office.Address : null,
-                            }),
+                            TotalOfficeStates = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                            TotalOfficeLocalGovernments = x.OfficeLocalGovernments != null ? x.OfficeLocalGovernments.Count() : 0,
+                            TotalSchools = x.Schools != null ? x.Schools.Count() : 0,
+                     
 
                         })
                         .Where(x => x.Id == id).SingleOrDefaultAsync();
@@ -443,12 +427,12 @@ namespace SchoolRecognition.Services
 
                         var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
 
-                        queryableSchools = queryableSchools.Where(a => a.Name.ToString().ToUpper().Contains(searchQuery)
-                            || a.Address.ToString().ToUpper().Contains(searchQuery)
-                            || a.EmailAddress.ToString().ToUpper().Contains(searchQuery)
-                            || a.PhoneNo.ToString().ToUpper().Contains(searchQuery)
+                        queryableSchools = queryableSchools.Where(a => a.Name.ToUpper().Contains(searchQuery)
+                            || a.Address.ToUpper().Contains(searchQuery)
+                            || a.EmailAddress.ToUpper().Contains(searchQuery)
+                            || a.PhoneNo.ToUpper().Contains(searchQuery)
                             || (a.YearEstablished != null ? a.YearEstablished : null).ToString().ToUpper().Contains(searchQuery)
-                            || (a.Category != null ? a.Category.Name : null).ToString().ToUpper().Contains(searchQuery)
+                            || (a.Category != null ? a.Category.Name : null).ToUpper().Contains(searchQuery)
                             || (a.Office != null ? a.Office.Name : null).ToUpper().Contains(searchQuery)
                             || (a.Office != null ? a.Office.Address : null).ToUpper().Contains(searchQuery)
                             || (a.Lg != null ? a.Lg.Name : null).ToUpper().Contains(searchQuery)
@@ -570,10 +554,10 @@ namespace SchoolRecognition.Services
                         var searchQuery = resourceParams.SearchQuery.Trim().ToUpper();
 
                         queryableOfficeLocalGovernments = queryableOfficeLocalGovernments.Where(
-                            a => (a.LocalGovernment != null ? a.LocalGovernment.Name : null).ToString().ToUpper().Contains(searchQuery)
-                            || (a.LocalGovernment != null ? a.LocalGovernment.Code : null).ToString().ToUpper().Contains(searchQuery)
-                            || (a.LocalGovernment != null && a.LocalGovernment.State != null ? a.LocalGovernment.State.Name : null).ToString().ToUpper().Contains(searchQuery)
-                            || (a.LocalGovernment != null && a.LocalGovernment.State != null ? a.LocalGovernment.State.Code : null).ToString().ToUpper().Contains(searchQuery)
+                            a => (a.LocalGovernment != null ? a.LocalGovernment.Name : null).ToUpper().Contains(searchQuery)
+                            || (a.LocalGovernment != null ? a.LocalGovernment.Code : null).ToUpper().Contains(searchQuery)
+                            || (a.LocalGovernment != null && a.LocalGovernment.State != null ? a.LocalGovernment.State.Name : null).ToUpper().Contains(searchQuery)
+                            || (a.LocalGovernment != null && a.LocalGovernment.State != null ? a.LocalGovernment.State.Code : null).ToUpper().Contains(searchQuery)
                             );
                     }
                     //Ordering

@@ -174,27 +174,6 @@
 </script>
 <script>
         $(function () {
-            $('#OfficeId').change(function () {
-
-                var _officeId = $('#OfficeId').val();
-
-                var _url = '@Url.Action("GetOfficeStates")'
-
-                return $.ajax({
-                    type: 'GET',
-                    url: _url,
-                    data: "officeId=" + _officeId,
-                    success: function (data) {
-                        console.log(data);
-                        $('#LocalGovernmentIds').val(data);
-                        $("#LocalGovernmentIds").bootstrapDualListbox('refresh', true);
-                    }
-                 });
-            });
-        });
-</script>
-<script>
-        $(function () {
             $('#StateId').change(function () {
 
                 var _stateId = $('#StateId').val();

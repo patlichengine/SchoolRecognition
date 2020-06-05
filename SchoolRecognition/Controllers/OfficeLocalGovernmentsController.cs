@@ -24,10 +24,11 @@ namespace SchoolRecognition.Controllers
         private ILocalGovernmentsRepository _localGovernmentsRepository;
         private IOfficesRepository _officesRepository;
         private IOfficeLocalGovernmentsRepository _officeLocalGovernmentsRepository;
+        private IOfficeStatesRepository _officeStatesRepository;
         private ILocalGovernmentsRepository _statesRepository;
         private readonly IMapper _mapper;
 
-        public OfficeLocalGovernmentsController(IFlashMessage flashMessage, ILocalGovernmentsRepository localGovernmentsRepository, IOfficesRepository officesRepository, IOfficeLocalGovernmentsRepository officeLocalGovernmentsRepository, ILocalGovernmentsRepository statesRepository, IMapper mapper)
+        public OfficeLocalGovernmentsController(IFlashMessage flashMessage, ILocalGovernmentsRepository localGovernmentsRepository, IOfficesRepository officesRepository, IOfficeStatesRepository officeStatesRepository, IOfficeLocalGovernmentsRepository officeLocalGovernmentsRepository, ILocalGovernmentsRepository statesRepository, IMapper mapper)
         {
             _flashMessage = flashMessage ??
                 throw new ArgumentNullException(nameof(mapper));
@@ -37,6 +38,8 @@ namespace SchoolRecognition.Controllers
                throw new ArgumentNullException(nameof(officesRepository));
             _officeLocalGovernmentsRepository = officeLocalGovernmentsRepository ??
                throw new ArgumentNullException(nameof(officeLocalGovernmentsRepository));
+            _officeStatesRepository = officeStatesRepository ??
+               throw new ArgumentNullException(nameof(officeStatesRepository));
             _statesRepository = statesRepository ??
                throw new ArgumentNullException(nameof(statesRepository));
             _mapper = mapper ??
@@ -301,8 +304,7 @@ namespace SchoolRecognition.Controllers
             }
             return Json(selectList);
         }
-        
-
+          
 
         [Route("list_local_governments")]
         [HttpGet]

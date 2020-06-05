@@ -59,7 +59,9 @@
     <script type="text/javascript">
         //var defaultHtml = '<h3 class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Loading...</h3> <h4 class="timeline-header no-border"><a href="#">If the page does not load, click here</a></h4>';
 
-        var defaultHtml = '<div class="container centered p-5"><div class="d-flex justify-content-center"><div class="loader text-info">Loading...</div></div></div>';
+        
+        var defaultHtml = '<div class="container centered"><div class="d-flex justify-content-center"><div class="loader text-primary">Loading...</div></div></div>';
+
 
 
         //$(function () {
@@ -70,7 +72,7 @@
             localStorage.setItem('lastLink', link);
             //alert("Checked");
             //goto the last page if it exists
-            console.log(link);
+            //console.log(link);
             
             var currentLink = $(this).attr('href');
 
@@ -88,7 +90,7 @@
         $(window).on('load', function(e){
             // your logic here`enter code here`
             var lastLink = localStorage.getItem('lastLink');
-            console.log(lastLink);
+            //console.log(lastLink);
             $('.content-wrapper').load(lastLink);
             e.preventDefault();
         });

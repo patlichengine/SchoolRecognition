@@ -182,32 +182,6 @@
     });
 </script>
 <script>
-    $(function () {
-        $("#DateCreated").datepicker({
-            dateFormat: 'dd-MM-yy',
-            changeMonth: true,
-            changeYear: true,
-            yearRange: '1900:c+30',
-            //showButtonPanel: true,
-
-            //Properly aligns pop-up calendar
-            beforeShow: function (a, b) {
-                var cnt = 0;
-                var interval = setInterval(function () {
-                    cnt++;
-                    if (b.dpDiv.is(":visible")) {
-                        var parent = b.input.closest("div");
-                        b.dpDiv.position({ my: "left top", at: "left bottom", of: parent });
-                        clearInterval(interval);
-                    } else if (cnt > 50) {
-                        clearInterval(interval);
-                    }
-                }, 10);
-            }
-        });
-    });
-</script>
-<script>
     // add the rule here
     //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
     //    return arg !== value;

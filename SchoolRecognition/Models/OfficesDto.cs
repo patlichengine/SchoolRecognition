@@ -46,12 +46,12 @@ namespace SchoolRecognition.Models
         public Guid? StateId { get; set; }
         public Guid? OfficeTypeId { get; set; }
         //Child collections
-        public Int64 OfficeLocalGovernmentsCount { get; set; }
-        public Int64 OfficeStatesCount { get; set; }
-        public Int64 SchoolsCount { get; set; }
-        public virtual IEnumerable<OfficeLocalGovernmentsViewDto> OfficeLgas { get; set; }
-        public virtual IEnumerable<OfficeStatesViewDto> OfficeStateStates { get; set; }
-        public virtual IEnumerable<SchoolsViewDto> OfficeSchools { get; set; }
+        public Int64 TotalOfficeLocalGovernments { get; set; }
+        public Int64 TotalOfficeStates { get; set; }
+        public Int64 TotalSchools { get; set; }
+        public virtual IEnumerable<OfficeLocalGovernmentsViewDto> OfficeLgas { get; set; } = new List<OfficeLocalGovernmentsViewDto>();
+        public virtual IEnumerable<OfficeStatesViewDto> OfficeStateStates { get; set; } = new List<OfficeStatesViewDto>();
+        public virtual IEnumerable<SchoolsViewDto> OfficeSchools { get; set; } = new List<SchoolsViewDto>();
     }
     public class OfficeViewPagedListOfficeLocalGovernmentsDto
     {
@@ -65,8 +65,6 @@ namespace SchoolRecognition.Models
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public string OfficeTypeDescription { get; set; }
-        //public virtual IEnumerable<OfficeStatesViewDto> StateOffices { get; set; }
-        public virtual IEnumerable<OfficeStatesViewDto> OfficeStateStates { get; set; }
         public virtual PagedList<OfficeLocalGovernmentsViewDto> OfficeLgas { get; set; }
     }
 
@@ -82,17 +80,14 @@ namespace SchoolRecognition.Models
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
         public string OfficeTypeDescription { get; set; }
-        //public virtual IEnumerable<OfficeStatesViewDto> StateOffices { get; set; }
-        public virtual IEnumerable<OfficeLocalGovernmentsViewDto> OfficeLgas { get; set; }
-        public virtual IEnumerable<OfficeStatesViewDto> OfficeStateStates { get; set; }
         public virtual PagedList<SchoolsViewDto> OfficeSchools { get; set; }
     }
 
 
     public class OfficesCreationDependecyDto
     {
-        public IEnumerable<StatesViewDto> States { get; set; }
-        public IEnumerable<OfficeTypesViewDto> OfficeTypes { get; set; }
+        public IEnumerable<StatesViewDto> States { get; set; } = new List<StatesViewDto>();
+        public IEnumerable<OfficeTypesViewDto> OfficeTypes { get; set; } = new List<OfficeTypesViewDto>();
     }
 
 

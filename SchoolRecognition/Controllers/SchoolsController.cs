@@ -17,7 +17,7 @@ using Vereyon.Web;
 namespace SchoolRecognition.Controllers
 {
 
-    [Route("manage_schools")]
+    [Route("manage_schools/registered_schools")]
     public class SchoolsController : Controller
     {
 
@@ -298,7 +298,7 @@ namespace SchoolRecognition.Controllers
                 var officeLocalGovernments = creationDependencys.OfficeLocalGovernments;
 
                 //
-                ViewBag.SchoolCategorys = schoolCategorys.OrderBy(x => x.Name).Select(x =>
+                ViewData["SchoolCategorys"] = schoolCategorys.OrderBy(x => x.Name).Select(x =>
                  new SelectListItem()
                  {
                      Text = x.Name,
@@ -307,7 +307,7 @@ namespace SchoolRecognition.Controllers
 
 
                 //
-                ViewBag.OfficeLocalGovernments = officeLocalGovernments.OrderBy(x => x.LocalGovernmentCode).Select(x =>
+                ViewData["OfficeLocalGovernments"] = officeLocalGovernments.OrderBy(x => x.LocalGovernmentCode).Select(x =>
                  new SelectListItem()
                  {
                      Text = $"{x.LocalGovernmentCode} {x.LocalGovernmentName} [ {x.StateCode} {x.StateName} ]",
@@ -376,7 +376,7 @@ namespace SchoolRecognition.Controllers
                 var officeLocalGovernments = creationDependencys.OfficeLocalGovernments;
 
                 //
-                ViewBag.SchoolCategorys = schoolCategorys.OrderBy(x => x.Name).Select(x =>
+                ViewData["SchoolCategorys"] = schoolCategorys.OrderBy(x => x.Name).Select(x =>
                  new SelectListItem()
                  {
                      Text = x.Name,
@@ -385,7 +385,7 @@ namespace SchoolRecognition.Controllers
 
 
                 //
-                ViewBag.OfficeLocalGovernments = officeLocalGovernments.OrderBy(x => x.LocalGovernmentCode).Select(x =>
+                ViewData["OfficeLocalGovernments"] = officeLocalGovernments.OrderBy(x => x.LocalGovernmentCode).Select(x =>
                  new SelectListItem()
                  {
                      Text = $"{x.LocalGovernmentCode} {x.LocalGovernmentName} [ {x.StateCode} {x.StateName} ]",

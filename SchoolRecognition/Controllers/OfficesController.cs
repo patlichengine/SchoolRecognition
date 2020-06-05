@@ -159,6 +159,7 @@ namespace SchoolRecognition.Controllers
         // GET: Offices/Details/5
         public async Task<IActionResult> ViewOfficeStates(Guid id)
         {
+            IEnumerable<OfficeStatesViewDto> officeStates = new List<OfficeStatesViewDto>();
             try
             {
 
@@ -173,8 +174,9 @@ namespace SchoolRecognition.Controllers
                 {
                     return NotFound();
                 }
+                officeStates = result.OfficeStateStates;
 
-                return PartialView(result);
+                return PartialView(officeStates);
             }
             catch (Exception)
             {
@@ -249,11 +251,10 @@ namespace SchoolRecognition.Controllers
                         }
                     }
                 }
-
-                ViewData["Pages"] = pages;
-                ViewData["Office"] = result;
-                ViewData["OrderBy"] = orderBy;
-                ViewData["SearchQuery"] = searchQuery;
+                ViewBag.Pages = pages;
+                ViewBag.Office = result;
+                ViewBag.OrderBy = orderBy;
+                ViewBag.SearchQuery = searchQuery;
 
                 pagedList = result.OfficeLgas;
 
@@ -340,10 +341,10 @@ namespace SchoolRecognition.Controllers
                     }
                 }
 
-                ViewData["Pages"] = pages;
-                ViewData["Office"] = result;
-                ViewData["OrderBy"] = orderBy;
-                ViewData["SearchQuery"] = searchQuery;
+                ViewBag.Pages = pages;
+                ViewBag.Office = result;
+                ViewBag.OrderBy = orderBy;
+                ViewBag.SearchQuery = searchQuery;
 
                 pagedList = result.OfficeSchools;
 
