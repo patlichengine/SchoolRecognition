@@ -34,6 +34,7 @@ namespace SchoolRecognition.Models
         public Guid? CategoryId { get; set; }
         public Guid? OfficeId { get; set; }
         public Guid? LgId { get; set; }
+        public virtual IEnumerable<SchoolPaymentsViewDto> Payments { get; set; } = new List<SchoolPaymentsViewDto>();
 
     }
     public class SchoolsCreateDto

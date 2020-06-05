@@ -22,6 +22,8 @@ namespace SchoolRecognition.Models
         public int? FacilitySettingQuantity { get; set; }
         //FacilityItemSettings
         public string FacilityItemSettingsDescription { get; set; }
+        //Subject
+
         //School
         public String SchoolName { get; set; }
         public String SchoolAddress { get; set; }

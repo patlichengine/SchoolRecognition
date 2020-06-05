@@ -121,13 +121,45 @@ namespace SchoolRecognition.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-
+                       
 
         [Route("details/{id:guid}")]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
         [HttpCacheValidation(MustRevalidate = false)]
         // GET: Schools/Details/5
-        public async Task<IActionResult> Details(Guid id, string orderBy, string searchQuery, int? pageNumber)
+        public async Task<IActionResult> Details(Guid id)
+        {
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+
+
+                var result = await _schoolsRepository.Get(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+
+                return PartialView(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [Route("school_facilities/{id:guid}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        // GET: Schools/Details/5
+        public async Task<IActionResult> ViewSchoolFacilitys(Guid id, string orderBy, string searchQuery, int? pageNumber)
         {
             try
             {
@@ -199,6 +231,41 @@ namespace SchoolRecognition.Controllers
                 schoolFacilitys = result.Facilities;
 
                 return PartialView(schoolFacilitys);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+
+        [Route("payments_made/{id:guid}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        // GET: Schools/Details/5
+        public async Task<IActionResult> ViewSchoolPayments(Guid id)
+        {
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+                IEnumerable<SchoolPaymentsViewDto> schoolPayments = new List<SchoolPaymentsViewDto>();
+
+                var school = await _schoolsRepository.GetIncludingListOfSchoolPayments(id);
+
+                if (school == null)
+                {
+                    return NotFound();
+                }
+
+                schoolPayments = school.Payments;
+
+                return PartialView(schoolPayments);
             }
             catch (Exception)
             {

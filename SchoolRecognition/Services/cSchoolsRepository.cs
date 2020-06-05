@@ -482,6 +482,109 @@ namespace SchoolRecognition.Services
             }
         }
 
+        public async Task<SchoolsViewDto> GetIncludingListOfSchoolPayments(Guid id)
+        {
+
+            //Instantiate Return Value
+            SchoolsViewDto returnValue = null;
+            try
+            {
+                if (id != Guid.Empty)
+                {
+                    var dbResult = _context.Schools
+                    .Include(x => x.Category)
+                    .Include(x => x.Office)
+                    .Include(x => x.Lg)
+                    .ThenInclude(x => x.State)
+                    .Include(x => x.PinHistories)
+                    .Include(x => x.SchoolClassAllocations)
+                    .ThenInclude(y => y.Class)
+                    .Include(x => x.SchoolDeficiencies)
+                    .Include(x => x.SchoolFacilities)
+                    .ThenInclude(y => y.FacilitySetting)
+                    .Include(x => x.SchoolFacilities)
+                    .ThenInclude(y => y.CreatedByNavigation)
+                    .Include(x => x.SchoolPayments)
+                    .ThenInclude(y => y.CreatedByNavigation)
+                    .Include(x => x.SchoolPayments)
+                    .ThenInclude(y => y.Pin)
+                    .ThenInclude(z => z.RecognitionType)
+                    .Include(x => x.SchoolStaffProfiles)
+                    .ThenInclude(y => y.Title)
+                    .Include(x => x.SchoolStaffProfiles)
+                    .ThenInclude(y => y.Category)
+                    .Include(x => x.SchoolStaffProfiles)
+                    .ThenInclude(y => y.SchoolStaffDegrees)
+                    .Include(x => x.SchoolStaffProfiles)
+                    .ThenInclude(y => y.SchoolStaffSubjects)
+                    as IQueryable<Schools>;
+
+                    var school = await dbResult.Select(x => new SchoolsViewDto()
+                    {
+                        Id = x.Id,
+                        SchoolName = x.Name,
+                        Address = x.Address,
+                        EmailAddress = x.EmailAddress,
+                        PhoneNo = x.PhoneNo,
+                        YearEstablished = x.YearEstablished,
+                        IsRecognised = x.IsRecognised,
+                        IsVetted = x.IsVetted,
+                        IsInspected = x.IsInspected,
+                        IsCompleted = x.IsCompleted,
+                        IsRecommended = x.IsRecommended,
+                        HasDeficientSubject = x.HasDeficientSubject,
+                        HasDeficientFacilitiy = x.HasDeficientFacilitiy,
+                        //SchoolCategory
+                        CategoryId = x.CategoryId,
+                        SchoolCategoryName = x.Category != null ? x.Category.Name : null,
+                        SchoolCategoryCode = x.Category != null ? x.Category.Code : null,
+                        //Office
+                        OfficeId = x.OfficeId,
+                        OfficeName = x.Office != null ? x.Office.Name : null,
+                        //LGA
+                        LgId = x.LgId,
+                        LgaName = x.Lg != null ? x.Lg.Name : null,
+                        LgaCode = x.Lg != null ? x.Lg.Code : null,
+                        //State
+                        StateName = x.Lg != null & x.Lg.State != null ? x.Lg.State.Name : null,
+                        StateCode = x.Lg != null & x.Lg.State != null ? x.Lg.State.Code : null,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            //school
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            //Pin
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null,
+                            //RecognitionType
+                            RecognitionTypeCode = x.Pin != null && x.Pin.RecognitionType != null ? x.Pin.RecognitionType.Code : null,
+                            RecognitionTypeName = x.Pin != null && x.Pin.RecognitionType != null ? x.Pin.RecognitionType.Name : null,
+
+                        })
+
+                    })
+                    .Where(x => x.Id == id).SingleOrDefaultAsync();
+                    //
+                    return returnValue = school;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(id));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<Guid?> Create(SchoolsCreateDto _obj)
         {
             //Instantiate Return Value

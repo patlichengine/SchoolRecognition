@@ -161,20 +161,20 @@
                                 <tbody>
                                     @foreach (var item in Model.Payments)
                                     {
-                                        <tr role="row">
-                                            <td>@item.DateCreated</td>
-                                            <td>@item.SchoolName</td>
-                                            <td>@(item.AmountPaid != null ? item.AmountPaid.Value : 0).ToString("#,##0")</td>
-                                            <td class="text-center p-1">
-                                                <span data-toggle="tooltip" data-placement="top" title="View Pins">
+                                    <tr role="row">
+                                        <td>@(item.DateCreated != null ? item.DateCreated.Value.ToString("dd-MMM-yyyy") : "NOT STATED")</td>
+                                        <td>@item.SchoolName</td>
+                                        <td>@(item.AmountPaid != null ? item.AmountPaid.Value.ToString("#,##0") : "0")</td>
+                                        <td class="text-center p-1">
+                                            <span data-toggle="tooltip" data-placement="top" title="View Pins">
 
-                                                    <a asp-action="ViewPins" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="link">
-                                                        <i class="fas fa-desktop"></i>
-                                                        @*View Pins*@
-                                                    </a>
-                                                </span>
-                                            </td>
-                                        </tr>
+                                                <a asp-action="Details" asp-controller="SchoolPayments" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="link">
+                                                    <i class="fas fa-desktop"></i>
+                                                    @*View Pins*@
+                                                </a>
+                                            </span>
+                                        </td>
+                                    </tr>
                                     }
 
                                 </tbody>

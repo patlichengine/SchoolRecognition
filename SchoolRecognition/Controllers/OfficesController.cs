@@ -128,7 +128,149 @@ namespace SchoolRecognition.Controllers
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
         [HttpCacheValidation(MustRevalidate = false)]
         // GET: Offices/Details/5
-        public async Task<IActionResult> Details(Guid id, string orderBy, string searchQuery, int? pageNumber)
+        public async Task<IActionResult> Details(Guid id)
+        {
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+                var result = await _officesRepository.Get(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return PartialView(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [Route("states_controlled/{id:guid}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        // GET: Offices/Details/5
+        public async Task<IActionResult> ViewOfficeStates(Guid id)
+        {
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+                var result = await _officesRepository.GetIncludingListOfOfficeStates(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return PartialView(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [Route("local_governments_controlled/{id:guid}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        // GET: Offices/Details/5
+        public async Task<IActionResult> ViewOfficeLocalGovernments(Guid id, string orderBy, string searchQuery, int? pageNumber)
+        {
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+
+
+                IEnumerable<int> pages = new List<int>();
+
+                var resourceParams = new OfficeLocalGovernmentsResourceParams()
+                {
+                    PageNumber = pageNumber != null ? pageNumber.Value : 1,
+                    SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
+                    OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "Name",
+                };
+                //Instantiate PagedList
+                PagedList<OfficeLocalGovernmentsViewDto> pagedList = PagedList<OfficeLocalGovernmentsViewDto>
+                         .Create(Enumerable.Empty<OfficeLocalGovernmentsViewDto>().AsQueryable(),
+                             resourceParams.PageNumber,
+                             resourceParams.PageSize);
+                switch (orderBy)
+                {
+                    case "id_desc":
+                        resourceParams.OrderBy = "IdDesc";
+                        break;
+                    case "id":
+                        resourceParams.OrderBy = "Id";
+                        break;
+                    default:
+                        resourceParams.OrderBy = "Id";
+                        break;
+                }
+
+                var result = await _officesRepository.GetIncludingPagedListOfOfficeLocalGovernments(id, resourceParams);
+
+                if (result != null)
+                {
+                    var totalPages = result.OfficeLgas.TotalPages;
+
+                    pages = Enumerable.Range(1, totalPages);
+
+                    if (totalPages > 5)
+                    {
+
+                        if ((resourceParams.PageNumber + 2) >= totalPages)
+                        {
+                            pages = pages.Skip(totalPages - 5).Take(5).ToList();
+                        }
+                        else if ((resourceParams.PageNumber - 2) <= 1)
+                        {
+                            pages = pages.Take(5).ToList();
+                        }
+                        else
+                        {
+                            pages = pages.Skip(resourceParams.PageNumber - 2).Take(5).ToList();
+                        }
+                    }
+                }
+
+                ViewData["Pages"] = pages;
+                ViewData["Office"] = result;
+                ViewData["OrderBy"] = orderBy;
+                ViewData["SearchQuery"] = searchQuery;
+
+                pagedList = result.OfficeLgas;
+
+                return PartialView(pagedList);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        [Route("schools_controlled/{id:guid}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        // GET: Offices/Details/5
+        public async Task<IActionResult> ViewSchools(Guid id, string orderBy, string searchQuery, int? pageNumber)
         {
             try
             {
@@ -149,7 +291,7 @@ namespace SchoolRecognition.Controllers
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "Name",
                 };
                 //Instantiate PagedList
-                PagedList<SchoolsViewDto> pins = PagedList<SchoolsViewDto>
+                PagedList<SchoolsViewDto> pagedList = PagedList<SchoolsViewDto>
                          .Create(Enumerable.Empty<SchoolsViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -203,15 +345,17 @@ namespace SchoolRecognition.Controllers
                 ViewData["OrderBy"] = orderBy;
                 ViewData["SearchQuery"] = searchQuery;
 
-                pins = result.OfficeSchools;
+                pagedList = result.OfficeSchools;
 
-                return PartialView(pins);
+                return PartialView(pagedList);
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+
 
         // GET: Offices/Create
         [Route("new_office")]
