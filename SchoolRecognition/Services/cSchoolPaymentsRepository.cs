@@ -20,6 +20,7 @@ namespace SchoolRecognition.Services
         private readonly SchoolRecognitionContext _context;
         private readonly IMapper _mapper;
         private readonly IPropertyMappingService _propertyMappingService;
+        private readonly ICentresRepository _centresRepository;
         private readonly ISchoolsRepository _schoolsRepository;
         private readonly IPinsRepository _pinsRepository;
 
@@ -30,11 +31,12 @@ namespace SchoolRecognition.Services
 
         //}
 
-        public cSchoolPaymentsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService, ISchoolsRepository schoolsRepository, IPinsRepository pinsRepository)
+        public cSchoolPaymentsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService, ICentresRepository centresRepository, IPinsRepository pinsRepository, ISchoolsRepository schoolsRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
+            _centresRepository = centresRepository ?? throw new ArgumentNullException(nameof(centresRepository));
             _schoolsRepository = schoolsRepository ?? throw new ArgumentNullException(nameof(schoolsRepository));
             _pinsRepository = pinsRepository ?? throw new ArgumentNullException(nameof(pinsRepository));
         }
@@ -245,7 +247,7 @@ namespace SchoolRecognition.Services
         {
             //Instantiate Return Value
             Guid? returnValue = null;
-            Guid? schoolId = null;
+            Guid? _schoolId = null;
             try
             {
                 if (_obj != null && _obj.Id == Guid.Empty)
@@ -262,18 +264,40 @@ namespace SchoolRecognition.Services
 
 
                     SchoolPayments entity = _mapper.Map<SchoolPayments>(_obj);
-                    schoolId = _obj.SchoolId;
+                    _schoolId = _obj.SchoolId;
                     //
-                    if (_obj.SchoolId == null || (_obj.SchoolId != null && _obj.SchoolId.Value == Guid.Empty))
+                    #region Consolidate Centre with Existing School otherwise Create School Table row for the Centre
+
+                    if (!String.IsNullOrWhiteSpace(_obj.CentreNo))
+                    {
+                        CentresViewDto _centre = await _centresRepository.GetByCentreNumber(_obj.CentreNo);
+                        if (_centre != null)
+                        {
+                            string centreName = _centre.CentreName.Trim().ToUpper();
+                            SchoolsViewDto _school = await _schoolsRepository.GetBySchoolName(centreName);
+                            if (_school != null)
+                            {
+                                _schoolId = _school.Id;
+                            }
+                            else
+                            {
+                                _schoolId = await _schoolsRepository.CreateForCentre(_centre, _obj.OfficeId);
+                            }
+                        }
+                    }
+
+                    #endregion
+
+                    if (_schoolId == null || (_schoolId != null && _schoolId.Value == Guid.Empty))
                     {
                         SchoolsCreateDto schoolObj = _mapper.Map<SchoolsCreateDto>(_obj);
 
-                        schoolId = await _schoolsRepository.Create(schoolObj);
+                        _schoolId = await _schoolsRepository.Create(schoolObj);
                     }
                     entity.Id = Guid.NewGuid();
                     entity.PinId = pin.Id;
                     entity.DateCreated = DateTime.Now;
-                    entity.SchoolId = schoolId;
+                    entity.SchoolId = _schoolId;
 
                     await _context.SchoolPayments.AddAsync(entity);
                     await this.Save();

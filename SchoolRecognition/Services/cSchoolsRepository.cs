@@ -22,6 +22,7 @@ namespace SchoolRecognition.Services
         private readonly SchoolRecognitionContext _context;
         private readonly IMapper _mapper;
         private readonly IPropertyMappingService _propertyMappingService;
+        private readonly ILocalGovernmentsRepository _localGovernmentsRepository;
 
         //public cRecognitionTypesRepository(ConnectionString connectionString)
         //{
@@ -30,11 +31,12 @@ namespace SchoolRecognition.Services
 
         //}
 
-        public cSchoolsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService)
+        public cSchoolsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService, ILocalGovernmentsRepository localGovernmentsRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
+            _localGovernmentsRepository = localGovernmentsRepository ?? throw new ArgumentNullException(nameof(localGovernmentsRepository));
         }
 
 
@@ -576,6 +578,57 @@ namespace SchoolRecognition.Services
                 else
                 {
                     throw new ArgumentNullException(nameof(id));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<Guid?> CreateForCentre(CentresViewDto _obj, Guid? officeId)
+        {
+            //Instantiate Return Value
+            Guid? returnValue = null;
+            Guid? lgaId = null;
+            try
+            {
+                if (_obj != null && _obj.Id == Guid.Empty)
+                {
+                    Schools entity = _mapper.Map<Schools>(_obj);
+
+                    #region Get School Lga
+
+                    char[] charArrayCentreNo = _obj.CentreNo.ToCharArray();
+
+                    //Get characters at positions 2 and 3
+                    string stateCode = $"{charArrayCentreNo[1]}{charArrayCentreNo[2]}";
+
+                    //Get characters at positions 4 and 5
+                    string lgaCode = $"{charArrayCentreNo[3]}{charArrayCentreNo[4]}";
+
+                    var localGovernment = await _localGovernmentsRepository.GetByStateCodeAndLgaCode(stateCode, lgaCode);
+                    if (localGovernment != null)
+                    {
+                        lgaId = localGovernment.Id;
+                    }
+
+                    #endregion
+                    //
+                    entity.Id = Guid.NewGuid();
+                    //
+                    entity.LgId = lgaId;
+                    entity.OfficeId = officeId;
+                    //
+                    await _context.Schools.AddAsync(entity);
+                    await this.Save();
+
+                    return returnValue = entity.Id;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(_obj));
                 }
             }
             catch (Exception ex)

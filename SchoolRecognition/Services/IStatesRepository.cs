@@ -16,6 +16,7 @@ namespace SchoolRecognition.Services
         Task<PagedList<StatesViewDto>> PagedList(StatesResourceParams resourceParams);
         Task<StatesViewPagedListLocalGovernmentsDto> GetIncludingPagedListOfLocalGovernments(Guid id, LocalGovernmentsResourceParams resourceParams);
         Task<StatesViewDto> Get(Guid id);
+        Task<StatesViewDto> GetByCode(string code);
         Task<Guid?> Create(StatesCreateDto _obj);
         Task<StatesViewDto> Update(StatesCreateDto _obj);
         Task Delete(Guid id); //return type is void

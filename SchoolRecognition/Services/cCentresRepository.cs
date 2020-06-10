@@ -43,7 +43,8 @@ namespace SchoolRecognition.Services
 
         async Task<bool> Save()
         {
-            return await Task.Run(async () => {
+            return await Task.Run(async () =>
+            {
                 return (await _context.SaveChangesAsync() >= 0);
             });
         }

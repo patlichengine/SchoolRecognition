@@ -20,6 +20,7 @@ namespace SchoolRecognition.Services
         Task<SchoolsViewDto> GetBySchoolName(string schoolName);
         Task<SchoolsViewPagedListSchoolFacilitiesDto> GetIncludingPagedListOfSchoolFacilities(Guid id, SchoolFacilitiesResourceParams resourceParams);
         Task<Guid?> Create(SchoolsCreateDto _obj);
+        Task<Guid?> CreateForCentre(CentresViewDto _obj, Guid? officeId);
         Task<SchoolsViewDto> Update(SchoolsCreateDto _obj);
         Task Delete(Guid id); //return type is void
         ///

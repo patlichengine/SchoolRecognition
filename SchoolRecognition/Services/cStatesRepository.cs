@@ -228,6 +228,76 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+        public async Task<StatesViewDto> GetByCode(string code)
+        {
+
+            //Instantiate Return Value
+            StatesViewDto returnValue = null;
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(code))
+                {
+                    string _code = code.ToUpper().Trim();
+
+                    var dbResult = await _context
+                        .States
+                        .Include(x => x.LocalGovernments)
+                        //.ThenInclude(y => y.State)
+                        //.Include(x => x.LocalGovernments)
+                        .ThenInclude(y => y.Schools)
+                        .ThenInclude(z => z.Category)
+                        .Include(x => x.OfficeStates)
+                        .ThenInclude(y => y.Office)
+                        .ThenInclude(z => z.OfficeType)
+                        .Include(x => x.OfficeStates)
+                        .ThenInclude(y => y.State)
+                        .Where(x => x.Code.Trim().ToUpper() == _code)
+                        .Select(x => new StatesViewDto()
+                        {
+                            Id = x.Id,
+                            StateName = x.Name,
+                            StateCode = x.Code,
+                            LocalGovernmentsCount = x.LocalGovernments != null ? x.LocalGovernments.Count() : 0,
+                            OfficeStatesCount = x.OfficeStates != null ? x.OfficeStates.Count() : 0,
+                            //StateLGAs = x.LocalGovernments.Select(x=> new LocalGovernmentsViewDto() { 
+                            //    Id = x.Id,
+                            //    LgaName = x.Name,
+                            //    LgaCode = x.Code,
+                            //    StateName = x.State != null ? $"{x.State.Code} {x.State.Name}" : null,
+                            //    TotalSchools = x.Schools != null ? x.Schools.Count() : 0
+                            //}),
+
+                            SchoolsCount = x.LocalGovernments != null ? x.LocalGovernments.SelectMany(y => y.Schools).Count() : 0,
+                            StateOfficeStates = x.OfficeStates.Select(y => new OfficeStatesViewDto()
+                            {
+                                Id = y.Id,
+                                StateId = y.StateId != null ? y.StateId.Value : Guid.Empty,
+                                OfficeId = y.OfficeId != null ? y.OfficeId.Value : Guid.Empty,
+                                StateName = y.State != null ? y.State.Name : null,
+                                StateCode = y.State != null ? y.State.Code : null,
+                                OfficeName = y.Office != null ? y.Office.Name : null,
+                                OfficeAddress = y.Office != null ? y.Office.Address : null,
+                            })
+
+                        }).SingleOrDefaultAsync();
+
+
+                    returnValue = dbResult;
+
+
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(code));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
         public async Task<StatesViewPagedListLocalGovernmentsDto> GetIncludingPagedListOfLocalGovernments(Guid id, LocalGovernmentsResourceParams resourceParams)
         {

@@ -76,6 +76,16 @@ namespace SchoolRecognition.Profiles
                 dest => dest.Name,
                 opt => opt.MapFrom(src => $"{src.SchoolName}"));
 
+
+
+            CreateMap<Models.CentresViewDto, Entities.Schools>()
+               .ForMember(
+                dest => dest.Name,
+                opt => opt.MapFrom(src => $"{src.CentreName}"))
+               .ForMember(
+                dest => dest.CategoryId,
+                opt => opt.MapFrom(src => src.SchoolCategoryId));
+
         }
     }
 }
