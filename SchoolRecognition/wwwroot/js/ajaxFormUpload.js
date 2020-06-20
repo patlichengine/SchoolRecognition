@@ -19,6 +19,8 @@ $('form').submit(function (e) {
 
     e.preventDefault();
 
+    var form = $('form');
+
     var formData = $('form').serializeObject();
 
     var fileUpload = $("#uploadedFile").get(0);
@@ -36,22 +38,26 @@ $('form').submit(function (e) {
     var _url = document.forms[0][name = "action"];
 
     /* get the action attribute from the <form action=""> element */
-    console.log(_form_Data);
+    //console.log(_form_Data);
+    //console.log(form.validate().valid());
 
-    $.ajax({
-        url: _url,
-        type: 'POST',
-        processData: false,  // tell jQuery not to process the data
-        contentType: false,  // tell jQuery not to set contentType
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("RequestVerificationToken",
-                $('input:hidden[name="__RequestVerificationToken"]').val());
-        },
-        data: _form_Data,
-    })
-        .done(function (result) {
-            $('.content-wrapper').load(result);
-            e.preventDefault();
-        });
+    if (form.validate().valid()) {
+
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            processData: false,  // tell jQuery not to process the data
+            contentType: false,  // tell jQuery not to set contentType
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("RequestVerificationToken",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            data: _form_Data,
+        })
+            .done(function (result) {
+                $('.content-wrapper').load(result);
+                e.preventDefault();
+            });
+    }
 
 });

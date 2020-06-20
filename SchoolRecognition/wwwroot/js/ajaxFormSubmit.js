@@ -19,26 +19,30 @@
 
         e.preventDefault();
 
+        var form = $('form');
+
         var formData = $('form').serializeObject();
 
 
         var _url = document.forms[0][name = "action"];
 
         /* get the action attribute from the <form action=""> element */
+        if (form.validate().valid()) {
 
 
-        $.ajax({
-            url: _url,
-            type: 'POST',
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("RequestVerificationToken",
-                    $('input:hidden[name="__RequestVerificationToken"]').val());
-            },
-            data: formData,
-        })
-        .done(function (result) {
-        $('.content-wrapper').load(result);
-        e.preventDefault();
-    });
+            $.ajax({
+                url: _url,
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("RequestVerificationToken",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: formData,
+            })
+                .done(function (result) {
+                    $('.content-wrapper').load(result);
+                    e.preventDefault();
+                });
+        }
 
     });

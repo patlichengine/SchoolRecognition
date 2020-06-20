@@ -33,6 +33,7 @@ namespace SchoolRecognition.Controllers
         private IFlashMessage _flashMessage;
         private readonly IToastNotification _toastNotification;
         private readonly IOfficesRepository _officesRepository;
+        private readonly IOfficeLocalGovernmentsRepository _officeLocalGovernmentsRepository;
         private IPinsRepository _pinsRepository;
         private IRecognitionTypesRepository _recognitionTypesRepository;
         private ISchoolPaymentsRepository _schoolPaymentsRepository;
@@ -46,7 +47,7 @@ namespace SchoolRecognition.Controllers
         //
         private int _defaultFileSizeLimit = 1100000;
 
-        public SchoolPaymentsController(IFlashMessage flashMessage, IToastNotification toastNotification, IOfficesRepository officesRepository, IPinsRepository pinsRepository, IRecognitionTypesRepository recognitionTypesRepository, ISchoolPaymentsRepository schoolPaymentsRepository, ISchoolCategoryRepository schoolCategorysRepository, ISchoolsRepository schoolsRepository, ICentresRepository centresRepository, IMapper mapper)
+        public SchoolPaymentsController(IFlashMessage flashMessage, IToastNotification toastNotification, IOfficesRepository officesRepository, IOfficeLocalGovernmentsRepository officeLocalGovernmentsRepository, IPinsRepository pinsRepository, IRecognitionTypesRepository recognitionTypesRepository, ISchoolPaymentsRepository schoolPaymentsRepository, ISchoolCategoryRepository schoolCategorysRepository, ISchoolsRepository schoolsRepository, ICentresRepository centresRepository, IMapper mapper)
         {
             _flashMessage = flashMessage ??
                 throw new ArgumentNullException(nameof(mapper));
@@ -54,6 +55,8 @@ namespace SchoolRecognition.Controllers
                 throw new ArgumentNullException(nameof(toastNotification));
             _officesRepository = officesRepository ??
                 throw new ArgumentNullException(nameof(officesRepository));
+            _officeLocalGovernmentsRepository = officeLocalGovernmentsRepository ??
+                throw new ArgumentNullException(nameof(officeLocalGovernmentsRepository));
             _pinsRepository = pinsRepository ??
                 throw new ArgumentNullException(nameof(pinsRepository));
             _recognitionTypesRepository = recognitionTypesRepository ??
@@ -353,6 +356,28 @@ namespace SchoolRecognition.Controllers
         #region SelectListResolver
 
 
+
+        [Route("list_local_governments")]
+        [HttpGet]
+        public async Task<IActionResult> GetOfficeLocalGovernmentsList(Guid stateId)
+        {
+            IEnumerable<OfficeLocalGovernmentsViewDto> _officeLgas = new List<OfficeLocalGovernmentsViewDto>();
+            IEnumerable<SelectListItem> selectList = new List<SelectListItem>();
+            if (stateId != Guid.Empty)
+            {
+                _officeLgas = await _officeLocalGovernmentsRepository.ListByStateId(stateId);
+                selectList = _officeLgas.OrderBy(x => x.LocalGovernmentCode).Select(x =>
+                 new SelectListItem()
+                 {
+                     Text = x.LocalGovernmentName,
+                     Value = x.Id.ToString(),
+                 }).ToList();
+
+            }
+            return Json(selectList);
+        }
+
+
         [Route("resolve_recognition_type")]
         [HttpGet]
         public async Task<IActionResult> ResolvePartialView(string recognitionTypeName)
@@ -365,7 +390,7 @@ namespace SchoolRecognition.Controllers
 
 
             var schoolCategorys = creationDependencys.SchoolCategorys;
-            var officeLocalGovernments = creationDependencys.OfficeLocalGovernments;
+            var officeStates = creationDependencys.OfficeStates;
 
             //
             ViewBag.SchoolCategorys = schoolCategorys.OrderBy(x => x.Name).Select(x =>
@@ -377,11 +402,11 @@ namespace SchoolRecognition.Controllers
 
 
             //
-            ViewBag.OfficeLocalGovernments = officeLocalGovernments.OrderBy(x => x.LocalGovernmentCode).Select(x =>
+            ViewBag.OfficeStates = officeStates.OrderBy(x => x.StateCode).Select(x =>
              new SelectListItem()
              {
-                 Text = $"{x.LocalGovernmentCode} {x.LocalGovernmentName} [ {x.StateCode} {x.StateName} ]",
-                 Value = x.LocalGovernmentId.ToString(),
+                 Text = x.StateName,
+                 Value = x.StateId.ToString(),
              }).ToList();
 
             #endregion
@@ -397,7 +422,7 @@ namespace SchoolRecognition.Controllers
                 if (_recognitionTypeName == "derecognition")
                 {
 
-                    _toastNotification.AddInfoToastMessage($"Payment for {_recognitionTypeName} is not supported as the moment!");
+                    _flashMessage.Danger("Operation Halted!", $"Payment for {_recognitionTypeName} is not supported as the moment!");
 
                 }
 
@@ -408,6 +433,37 @@ namespace SchoolRecognition.Controllers
         }
         
 
+
+        [Route("resolve_receipt_no")]
+        [HttpGet]
+        public async Task<IActionResult> ValidateReceiptNo(string receiptNo)
+        {
+
+
+            var result = false;
+
+            if (!String.IsNullOrWhiteSpace(receiptNo))
+            {
+
+                var schoolPayment = await _schoolPaymentsRepository.GetByReceiptNo(receiptNo);
+
+                if (schoolPayment != null)
+                {
+
+
+                    _toastNotification.AddErrorToastMessage($"This receipt has already been used!");
+
+
+                    return Json(result);
+                }
+
+                result = true;
+
+                return Json(result);
+            }
+
+            return BadRequest();
+        }
 
         [Route("resolve_centre")]
         [HttpGet]
@@ -425,7 +481,7 @@ namespace SchoolRecognition.Controllers
                 {
 
 
-                    _toastNotification.AddErrorToastMessage($"Invalid Centre Number!");
+                    _flashMessage.Danger("Operation Halted!", $"Invalid Centre Number!");
 
                     return NotFound();
                 }

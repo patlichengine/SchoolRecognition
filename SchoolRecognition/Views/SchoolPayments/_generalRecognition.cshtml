@@ -27,7 +27,7 @@
 
         <div class="form-group">
             <label asp-for="YearEstablished" class="control-label">*Year Established</label>
-            <input min="1500" max="9999" asp-for="YearEstablished" class="form-control" placeholder="Enter Year Established" autocomplete="off" />
+            <input min="1800" max="9999" asp-for="YearEstablished" class="form-control" placeholder="Enter Year Established" autocomplete="off" />
             <span asp-validation-for="YearEstablished" class="text-danger"></span>
         </div>
 
@@ -41,37 +41,78 @@
 </div>
 <div class="row">
 
-    <div class="col-md-8">
+    <div class="col-md-6">
 
         <div class="form-group">
-            <label asp-for="LgId">LGA</label>
-            <select asp-for="LgId" asp-items="ViewBag.OfficeLocalGovernments" class="form-control" required>
-                <option value="">--Select Local Government---</option>
+            <label for="StateId">*State</label>
+            <select name="StateId" id="StateId" asp-items="ViewBag.OfficeStates" class="form-control" required>
+                <option value="">--Select State---</option>
             </select>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+
+        <div class="form-group">
+            <label asp-for="LgId">*LGA</label>
+            <select asp-for="LgId" class="form-control" required></select>
             <span asp-validation-for="LgId" class="text-danger"></span>
         </div>
 
     </div>
-    <div class="col-md-4">
+
+</div>
+<div class="row">
+
+    <div class="col-md-6">
 
         <div class="form-group">
             <label asp-for="PhoneNo" class="control-label">*Phone No.</label>
-            <input minlength="4" maxlength="20" type="tel" asp-for="PhoneNo" class="form-control" placeholder="Enter Phone Number" autocomplete="off" />
+            <input minlength="4" maxlength="20" type="tel" asp-for="PhoneNo" class="form-control" placeholder="Enter Phone Number" autocomplete="off" required />
             <span asp-validation-for="PhoneNo" class="text-danger"></span>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+
+        <div class="form-group">
+            <label asp-for="EmailAddress" class="control-label">*Email</label>
+            <input type="email" asp-for="EmailAddress" class="form-control" placeholder="Enter Email Address" autocomplete="off" required />
+            <span asp-validation-for="EmailAddress" class="text-danger"></span>
         </div>
 
     </div>
 
 </div>
 
-<div class="form-group">
-    <label asp-for="EmailAddress" class="control-label">Email</label>
-    <input type="email" asp-for="EmailAddress" class="form-control" placeholder="Enter Email Address" autocomplete="off" />
-    <span asp-validation-for="EmailAddress" class="text-danger"></span>
-</div>
+
 
 
 <hr />
+<script>
+        $(function () {
+            $('#StateId').change(function () {
+
+                var _stateId = $('#StateId').val();
+
+                var _url = '@Url.Action("GetOfficeLocalGovernmentsList")'
+
+                return $.ajax({
+                    type: 'GET',
+                    url: _url,
+                    data: "stateId=" + _stateId,
+                    success: function (data) {
+                        var items = '<option value="">-- Select LGA --</option>';
+                        $.each(data, function (i, alias) {
+                            items += "<option value = '" + alias.Value + "'>" + alias.Text + "</option>";
+                        });
+                        $('#LgId').html(items);
+                        //$("#LgId").bootstrapDualListbox('refresh', true);
+                    }
+                 });
+            });
+        });
+</script>
 <script>
     $(document).ready(function () {
         $('select.form-control').select2({

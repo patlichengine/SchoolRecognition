@@ -15,7 +15,7 @@ namespace SchoolRecognition.Services
 
 
         public Task<SchoolCategorysViewDto> GetCategoryById(Guid id);
-
+        Task<SchoolCategorysViewDto> GetByCode(string code);
         public Task<IEnumerable<SchoolCategorysViewDto>> List();
         public Task<IEnumerable<SchoolsViewDto>> GetAllSchoolsForACategory();
 

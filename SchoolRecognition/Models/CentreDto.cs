@@ -14,6 +14,7 @@ namespace SchoolRecognition.Models
         public byte[] CentreImage { get; set; }
         public double? Longitude { get; set; }
         public double? Latitude { get; set; }
+        public string CentreCategoryCode { get; set; }
         //
         public string CreatedByUser { get; set; }
         public string SchoolCategoryName { get; set; }

@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using SchoolRecognition.DbContexts;
@@ -65,6 +64,29 @@ namespace SchoolRecognition.Services
                 //return the mapped object
                 return _mapper.Map<SchoolCategorysViewDto>(result);
             });
+        }
+        public async Task<SchoolCategorysViewDto> GetByCode(string code)
+        {
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(code))
+                {
+
+                    var result = await _context.SchoolCategories.FirstOrDefaultAsync(c => c.Code == code);
+                    //return the mapped object
+                    return _mapper.Map<SchoolCategorysViewDto>(result);
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(code));
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
         //Get all Category

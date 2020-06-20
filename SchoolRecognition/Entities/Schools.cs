@@ -13,6 +13,7 @@ namespace SchoolRecognition.Entities
             SchoolFacilities = new HashSet<SchoolFacilities>();
             SchoolPayments = new HashSet<SchoolPayments>();
             SchoolStaffProfiles = new HashSet<SchoolStaffProfiles>();
+            SchoolSubjects = new HashSet<SchoolSubjects>();
         }
 
         public Guid Id { get; set; }
@@ -31,8 +32,10 @@ namespace SchoolRecognition.Entities
         public bool IsRecommended { get; set; }
         public bool HasDeficientSubject { get; set; }
         public bool HasDeficientFacilitiy { get; set; }
+        public Guid? CentreId { get; set; }
 
         public virtual SchoolCategories Category { get; set; }
+        public virtual Centres Centre { get; set; }
         public virtual LocalGovernments Lg { get; set; }
         public virtual Offices Office { get; set; }
         public virtual ICollection<PinHistories> PinHistories { get; set; }
@@ -41,5 +44,6 @@ namespace SchoolRecognition.Entities
         public virtual ICollection<SchoolFacilities> SchoolFacilities { get; set; }
         public virtual ICollection<SchoolPayments> SchoolPayments { get; set; }
         public virtual ICollection<SchoolStaffProfiles> SchoolStaffProfiles { get; set; }
+        public virtual ICollection<SchoolSubjects> SchoolSubjects { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace SchoolRecognition.Services
         Task<SchoolsViewDto> Get(Guid id);
         Task<SchoolsViewDto> GetIncludingListOfSchoolPayments(Guid id);
         Task<SchoolsViewDto> GetBySchoolName(string schoolName);
+        Task<SchoolsViewDto> GetByCentreId(Guid centreId);
         Task<SchoolsViewPagedListSchoolFacilitiesDto> GetIncludingPagedListOfSchoolFacilities(Guid id, SchoolFacilitiesResourceParams resourceParams);
         Task<Guid?> Create(SchoolsCreateDto _obj);
         Task<Guid?> CreateForCentre(CentresViewDto _obj, Guid? officeId);

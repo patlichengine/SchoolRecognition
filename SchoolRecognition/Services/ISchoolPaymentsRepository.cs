@@ -15,6 +15,7 @@ namespace SchoolRecognition.Services
         Task<IEnumerable<SchoolPaymentsViewDto>> List();
         Task<PagedList<SchoolPaymentsViewDto>> PagedList(SchoolPaymentsResourceParams resourceParams);
         Task<SchoolPaymentsViewDto> Get(Guid id);
+        Task<SchoolPaymentsViewDto> GetByReceiptNo(string receiptNo);
         Task<Guid?> Create(SchoolPaymentsCreateDto _obj);
         Task<SchoolPaymentsViewDto> Update(SchoolPaymentsCreateDto _obj);
         Task Delete(Guid id); //return type is void

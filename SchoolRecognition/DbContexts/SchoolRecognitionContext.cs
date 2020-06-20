@@ -52,6 +52,7 @@ namespace SchoolRecognition.DbContexts
         public virtual DbSet<SchoolStaffDegrees> SchoolStaffDegrees { get; set; }
         public virtual DbSet<SchoolStaffProfiles> SchoolStaffProfiles { get; set; }
         public virtual DbSet<SchoolStaffSubjects> SchoolStaffSubjects { get; set; }
+        public virtual DbSet<SchoolSubjects> SchoolSubjects { get; set; }
         public virtual DbSet<Schools> Schools { get; set; }
         public virtual DbSet<SecurityConfig> SecurityConfig { get; set; }
         public virtual DbSet<States> States { get; set; }
@@ -257,7 +258,9 @@ namespace SchoolRecognition.DbContexts
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CategoryCode).HasMaxLength(5);
 
                 entity.Property(e => e.CentreName)
                     .IsRequired()
@@ -267,20 +270,18 @@ namespace SchoolRecognition.DbContexts
                     .IsRequired()
                     .HasMaxLength(7);
 
-                entity.Property(e => e.DateCreated)
-                    .HasColumnType("date")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.DateCreated).HasColumnType("date");
 
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.LocationDetails)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SchoolCategoryId).HasColumnName("SchoolCategoryID");
 
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.Centres)
                     .HasForeignKey(d => d.CreatedBy)
-                    .HasConstraintName("FK_Centres_Users");
+                    .HasConstraintName("FK_Centres_ApplicationUsers");
 
                 entity.HasOne(d => d.SchoolCategory)
                     .WithMany(p => p.Centres)
@@ -851,6 +852,43 @@ namespace SchoolRecognition.DbContexts
                     .HasConstraintName("FK_SchoolStaffSubjects_Subjects");
             });
 
+            modelBuilder.Entity<SchoolSubjects>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.DateCreated).HasColumnType("datetime");
+
+                entity.Property(e => e.DateModified).HasColumnType("datetime");
+
+                entity.Property(e => e.SchoolId).HasColumnName("SchoolID");
+
+                entity.Property(e => e.SubjectId).HasColumnName("SubjectID");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.SchoolSubjectsCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .HasConstraintName("FK_SchoolSubjects_ApplicationUsers");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.SchoolSubjectsModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .HasConstraintName("FK_SchoolSubjects_ApplicationUsers1");
+
+                entity.HasOne(d => d.School)
+                    .WithMany(p => p.SchoolSubjects)
+                    .HasForeignKey(d => d.SchoolId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SchoolSubjects_Schools");
+
+                entity.HasOne(d => d.Subject)
+                    .WithMany(p => p.SchoolSubjects)
+                    .HasForeignKey(d => d.SubjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SchoolSubjects_Subjects");
+            });
+
             modelBuilder.Entity<Schools>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -860,6 +898,8 @@ namespace SchoolRecognition.DbContexts
                 entity.Property(e => e.Address).HasMaxLength(50);
 
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.CentreId).HasColumnName("CentreID");
 
                 entity.Property(e => e.EmailAddress).HasMaxLength(50);
 
@@ -875,6 +915,11 @@ namespace SchoolRecognition.DbContexts
                     .WithMany(p => p.Schools)
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_School_SchoolCategory");
+
+                entity.HasOne(d => d.Centre)
+                    .WithMany(p => p.Schools)
+                    .HasForeignKey(d => d.CentreId)
+                    .HasConstraintName("FK_Schools_Centres");
 
                 entity.HasOne(d => d.Lg)
                     .WithMany(p => p.Schools)

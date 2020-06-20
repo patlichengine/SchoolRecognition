@@ -22,7 +22,9 @@ namespace SchoolRecognition.Services
         private readonly IPropertyMappingService _propertyMappingService;
         private readonly ICentresRepository _centresRepository;
         private readonly ISchoolsRepository _schoolsRepository;
+        private readonly ISchoolCategoryRepository _schoolCategoryRepository;
         private readonly IPinsRepository _pinsRepository;
+        private readonly IOfficeStatesRepository _officeStatesRepository;
 
         //public cRecognitionTypesRepository(ConnectionString connectionString)
         //{
@@ -31,14 +33,16 @@ namespace SchoolRecognition.Services
 
         //}
 
-        public cSchoolPaymentsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService, ICentresRepository centresRepository, IPinsRepository pinsRepository, ISchoolsRepository schoolsRepository)
+        public cSchoolPaymentsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService, ICentresRepository centresRepository, IPinsRepository pinsRepository, IOfficeStatesRepository officeStatesRepository, ISchoolsRepository schoolsRepository, ISchoolCategoryRepository schoolCategoryRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
             _centresRepository = centresRepository ?? throw new ArgumentNullException(nameof(centresRepository));
-            _schoolsRepository = schoolsRepository ?? throw new ArgumentNullException(nameof(schoolsRepository));
+            _officeStatesRepository = officeStatesRepository ?? throw new ArgumentNullException(nameof(officeStatesRepository));
             _pinsRepository = pinsRepository ?? throw new ArgumentNullException(nameof(pinsRepository));
+            _schoolsRepository = schoolsRepository ?? throw new ArgumentNullException(nameof(schoolsRepository));
+            _schoolCategoryRepository = schoolCategoryRepository ?? throw new ArgumentNullException(nameof(schoolCategoryRepository));
         }
 
 
@@ -242,6 +246,41 @@ namespace SchoolRecognition.Services
                 throw ex;
             }
         }
+        public async Task<SchoolPaymentsViewDto> GetByReceiptNo(string receiptNo)
+        {
+
+            //Instantiate Return Value
+            SchoolPaymentsViewDto returnValue = null;
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(receiptNo))
+                {
+                    var dbResult = _context.SchoolPayments
+                    .Include(x => x.Pin)
+                    .ThenInclude(y => y.RecognitionType)
+                    .Include(x => x.School)
+                    .ThenInclude(y => y.Category)
+                    .Include(x => x.CreatedByNavigation)
+                    as IQueryable<SchoolPayments>;
+
+                    var schoolPayments = await dbResult
+                        .Where(x => x.ReceiptNo == receiptNo).SingleOrDefaultAsync();
+
+                    returnValue = _mapper.Map<SchoolPaymentsViewDto>(schoolPayments);
+                    //
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(receiptNo));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
 
         public async Task<Guid?> Create(SchoolPaymentsCreateDto _obj)
         {
@@ -273,8 +312,7 @@ namespace SchoolRecognition.Services
                         CentresViewDto _centre = await _centresRepository.GetByCentreNumber(_obj.CentreNo);
                         if (_centre != null)
                         {
-                            string centreName = _centre.CentreName.Trim().ToUpper();
-                            SchoolsViewDto _school = await _schoolsRepository.GetBySchoolName(centreName);
+                            SchoolsViewDto _school = await _schoolsRepository.GetByCentreId(_centre.Id);
                             if (_school != null)
                             {
                                 _schoolId = _school.Id;
@@ -439,32 +477,14 @@ namespace SchoolRecognition.Services
             try
             {
 
-                var schoolCategorys = await _context.SchoolCategories.Select(x => new SchoolCategorysViewDto()
-                {
-                    Id = x.Id,
-                    Code = x.Code,
-                    Name = x.Name
-
-                }).ToListAsync();
+                var schoolCategorys = await _schoolCategoryRepository.List();
 
 
-                var officeLocalGovernments = await _context.OfficeLocalGovernments
-                    .Include(x => x.LocalGovernment)
-                    .ThenInclude(y => y.State)
-                    .Select(x => new OfficeLocalGovernmentsViewDto()
-                    {
-                        Id = x.Id,
-                        LocalGovernmentId  = x.LocalGovernmentId != null ? x.LocalGovernmentId.Value : Guid.Empty,
-                        LocalGovernmentCode = x.LocalGovernment != null ? x.LocalGovernment.Code : null,
-                        LocalGovernmentName = x.LocalGovernment != null ? x.LocalGovernment.Name : null,
-                        StateCode = x.LocalGovernment != null && x.LocalGovernment.State != null ? x.LocalGovernment.State.Code : null,
-                        StateName = x.LocalGovernment != null && x.LocalGovernment.State != null ? x.LocalGovernment.State.Name : null,
-
-                    }).ToListAsync();
+                var officeStates = await _officeStatesRepository.List();
 
 
                 returnValue.SchoolCategorys = schoolCategorys;
-                returnValue.OfficeLocalGovernments = officeLocalGovernments;
+                returnValue.OfficeStates = officeStates;
                 
 
                 return returnValue;

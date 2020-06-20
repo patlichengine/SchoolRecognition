@@ -72,6 +72,7 @@ namespace SchoolRecognition.Models
     {
         public IEnumerable<SchoolCategorysViewDto> SchoolCategorys { get; set; }
         //public IEnumerable<RecognitionTypesViewDto> RecognitionTypes { get; set; }
-        public IEnumerable<OfficeLocalGovernmentsViewDto> OfficeLocalGovernments { get; set; }
+        //public IEnumerable<OfficeLocalGovernmentsViewDto> OfficeLocalGovernments { get; set; }
+        public IEnumerable<OfficeStatesViewDto> OfficeStates { get; set; }
     }
 }

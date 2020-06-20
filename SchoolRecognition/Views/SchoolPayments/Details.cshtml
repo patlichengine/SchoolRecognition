@@ -53,7 +53,7 @@
                         <div class="col-12">
                             <h4>
                                 @Model.RecognitionTypeName <span style="font-weight: 300">Payment Statement</span>
-                                <small class="float-right">
+                                <small class="float-right mt-3">
                                     <b>RECEIPT NO.</b> @Model.PaymentReceiptNo<br>
                                     <span class="mt-2" style="font-size: 18px"><b>Date:</b> @(Model.DateCreated != null ? Model.DateCreated.Value.ToString("dd-MMMM-yyyy") : "NOT STATED")</span>
 
@@ -65,7 +65,7 @@
                     <!-- info row -->
                     <div class="row invoice-info mt-5">
                         <div class="col-sm-8 invoice-col">
-                            For
+                            Made For:
                             <address>
                                 <strong class="lead" style="font-weight: bolder">@Model.SchoolName</strong>
                                 <br />
@@ -76,7 +76,7 @@
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-4 invoice-col">
-                            Made By
+                            Captured By:
                             <address>
                                 <strong class="lead" style="font-weight: bolder">@(!String.IsNullOrWhiteSpace(Model.CreatedByUser) ? Model.CreatedByUser : "NOT STATED")</strong><br>
                                 @*795 Folsom Ave, Suite 600<br>
@@ -92,7 +92,9 @@
                     <div class="row">
                         <!-- /.col -->
                         <div class="col-12">
-                            <p class="lead">RECEIPT NUMBER - @Model.PaymentReceiptNo</p>
+                            <p class="lead">RECEIPT NUMBER - <b>@Model.PaymentReceiptNo</b></p>
+                            <hr />
+                            <p class="lead">PIN ISSUED - <b>@Model.PinSerialNumber</b></p>
                             <div class="table-responsive">
                                 <table class="table">
                                     <tbody>
@@ -103,7 +105,7 @@
                                         <tr>
                                             <th style="width:30%">School</th>
                                             <td>
-                                                <a  asp-area="" asp-controller="Schools" asp-action="Details" asp-route-id="@Model.SchoolId" data-toggle="link">@Model.SchoolName</a>
+                                                <a asp-area="" asp-controller="Schools" asp-action="Details" asp-route-id="@Model.SchoolId" data-toggle="link">@Model.SchoolName</a>
                                             </td>
                                         </tr>
                                         <tr>

@@ -23,6 +23,7 @@ namespace SchoolRecognition.Services
         private readonly IMapper _mapper;
         private readonly IPropertyMappingService _propertyMappingService;
         private readonly ILocalGovernmentsRepository _localGovernmentsRepository;
+        private readonly ISchoolCategoryRepository _schoolCategoryRepository;
 
         //public cRecognitionTypesRepository(ConnectionString connectionString)
         //{
@@ -31,12 +32,13 @@ namespace SchoolRecognition.Services
 
         //}
 
-        public cSchoolsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService, ILocalGovernmentsRepository localGovernmentsRepository)
+        public cSchoolsRepository(SchoolRecognitionContext context, IMapper mapper, IPropertyMappingService propertyMappingService, ILocalGovernmentsRepository localGovernmentsRepository, ISchoolCategoryRepository schoolCategoryRepository)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
             _localGovernmentsRepository = localGovernmentsRepository ?? throw new ArgumentNullException(nameof(localGovernmentsRepository));
+            _schoolCategoryRepository = schoolCategoryRepository ?? throw new ArgumentNullException(nameof(schoolCategoryRepository));
         }
 
 
@@ -209,6 +211,60 @@ namespace SchoolRecognition.Services
                 else
                 {
                     throw new ArgumentNullException(nameof(resourceParams));
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<SchoolsViewDto> GetByCentreId(Guid centreId)
+        {
+
+            //Instantiate Return Value
+            SchoolsViewDto returnValue = null;
+            try
+            {
+                if (centreId != Guid.Empty)
+                {
+                    var dbResult = _context.Schools
+                    .Include(x => x.Category)
+                    .Include(x => x.Office)
+                    .Include(x => x.Lg)
+                    .ThenInclude(x => x.State)
+                    .Include(x => x.PinHistories)
+                    .Include(x => x.SchoolClassAllocations)
+                    .ThenInclude(y => y.Class) 
+                    .Include(x=>x.SchoolDeficiencies)
+                    .Include(x=>x.SchoolFacilities)
+                    .ThenInclude(y=>y.FacilitySetting)
+                    .Include(x=>x.SchoolFacilities)
+                    .ThenInclude(y=>y.CreatedByNavigation)
+                    .Include(x=>x.SchoolPayments)
+                    .ThenInclude(y=>y.CreatedByNavigation)
+                    .Include(x=>x.SchoolPayments)
+                    .ThenInclude(y=>y.Pin)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.Title)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.Category)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.SchoolStaffDegrees)
+                    .Include(x=>x.SchoolStaffProfiles)
+                    .ThenInclude(y=>y.SchoolStaffSubjects)
+                    as IQueryable<Schools>;
+
+                    var schools = await dbResult
+                        .Where(x => x.CentreId == centreId).SingleOrDefaultAsync();
+                    returnValue = _mapper.Map<SchoolsViewDto>(schools);
+                    //
+                    return returnValue;
+                }
+                else
+                {
+                    throw new ArgumentNullException(nameof(centreId));
                 }
             }
             catch (Exception ex)
@@ -592,6 +648,7 @@ namespace SchoolRecognition.Services
             //Instantiate Return Value
             Guid? returnValue = null;
             Guid? lgaId = null;
+            Guid? schoolCategoryId = null;
             try
             {
                 if (_obj != null && _obj.Id == Guid.Empty)
@@ -615,10 +672,25 @@ namespace SchoolRecognition.Services
                     }
 
                     #endregion
+
+                    #region Get SchoolCategory
+
+                    string _categoryCode = _obj.CentreCategoryCode;
+
+                    var schoolCategory = await _schoolCategoryRepository.GetByCode(_categoryCode);
+
+                    if (schoolCategory != null)
+                    {
+                        schoolCategoryId = schoolCategory.Id;
+                    }
+
+
+                    #endregion
                     //
                     entity.Id = Guid.NewGuid();
                     //
                     entity.LgId = lgaId;
+                    entity.CategoryId = schoolCategoryId;
                     entity.OfficeId = officeId;
                     //
                     await _context.Schools.AddAsync(entity);
