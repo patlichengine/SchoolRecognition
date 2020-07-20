@@ -319,36 +319,46 @@ namespace SchoolRecognition.Services
                             pinPropertyMappingDictionary);
                     }
 
-                    var mappedResult = dbResult.Select(x => new PinsViewDto()
-                    {
-                        Id = x.Id,
-                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
-                        SerialNumber = x.SerialPin,
-                        IsActive = x.IsActive,
-                        IsInUse = x.IsInUse,
-                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                        DateCreated = x.DateCreated,
-                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
-                        {
-                            Id = x.Id,
-                            AmountPaid = x.Amount,
-                            PaymentReceiptNo = x.ReceiptNo,
-                            DateCreated = x.DateCreated,
-                            PaymentReceiptImage = x.ReceiptImage,
-                            //CreatedByNavigation
-                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                            SchoolName = x.School != null ? x.School.Name : null,
-                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
-                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
+                    //var mappedResult = dbResult.Select(x => new PinsViewDto()
+                    //{
+                    //    Id = x.Id,
+                    //    RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                    //    SerialNumber = x.SerialPin,
+                    //    IsActive = x.IsActive,
+                    //    IsInUse = x.IsInUse,
+                    //    CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                    //    DateCreated = x.DateCreated,
+                    //    Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                    //    {
+                    //        Id = x.Id,
+                    //        AmountPaid = x.Amount,
+                    //        PaymentReceiptNo = x.ReceiptNo,
+                    //        DateCreated = x.DateCreated,
+                    //        PaymentReceiptImage = x.ReceiptImage,
+                    //        //CreatedByNavigation
+                    //        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                    //        SchoolName = x.School != null ? x.School.Name : null,
+                    //        SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                    //        PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
 
-                        })
-                    });
+                    //    })
+                    //});
 
-                    returnValue = await PagedList<PinsViewDto>.CreateAsync(mappedResult,
-                        resourceParams.PageNumber,
-                        resourceParams.PageSize);
+                    //returnValue = await PagedList<PinsViewDto>.CreateAsync(mappedResult,
+                    //    resourceParams.PageNumber,
+                    //    resourceParams.PageSize);
+
+                    var mappedValue = await PagedList<Pins>.CreateAsync(dbResult,
+                       resourceParams.PageNumber,
+                       resourceParams.PageSize);
+
+                    List<PinsViewDto> mappedViewDto = _mapper.Map<List<PinsViewDto>>(mappedValue.ToList());
+
+                    returnValue = new PagedList<PinsViewDto>(mappedViewDto, mappedValue.TotalCount, resourceParams.PageNumber, resourceParams.PageSize);
 
                     return returnValue;
+
+
                 }
                 else
                 {

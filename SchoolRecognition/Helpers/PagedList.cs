@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Castle.DynamicProxy;
 using Microsoft.EntityFrameworkCore;
 
 namespace SchoolRecognition.Helpers
@@ -38,4 +40,5 @@ namespace SchoolRecognition.Helpers
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
     }
+
 }
