@@ -12587,24 +12587,29 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\15N\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\NORMAL\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\15N\\Desktop\\henry\\WAEC Program\\SchoolRecognition Files\\SR New\\remote\\SchoolRecognition\\SchoolRecognition.csproj",
+      "projectUniqueName": "C:\\csharp_projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
       "projectName": "SchoolRecognition",
-      "projectPath": "C:\\Users\\15N\\Desktop\\henry\\WAEC Program\\SchoolRecognition Files\\SR New\\remote\\SchoolRecognition\\SchoolRecognition.csproj",
-      "packagesPath": "C:\\Users\\15N\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\15N\\Desktop\\henry\\WAEC Program\\SchoolRecognition Files\\SR New\\remote\\SchoolRecognition\\obj\\",
+      "projectPath": "C:\\csharp_projects\\SchoolRecognition\\SchoolRecognition\\SchoolRecognition.csproj",
+      "packagesPath": "C:\\Users\\NORMAL\\.nuget\\packages\\",
+      "outputPath": "C:\\csharp_projects\\SchoolRecognition\\SchoolRecognition\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
+        "C:\\Microsoft\\Xamarin\\NuGet\\",
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\15N\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\NORMAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12612,11 +12617,11 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\csharp_projects\\Libraries\\SeedWork": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -12628,7 +12633,6 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
-        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
@@ -12715,16 +12719,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[3.1.10, 3.1.10]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[3.1.10, 3.1.10]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -12733,7 +12727,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
