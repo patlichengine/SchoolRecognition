@@ -1,5 +1,7 @@
 ﻿using SchoolRecognition.Entities;
+using SchoolRecognition.Helpers;
 using SchoolRecognition.Models;
+using SchoolRecognition.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +11,19 @@ namespace SchoolRecognition.Services
 {
     public interface ISchoolPaymentsRepository
     {
-        //SchoolPaymentViewModel AddSchoolPayment(SchoolPaymentViewModel model);
 
-        //public void UpdateSchoolPayment(Guid id);
-        //public void DeleteSchoolPayment(Guid id);
-        //public SchoolPaymentViewModel GetSchoolPayments();
-        //public SchoolPaymentViewModel GetSchoolPayment(Guid id);
+        Task<IEnumerable<SchoolPaymentsViewDto>> List();
+        Task<PagedList<SchoolPaymentsViewDto>> PagedList(SchoolPaymentsResourceParams resourceParams);
+        Task<SchoolPaymentsViewDto> Get(Guid id);
+        Task<SchoolPaymentsViewDto> GetByReceiptNo(string receiptNo);
+        Task<Guid?> Create(SchoolPaymentsCreateDto _obj);
+        Task<SchoolPaymentsViewDto> Update(SchoolPaymentsCreateDto _obj);
+        Task Delete(Guid id); //return type is void
+        ///
+        Task<bool> Exists(string receiptNo);
+        Task<bool> Exists(Guid id, string receiptNo);
+        //
+        Task<SchoolPaymentsCreationDependecyDto> GetCreationDependencys();
+
     }
 }

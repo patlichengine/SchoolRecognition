@@ -13,7 +13,7 @@ namespace SchoolRecognition.Entities
         public Guid Id { get; set; }
         public Guid? SchoolId { get; set; }
         public Guid? FacilitySettingId { get; set; }
-        public string ValueAupplied { get; set; }
+        public string ValueApplied { get; set; }
         public Guid? CreatedBy { get; set; }
         public DateTime DateCreated { get; set; }
 

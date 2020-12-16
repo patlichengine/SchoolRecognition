@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolRecognition.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,5 +12,8 @@ namespace SchoolRecognition.Models
         public string Name { get; set; }
         public string Code { get; set; }
         public Guid? StateId { get; set; }
+        public States State { get; set; }
+
+        public IEnumerable<Schools> Schools { get; set; }
     }
 }

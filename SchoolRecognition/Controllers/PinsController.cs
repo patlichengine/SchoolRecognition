@@ -293,6 +293,8 @@ namespace SchoolRecognition.Controllers
 
                 #endregion
 
+                var url = Url.Action("GeneratePins");
+
                 if (ModelState.IsValid)
                 {
                     model.IsActive = true;
@@ -301,16 +303,19 @@ namespace SchoolRecognition.Controllers
                     if (result)
                     {
                         _flashMessage.Confirmation("Operation Completed", String.Format("{0} PINs generated", model.NoOfPinToGenerate));
-                        return RedirectToAction("Index", "Pins");
+                        url = Url.Action("Index", "Pins");
+                        return Json(url);
+
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        //return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -359,15 +364,19 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Delete", new { id = model.Id });
                 if (ModelState.IsValid)
                 {
                     await _pinsRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Pin removed from system!");
-                    return RedirectToAction("Index", "RecognitionTypes");
+                    url = Url.Action("Index", "RecognitionTypes");
+                    return Json(url);
+
+
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {

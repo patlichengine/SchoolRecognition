@@ -3,16 +3,13 @@
     var officeTypes = (IEnumerable<SelectListItem>)ViewData["OfficeTypes"];
     var states = (IEnumerable<SelectListItem>)ViewData["States"];
     ViewData["Title"] = "New Office";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-@section styles{
 
-    <link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-    <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
-    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
+<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
+<link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
 
-}
+
 
 
 
@@ -25,8 +22,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -58,17 +55,26 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 
-                        <div class="form-group">
-                            <label asp-for="OfficeTypeId">*Type Of Office</label>
-                            <select asp-for="OfficeTypeId" asp-items="@officeTypes.ToList()" class="form-control" required>
-                                <option value="">--Select Type of Office---</option>
-                            </select>
-                            <span asp-validation-for="OfficeTypeId" class="text-danger"></span>
-                        </div>
+                        
 
                         <div class="row">
 
-                            <div class="col-md-6">
+
+                            <div class="col-md-4">
+
+                                <div class="form-group">
+                                    <label asp-for="OfficeTypeId">*Type Of Office</label>
+                                    <select asp-for="OfficeTypeId" asp-items="@officeTypes.ToList()" class="form-control" required>
+                                        <option value="">--Select Type of Office---</option>
+                                    </select>
+                                    <span asp-validation-for="OfficeTypeId" class="text-danger"></span>
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="col-md-8">
 
                                 <div class="form-group">
                                     <label asp-for="OfficeName">*Name:</label>
@@ -77,21 +83,9 @@
 
                             </div>
 
-
-                            <div class="col-md-6">
-
-
-                                <div class="form-group">
-                                    <label>*Date Created:</label>
-                                    <input type="text" asp-for="DateCreated" class="form-control" placeholder="Date Created/Established" required />
-                                    <span asp-validation-for="DateCreated" class="text-danger"></span>
-                                </div>
-
-                            </div>
-
                         </div>
 
-                
+
 
 
                         <h5 style="font-weight: 100">Location Information</h5>
@@ -173,108 +167,78 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    <script src="~/js/loading_icon.js"></script>
-    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
-    @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
-    <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('select.form-control').select2({
-                theme: 'bootstrap4'
-            });
-            //$('.select2me').select2();
-        });
-    </script>
-    <script>
-        $(function () {
-            $("#DateCreated").val("");
-            $("#DateCreated").datepicker({
-                dateFormat: 'dd-MM-yy',
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '1900:c+30',
-                //showButtonPanel: true,
 
-                //Properly aligns pop-up calendar
-                beforeShow: function (a, b) {
-                    var cnt = 0;
-                    var interval = setInterval(function () {
-                        cnt++;
-                        if (b.dpDiv.is(":visible")) {
-                            var parent = b.input.closest("div");
-                            b.dpDiv.position({ my: "left top", at: "left bottom", of: parent });
-                            clearInterval(interval);
-                        } else if (cnt > 50) {
-                            clearInterval(interval);
-                        }
-                    }, 10);
-                }
-            });
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/js/loading_icon.js"></script>
+<script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select.form-control').select2({
+            theme: 'bootstrap4'
         });
-    </script>
-    <script>
-        // add the rule here
-        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
-        //    return arg !== value;
-        //}, "Select a valid value!");
-        // add the rule here
-        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-            return arg !== value;
-        }, "Select a valid value!");
-        $("form").validate({
-            rules: {
-                OfficeName: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 60
-                },
-                OfficeAddress: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 200
-                },
-                StateId: {
-                    required: true,
-                    valueNotEquals: ""
-                    //min: 1
-                },
-                DateCreated: {
-                    required: true,
-                    date: true
-                },
-
+        //$('.select2me').select2();
+    });
+</script>
+<script>
+    // add the rule here
+    //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+    //    return arg !== value;
+    //}, "Select a valid value!");
+    // add the rule here
+    $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        return arg !== value;
+    }, "Select a valid value!");
+    $("form").validate({
+        rules: {
+            OfficeName: {
+                required: true,
+                minlength: 2,
+                maxlength: 60
             },
-            messages: {
-                OfficeName: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 5 characters!",
-                    maxlength: "This field must have less than 60 characters!",
-                },
-                OfficeAddress: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 5 characters!",
-                    maxlength: "This field must have less than 150 characters!",
-                },
-                OfficeTypeId: {
-                    required: "This field is required!",
-                    valueNotEquals: "Select a valid value!"
-                },
-                StateId: {
-                    required: "This field is required!",
-                    valueNotEquals: "Select a valid value!"
-                },
-                DateCreated: {
-                    required: "This field is required!",
-                    date: "Select a valid date!"
-                },
-            }
-        });
-    </script>
+            OfficeAddress: {
+                required: true,
+                minlength: 5,
+                maxlength: 200
+            },
+            StateId: {
+                required: true,
+                valueNotEquals: ""
+                //min: 1
+            },
+            DateCreated: {
+                required: true,
+                date: true
+            },
 
+        },
+        messages: {
+            OfficeName: {
+                required: "This field is required!",
+                minlength: "This field must have at least 5 characters!",
+                maxlength: "This field must have less than 60 characters!",
+            },
+            OfficeAddress: {
+                required: "This field is required!",
+                minlength: "This field must have at least 5 characters!",
+                maxlength: "This field must have less than 150 characters!",
+            },
+            OfficeTypeId: {
+                required: "This field is required!",
+                valueNotEquals: "Select a valid value!"
+            },
+            StateId: {
+                required: "This field is required!",
+                valueNotEquals: "Select a valid value!"
+            },
+            DateCreated: {
+                required: "This field is required!",
+                date: "Select a valid date!"
+            },
+        }
+    });
+</script>
 
-}
+<script src="~/js/ajaxFormSubmit.js"></script>
+<script src="~/js/linkClick.js"></script>
 
 

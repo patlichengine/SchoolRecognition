@@ -7,7 +7,7 @@
            asp-route-orderBy="@ViewData["OrderBy"]"
            asp-route-searchQuery="@ViewData["SearchQuery"]"
            asp-route-pageNumber=""
-           class="page-link">
+           class="page-link" data-toggle="link">
             <i class="fas fa-angle-double-left"></i>
         </a>
     </li>
@@ -16,7 +16,7 @@
            asp-route-orderBy="@ViewData["OrderBy"]"
            asp-route-searchQuery="@ViewData["SearchQuery"]"
            asp-route-pageNumber="@(Model.CurrentPage - 1)"
-           class="page-link">
+           class="page-link" data-toggle="link">
             <i class="fas fa-angle-left"></i>
         </a>
     </li>
@@ -27,7 +27,7 @@
                asp-route-orderBy="@ViewData["OrderBy"]"
                asp-route-searchQuery="@ViewData["SearchQuery"]"
                asp-route-pageNumber="@item"
-               class="page-link">
+               class="page-link" data-toggle="link">
                 @item
             </a>
         </li>
@@ -37,7 +37,7 @@
            asp-route-orderBy="@ViewData["OrderBy"]"
            asp-route-searchQuery="@ViewData["SearchQuery"]"
            asp-route-pageNumber="@(Model.CurrentPage + 1)"
-           class="page-link">
+           class="page-link" data-toggle="link">
             <i class="fas fa-angle-right"></i>
         </a>
     </li>
@@ -46,7 +46,7 @@
            asp-route-orderBy="@ViewData["OrderBy"]"
            asp-route-searchQuery="@ViewData["SearchQuery"]"
            asp-route-pageNumber="@Model.TotalPages"
-           class="page-link">
+           class="page-link" data-toggle="link">
             <i class="fas fa-angle-double-right"></i>
         </a>
     </li>

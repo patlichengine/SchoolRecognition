@@ -1,0 +1,31 @@
+﻿@model SchoolRecognition.Models.LocalGovernmentsViewDto
+
+@{
+    ViewData["Title"] = "ListLGA";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>ListLGA</h1>
+
+<div>
+    <h4>StatesDto</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LgaName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LgaName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LgaCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LgaCode)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

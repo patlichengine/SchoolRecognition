@@ -1,0 +1,203 @@
+﻿
+
+@model SchoolRecognition.Helpers.PagedList<FacilityTypesDto>
+
+@{
+    var pages = (IEnumerable<int>)ViewData["Pages"];
+
+    string stringQuery = ViewData["SearchQuery"].ToString();
+    ViewData["Title"] = "Available Facility Types ";
+   // Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+
+
+
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">List of @ViewData["Title"]</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <div class="clearfix mb-3">
+                        <div class="float-right">
+                            <a asp-area="" asp-action="Create" class="btn btn-light">
+                                <span><i class="fa fa-plus"></i>  New Facility Types</span>
+
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mb-2">
+                        <div class="col">
+                        </div>
+                        <div class="col-8">
+                            <form asp-action="Index" method="get" class="md-form mb-3" id="searchForm">
+
+                                <div class="input-group">
+                                    <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewData["SearchQuery"]" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
+
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-md btn-light" type="submit">
+                                            <i class="fas fa-search"></i>
+                                            Search
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+                        <div class="col-md-12 mb-1">
+                            <a asp-action="Index" asp-controller="FacilitySettings"
+                               asp-route-orderBy="title" asp-route-searchQuery="@ViewData["SearchQuery"]" asp-route-pageNumber="@Model.CurrentPage"
+                               class="btn btn-light btn-xs">
+                               Title Ascending
+                                <i class="fas fa-sort-up"></i>
+                            </a>
+
+                            <a asp-action="Index" asp-controller="FacilityTypes" asp-route-orderBy="title_desc" asp-route-searchQuery="@ViewData["SearchQuery"]" asp-route-pageNumber="@Model.CurrentPage" class="btn btn-light btn-xs">
+                                Types Title Descending
+                                <i class="fas fa-sort-down"></i>
+                            </a>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-striped dataTable" role="grid" aria-describedby="example1_info">
+
+                        <thead>
+                            <tr role="row">
+                                <td>Title</td>
+                                
+                                <td>isActive</td>
+                                <td>isGlobal</td>
+
+                                <td>Actions</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr role="row">
+                                    
+
+                                    <td>@(item.Title != null ? item.Title : "NOT STATED")</td>
+                                    <td>
+                                        @if (item.IsActive)
+                                        {
+                                            <i class="fas fa-check text-success"></i>
+                                        }
+                                        else
+                                        {
+
+                                            <i class="fas fa-times text-danger"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.IsGlobal)
+                                        {
+                                            <i class="fas fa-check text-success"></i>
+                                        }
+                                        else
+                                        {
+
+                                            <i class="fas fa-times text-danger"></i>
+                                        }
+                                    </td>
+                                 
+
+
+
+
+
+                                    <td class="text-center p-1">
+                                        <a asp-action="Details" asp-controller="FacilityTypes" asp-route-id="@item.Id" class="btn btn-light btn-sm " data-toggle="link" data-placement="top" title="Details">
+                                            <i class="fas fa-desktop"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-controller="FacilityTypes" asp-route-id="@item.Id " class="btn btn-danger btn-sm" data-toggle="link" data-placement="top" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                            @if (Model.TotalCount < 1)
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="5">
+                                        No data available in table
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+
+                    @{
+                        var prevDisabled = Model.HasPrevious ? "" : "disabled";
+                        var nextDisabled = Model.HasNext ? "" : "disabled";
+                        //var disableAll =
+                    }
+                    @if (Model.TotalCount > 0)
+                    {
+                        int range = Model.PageSize > Model.TotalCount ? Model.TotalCount : Model.PageSize;
+                        <div class="row mt-2">
+                            <div class="col">
+                                @($"{(((Model.CurrentPage - 1) * range) + 1) } of {(Model.CurrentPage * range)} :: { Model.TotalCount } Records")
+                            </div>
+                            <div class="col-8">
+                                <partial name="_paginationLinks" model='new PaginationLinksDto {
+                                 Pages = pages, PageNumber = Model.CurrentPage, PrevDisabled = prevDisabled,
+                                 NextDisabled = nextDisabled, Controller = "Ranks", CurrentPage = Model.CurrentPage,
+                                 TotalPages = Model.TotalPages }'>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+<script type="text/javascript" src="~/js/linkClick.js"></script>

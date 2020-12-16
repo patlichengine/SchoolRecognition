@@ -13,6 +13,7 @@ namespace SchoolRecognition.Services
     {
 
         Task<IEnumerable<PinsViewDto>> List();
+        Task<IEnumerable<PinsViewDto>> ListActivePinsNOTInUseByRecognitionTypeId(Guid recognitionTypeId);
         Task<PagedList<PinsViewDto>> PagedList(PinsResourceParams resourceParams);
         Task<PinsViewDto> Get(Guid id);
         Task<PinsViewDto> GetIncludingListOfPinHistories(Guid id);
@@ -24,7 +25,7 @@ namespace SchoolRecognition.Services
         Task<PinsViewDto> Update(PinsUpdateDto _obj);
         Task Delete(Guid id); //return type is void
         //
-        Task<int> CheckTotalActivePinsNOTInUse();
+        Task<int> CheckTotalActivePinsNOTInUse(Guid recognitionTypeId);
         Task<PinsStatisticsSummaryDto> Summary();
         Task<PinsCreationDependecyDto> GetCreationDepedencys();
     }

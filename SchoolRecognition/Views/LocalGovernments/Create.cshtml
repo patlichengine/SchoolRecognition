@@ -1,0 +1,89 @@
+﻿@model SchoolRecognition.Models.LocalGovernmentsDto
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<section class="form-simple">
+    <div class="container">
+
+        <!--Form with header-->
+        <div class="card">
+
+            <!--Header-->
+
+            <div class="header pt-3 bg-gradient-navy ">
+
+                <div class="row d-flex justify-content-start">
+                    <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"><span><i class="fa fa-plus-circle text-yellow"> New LGA</i></span></h3>
+                </div>
+
+            </div>
+
+            <form asp-action="Create" method="post" asp-controller="LocalGovernments">
+                <div class="card-body mx-4 mt-4">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group col-md-6">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter Name of LGA e.g Oshimili South">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group pb-3 col-md-6">
+                            <label asp-for="Code" class="control-label"></label>
+                            <input asp-for="Code" class="form-control" placeholder="Enter LGA code e.g 02">
+                            <span asp-validation-for="Code" class="text-danger"></span>
+
+                        </div>
+
+                    </div>
+
+
+                    <label>Select State </label>
+                    <select class="form-control" asp-for="StateId" asp-items="@(new SelectList(@ViewBag.allStateList,"Id", "Name"))">
+                        <option value="0"> --- Select State --- </option>
+
+
+
+                    </select>
+                    <div class="form-group col-md-12">
+
+                    </div>
+
+
+
+                    <div class="md-form text-center">
+                        <input type="submit" value="Save" class="btn btn-yellow" />
+                    </div>
+                    @*<div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>*@
+                    <div class="card-footer text-muted bg-gradient-navy ">
+                        <a asp-action="Index" class="btn btn-yellow float-right">View All</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>$(document).ready(function () {
+            $('select.form-control').select2({
+                theme: 'bootstrap4'
+            });
+            //$('.select2me').select2();
+        });</script>
+}

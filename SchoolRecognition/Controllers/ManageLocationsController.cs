@@ -14,7 +14,7 @@ namespace SchoolRecognition.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            return View();
+            return PartialView();
         }
     }
 }

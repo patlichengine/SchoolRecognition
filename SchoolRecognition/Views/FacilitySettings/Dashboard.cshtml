@@ -1,0 +1,129 @@
+﻿@*@model SchoolRecognition.Models.SchoolsDto*@
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Home</li>
+
+    </ol>
+</nav>
+
+
+
+<section class="content">
+    <!-- Info boxes -->
+    <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-gradient-navy">
+                <span class="info-box-icon bg-yellow"><i class="fa fa-list"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Schools</span>
+                    <span class="info-box-number"> 90<small>%</small></span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-gradient-navy">
+                <span class="info-box-icon bg-purple"><i class="fa fa-list"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Total Categories</span>
+                    <span class="info-box-number">41,410</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-gradient-navy">
+                <span class="info-box-icon bg-green"><i class="fa fa-school"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Active Schools</span>
+                    <span class="info-box-number">760</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-gradient-navy">
+                <span class="info-box-icon bg-gradient-blue"><i class="fa fa-id-card"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Pins Used</span>
+                    <span class="info-box-number">2,000</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+</section>
+
+<section class="content">
+    <div class="container">
+
+
+        <div class="row">
+            <div class="col-md-12 d-flex">
+                <div class="col-md-4">
+                    <div class="card bg-gradient-navy">
+                        <div class="card-header">
+                            View All Schools
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a asp-action="Dashboard" asp-controller="School" class="btn btn-yellow"><i class="fa fa-eye"></i> View Schools</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card bg-gradient-navy">
+                        <div class="card-header">
+                            View All Categories
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a asp-action="Index" asp-controller="SchoolCategories" class="btn btn-yellow"><i class="fa fa-eye"></i> View Categories</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card bg-gradient-navy">
+                        <div class="card-header">
+                            Manage Schools
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a href="#" class="btn btn-yellow"><i class="fa fa-pen"></i> Manage Schools</a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</section>

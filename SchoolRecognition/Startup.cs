@@ -60,10 +60,12 @@ namespace SchoolRecognition
                         Duration = 240
                     });
             })
+
                 .AddNewtonsoftJson(setupAction =>
                 {
                     setupAction.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
+                    //setupAction.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 })
                 .AddXmlDataContractSerializerFormatters()
                 .ConfigureApiBehaviorOptions(setupAction =>
@@ -168,6 +170,11 @@ namespace SchoolRecognition
             services.AddScoped<ISchoolPaymentsRepository, cSchoolPaymentsRepository>();
             services.AddScoped<IStatesRepository, cStatesRepository>();
             services.AddScoped<ISubjectsRepository, cSubjectsRepository>();
+            services.AddScoped<IRanksRepository, cRanksRepository>();
+            services.AddScoped<IFacilityItemsRepository, cFacilityItemsRepository>();
+            services.AddScoped<IFacilityTypesRepository, cFacilityTypesRepository>();
+            services.AddScoped<IFacilitySettingsRepository, cFacilitySettingsRepository>();
+            services.AddScoped<IClassSettingsRepository, cClassSettingsRepository>();
 
 
 
@@ -189,9 +196,9 @@ namespace SchoolRecognition
             
     
             services.AddMvc()
-
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNToastNotifyToastr();
+
             services.AddAntiforgery(options =>
             {
                 options.HeaderName = "X-CSRF-TOKEN";

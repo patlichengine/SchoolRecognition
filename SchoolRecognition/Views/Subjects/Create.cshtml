@@ -2,14 +2,6 @@
 @{
     ViewData["Title"] = "New Subject";
 }
-@section styles{
-
-    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-    <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />
-    <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="~/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />*@
-
-}
 
 
 
@@ -85,7 +77,7 @@
                         <div class="form-group mb-5 mt-3">
 
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" asp-for="IsCoreSubject">
+                                <input class="form-check-input" type="checkbox" value="checked" asp-for="IsCoreSubject">
                                 <label class="form-check-label" asp-for="IsCoreSubject">Is a Core Subject</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -125,72 +117,65 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    <script src="~/js/loading_icon.js"></script>
-    @*<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>*@
-    @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
-    @*<script src="~/lib/select2/dist/js/select2.full.min.js"></script>*@
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('select.form-control').select2({
-                theme: 'bootstrap4'
-            });
-            //$('.select2me').select2();
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/js/loading_icon.js"></script>
+<script>
+    $(document).ready(function () {
+        $('select.form-control').select2({
+            theme: 'bootstrap4'
         });
-    </script>
-    <script>
-        // add the rule here
-        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
-        //    return arg !== value;
-        //}, "Select a valid value!");
-        // add the rule here
-        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-            return arg !== value;
-        }, "Select a valid value!");
-        $("form").validate({
-            rules: {
-                LongName: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 200
-                },
-                ShortName: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 100
-                },
-                SubjectCode: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 4,
-                    pattern: /[0-9]/
-                }
-
+        //$('.select2me').select2();
+    });
+</script>
+<script>
+    // add the rule here
+    //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+    //    return arg !== value;
+    //}, "Select a valid value!");
+    // add the rule here
+    $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        return arg !== value;
+    }, "Select a valid value!");
+    $("form").validate({
+        rules: {
+            LongName: {
+                required: true,
+                minlength: 5,
+                maxlength: 200
             },
-            messages: {
-                LongName: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 5 characters!",
-                    maxlength: "This field must have less than 200 characters!",
-                },
-                ShortName: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 5 characters!",
-                    maxlength: "This field must have less than 100 characters!",
-                },
-                SubjectCode: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 3 characters!",
-                    maxlength: "This field must have less than 4 characters!",
-                    pattern: "This field only accepts numerical values!"
-                }
+            ShortName: {
+                required: true,
+                minlength: 5,
+                maxlength: 100
+            },
+            SubjectCode: {
+                required: true,
+                minlength: 3,
+                maxlength: 4,
+                pattern: /[0-9]/
             }
-        });
-    </script>
 
-
-}
-
+        },
+        messages: {
+            LongName: {
+                required: "This field is required!",
+                minlength: "This field must have at least 5 characters!",
+                maxlength: "This field must have less than 200 characters!",
+            },
+            ShortName: {
+                required: "This field is required!",
+                minlength: "This field must have at least 5 characters!",
+                maxlength: "This field must have less than 100 characters!",
+            },
+            SubjectCode: {
+                required: "This field is required!",
+                minlength: "This field must have at least 3 characters!",
+                maxlength: "This field must have less than 4 characters!",
+                pattern: "This field only accepts numerical values!"
+            }
+        }
+    });
+</script>
+<script src="~/js/ajaxFormSubmit.js"></script>
+<script src="~/js/linkClick.js"></script>
 

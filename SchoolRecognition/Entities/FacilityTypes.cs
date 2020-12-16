@@ -12,10 +12,9 @@ namespace SchoolRecognition.Entities
 
         public Guid Id { get; set; }
         public string Title { get; set; }
-        public bool? IsActive { get; set; }
-        public bool HasSubject { get; set; }
-        public bool HasSpecification { get; set; }
-        public bool HasQuantity { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsGlobal { get; set; }
+        
 
         public virtual ICollection<FacilitySettings> FacilitySettings { get; set; }
     }

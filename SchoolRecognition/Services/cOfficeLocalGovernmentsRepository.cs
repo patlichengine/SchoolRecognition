@@ -90,6 +90,35 @@ namespace SchoolRecognition.Services
             }
         }
 
+        public async Task<IEnumerable<OfficeLocalGovernmentsViewDto>> ListByStateId(Guid stateId)
+        {
+            //Instantiate Return Value
+            IEnumerable<OfficeLocalGovernmentsViewDto> returnValue = new List<OfficeLocalGovernmentsViewDto>();
+            try
+            {
+                if (stateId != Guid.Empty)
+                {
+                    var dbResult = _context.OfficeLocalGovernments
+                       .Include(x => x.Office)
+                       .ThenInclude(x => x.OfficeType)
+                       .Include(x => x.LocalGovernment)
+                       .ThenInclude(y => y.State)
+                       .Where(x => x.LocalGovernment.StateId == stateId)
+                       as IQueryable<OfficeLocalGovernments>;
+
+
+                    returnValue = _mapper.Map<IEnumerable<OfficeLocalGovernmentsViewDto>>(dbResult);
+                }
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<PagedList<OfficeLocalGovernmentsViewDto>> PagedList(OfficeLocalGovernmentsResourceParams resourceParams)
         {
             //Instantiate Return Value

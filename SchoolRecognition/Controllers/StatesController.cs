@@ -173,6 +173,9 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+
+                var url = Url.Action("Create");
+
                 if (ModelState.IsValid)
                 {
 
@@ -181,7 +184,7 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An State with the same description already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
 
                     var result = await _statesRepository.Create(model);
@@ -189,16 +192,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New State Added Successfully!");
-                        return RedirectToAction("Index", "States");
+                        url = Url.Action("Index", "States");
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -241,16 +245,17 @@ namespace SchoolRecognition.Controllers
 
             try
             {
+
+                var url = Url.Action("Update", new { id = model.Id });
                 if (ModelState.IsValid)
                 {
-
 
                     //Check if entry with similar data already exists
                     if (await _statesRepository.Exists(model.Id, model.StateName))
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An State with the same description already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
 
                     //Set Pins as active 
@@ -259,16 +264,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "State Updated Successfully!");
-                        return RedirectToAction("Index", "States");
+                        url = Url.Action("Index", "States");
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -321,7 +327,8 @@ namespace SchoolRecognition.Controllers
                     await _statesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "State removed from system!");
-                    return RedirectToAction("Index", "States");
+                    var url = Url.Action("Index", "States");
+                    return Json(url);
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
                 return PartialView(model);

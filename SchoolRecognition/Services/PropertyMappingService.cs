@@ -9,6 +9,30 @@ namespace SchoolRecognition.Services
 {
     public class PropertyMappingService : IPropertyMappingService
     {
+        private Dictionary<string, PropertyMappingValue> _schoolCategoryPropertyMapping =
+           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+           {
+               { "Name", new PropertyMappingValue(new List<string>() { "Name" } ) },
+               //{ "NameDesc", new PropertyMappingValue(new List<string>() { "Name" } ) },
+               { "Code", new PropertyMappingValue(new List<string>() { "Code" } ) },
+               //{ "CodeDesc", new PropertyMappingValue(new List<string>() { "Code" } ) }
+           };
+
+        private Dictionary<string, PropertyMappingValue> _ranksPropertyMapping =
+           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+           {
+               { "Name", new PropertyMappingValue(new List<string>() { "Name" } ) },
+               //{ "NameDesc", new PropertyMappingValue(new List<string>() { "Name" } ) },
+               { "Code", new PropertyMappingValue(new List<string>() { "Code" } ) },
+               //{ "CodeDesc", new PropertyMappingValue(new List<string>() { "Code" } ) }
+           };
+
+        private Dictionary<string, PropertyMappingValue> _schoolClassesPropertyMapping =
+           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+           {
+               { "Name", new PropertyMappingValue(new List<string>() { "Name" } ) },
+
+           };
 
         private Dictionary<string, PropertyMappingValue> _accountsPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
@@ -108,14 +132,44 @@ namespace SchoolRecognition.Services
                { "YearEstablished", new PropertyMappingValue(new List<string>() { "YearEstablished" } )},
                { "YearEstablishedDesc", new PropertyMappingValue(new List<string>() { "YearEstablished" } , true)},
           };
-        
 
+
+        private Dictionary<string, PropertyMappingValue> _schoolFacilitiesPropertyMapping =
+          new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+          {
+               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" } )},
+               { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" } , true)},
+          };
+
+        private Dictionary<string, PropertyMappingValue> _facilityItemsPropertyMapping =
+         new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+         {
+               { "Description", new PropertyMappingValue(new List<string>() { "Description" } )},
+         };
+
+        private Dictionary<string, PropertyMappingValue> _facilityTypesPropertyMapping =
+         new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+         {
+               { "Title", new PropertyMappingValue(new List<string>() { "Title" } )},
+         };
+        private Dictionary<string, PropertyMappingValue> _facilitySettingsPropertyMapping =
+         new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+         {
+               { "Specification", new PropertyMappingValue(new List<string>() { "Specification" } )},
+         };
+        private Dictionary<string, PropertyMappingValue> _classSettingsPropertyMapping =
+         new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+         {
+               { "Name", new PropertyMappingValue(new List<string>() { "Name" } )},
+         };
         private Dictionary<string, PropertyMappingValue> _schoolPaymentsPropertyMapping =
           new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
           {
                //{ "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
-               { "TypeDescription", new PropertyMappingValue(new List<string>() { "Description" } )},
-               { "TypeDescriptionDesc", new PropertyMappingValue(new List<string>() { "Description" } , true)},
+               { "ReceiptNo", new PropertyMappingValue(new List<string>() { "ReceiptNo" } )},
+               { "ReceiptNoDesc", new PropertyMappingValue(new List<string>() { "ReceiptNo" } , true)},
+               { "DateCreated", new PropertyMappingValue(new List<string>() { "DateCreated" } )},
+               { "DateCreatedDesc", new PropertyMappingValue(new List<string>() { "DateCreated" } , true)},
           };
         
         
@@ -144,6 +198,9 @@ namespace SchoolRecognition.Services
 
         public PropertyMappingService()
         {
+            _propertyMappings.Add(new PropertyMapping<SchoolClassesDto, SchoolClasses>(_schoolClassesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<SchoolCategoryDto, SchoolCategories>(_schoolCategoryPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<RanksDto, Ranks>(_ranksPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<AccountsDto, ApplicationUsers>(_accountsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<LocalGovernmentsViewDto, LocalGovernments>(_localGovernmentsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<OfficesViewDto, Offices>(_officesPropertyMapping));
@@ -154,9 +211,14 @@ namespace SchoolRecognition.Services
             _propertyMappings.Add(new PropertyMapping<PinsViewDto, Pins>(_pinsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<RecognitionTypesViewDto, RecognitionTypes>(_recognitionTypesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SchoolsViewDto, Schools>(_schoolsPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<SchoolFacilitiesViewDto, SchoolFacilities>(_schoolFacilitiesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SchoolPaymentsViewDto, SchoolPayments>(_schoolPaymentsPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<StatesViewDto, States>(_statesPropertyMapping));
             _propertyMappings.Add(new PropertyMapping<SubjectsViewDto, Subjects>(_subjectsPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<FacilityItemsDto, FacilityItems>(_facilityItemsPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<FacilityTypesDto, FacilityTypes>(_facilityTypesPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<FacilitySettingsDto, FacilitySettings>(_facilitySettingsPropertyMapping));
+            _propertyMappings.Add(new PropertyMapping<ClassSettingsDto, ClassSettings>(_classSettingsPropertyMapping));
         }
 
         public bool ValidMappingExistsFor<TSource, TDestination>(string fields)

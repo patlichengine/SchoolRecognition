@@ -18,13 +18,15 @@ namespace SchoolRecognition.Profiles
                 opt => opt.MapFrom(src => $"{src.SerialPin}"))
                 .ForMember(
                 dest => dest.RecognitionTypeName,
-                opt => {
+                opt =>
+                {
                     opt.PreCondition(src => (src.RecognitionType != null));
                     opt.MapFrom(src => $"{ src.RecognitionType.Name}");
                 })
                 .ForMember(
                 dest => dest.CreatedByUser,
-                opt => {
+                opt =>
+                {
                     opt.PreCondition(src => (src.CreatedByNavigation != null));
                     opt.MapFrom(src => $"{src.CreatedByNavigation.Surname} {src.CreatedByNavigation.Othernames}");
                 });

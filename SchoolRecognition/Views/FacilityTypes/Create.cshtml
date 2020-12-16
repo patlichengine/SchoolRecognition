@@ -1,0 +1,138 @@
+﻿
+
+@model SchoolRecognition.Models.FacilityTypesDto
+
+@{
+    ViewData["Title"] = "Add New Facility Type";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="FacilityTypes" asp-action="Index">Manage Facility Types</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Add New Type of Facility</h3>
+                </div>
+                <div class="card-body">
+
+                    <small class="text-muted mt-1 mb-2">All fields marked <b class="text-dark">*</b> are required!</small>
+
+                    <form asp-action="Create" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+                        <div class="form-group">
+                            <label asp-for="Title">*Title of Facility:</label>
+                            <input minlength="3" maxlength="100" asp-for="Title" class="form-control" placeholder="Enter Facility Title" required>
+                        </div>
+
+
+
+                        <div class="form-check form-group">
+                            <input class="form-check-input" type="checkbox" asp-for="IsActive">
+                            <label class="form-check-label" asp-for="IsActive">
+                                Type of Facility is Currently Active?
+                            </label>
+                        </div>
+
+                        <div class="form-check form-group">
+                            <input class="form-check-input" type="checkbox" asp-for="IsGlobal">
+                            <label class="form-check-label" asp-for="IsGlobal">
+                                Facility Type Has Subject Assigned?
+                            </label>
+                        </div>
+
+                       
+                        <!-- /.col -->
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-spinner fa-spin" id="loading_icon" style="display:none"></i>
+                            Submit
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-lg"> Reset</button>
+
+                        <!-- /.col -->
+
+                    </form>
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/loading_icon.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    @*<script>
+            $(document).ready(function () {
+                $('select.form-control').select2({
+                    theme: "classic"
+                });
+                //$('.select2me').select2();
+            });
+        </script>*@
+    <script>
+        // add the rule here
+        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        //    return arg !== value;
+        //}, "Select a valid value!");
+        $("form").validate({
+            rules: {
+                TypeDescription: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 100
+                },
+            },
+            messages: {
+                TypeDescription: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 3 characters!",
+                    maxlength: "This field must have less than 100 characters!",
+                }
+            }
+        });
+    </script>
+
+}
+
+<script type="text/javascript" src="~/js/linkClick.js"></script>

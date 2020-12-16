@@ -20,5 +20,5 @@ function loadSR() {
             $("#msg").html("Error while calling the Web API!");
         };
         $.ajax(options);
-    }
+    });
 }

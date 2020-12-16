@@ -154,6 +154,8 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Create");
+
                 if (ModelState.IsValid)
                 {
 
@@ -162,7 +164,7 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office Type with the same description already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
 
                     var result = await _officeTypesRepository.Create(model);
@@ -170,16 +172,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New Office Type Added Successfully!");
-                        return RedirectToAction("Index", "OfficeTypes");
+                        url = Url.Action("Index", "OfficeTypes");
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -246,6 +249,8 @@ namespace SchoolRecognition.Controllers
                      Value = x.Id.ToString(),
                  }).ToList();
 
+                var url = Url.Action("CreateOffice", new { id = model.OfficeTypeId });
+
                 if (ModelState.IsValid)
                 {
 
@@ -255,7 +260,7 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                     //model.Id = Guid.Empty;
                     var result = await _officesRepository.Create(model);
@@ -263,16 +268,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New Office Added Successfully!");
-                        return RedirectToAction("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -314,6 +320,7 @@ namespace SchoolRecognition.Controllers
 
             try
             {
+                var url = Url.Action("Update", new { id = model.Id });
                 if (ModelState.IsValid)
                 {
 
@@ -323,7 +330,7 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office Type with the same description already exists in the system...");
-                        return View(model);
+                        return Json(url);
                     }
 
                     //Set Pins as active 
@@ -332,16 +339,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "Office Type Updated Successfully!");
-                        return RedirectToAction("ViewPins", "OfficeTypes", new { id = model.Id });
+                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.Id });
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return PartialView(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -389,15 +397,17 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Delete", new { id = model.Id });
                 if (ModelState.IsValid)
                 {
                     await _officeTypesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Office Type removed from system!");
-                    return RedirectToAction("Index", "OfficeTypes");
+                    url = Url.Action("Index", "OfficeTypes");
+                    return Json(url);
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
-                return PartialView(model);
+                return Json(url);
             }
             catch (Exception)
             {

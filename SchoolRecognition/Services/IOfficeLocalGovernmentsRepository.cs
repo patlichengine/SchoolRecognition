@@ -12,6 +12,7 @@ namespace SchoolRecognition.Services
     {
 
         Task<IEnumerable<OfficeLocalGovernmentsViewDto>> List();
+        Task<IEnumerable<OfficeLocalGovernmentsViewDto>> ListByStateId(Guid stateId);
         Task<PagedList<OfficeLocalGovernmentsViewDto>> PagedList(OfficeLocalGovernmentsResourceParams resourceParams);
         Task<OfficeLocalGovernmentsViewDto> Get(Guid id);
         Task<Guid?> Create(OfficeLocalGovernmentsCreateDto _obj);

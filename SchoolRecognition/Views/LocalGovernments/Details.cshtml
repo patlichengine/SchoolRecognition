@@ -1,0 +1,179 @@
+﻿@model LocalGovernmentsDto
+@{
+    ViewData["Title"] = Model.Name;
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+
+
+@section styles{
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                @*<h1>@ViewData["Title"]</h1>*@
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-action="Index" data-toggle="link">Manage Local Governments</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active disabled" id="custom-tabs-three-home-tab" data-toggle="pill" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">
+                                <b>@ViewData["Title"]</b> LGA Details
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-md-3 border">
+
+                            <h4 class="mt-2" style="font-weight: 100">LGA Details:</h4>
+
+                            <table class="table table-striped table-borderless">
+
+                                <tbody>
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>LGA Name</dt>
+                                                <dd>
+                                                    @Model.Name <br />
+
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>LGA Code</dt>
+                                                <dd>@Model.Code</dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>State Name</dt>
+                                                <dd>@Model.State.Name</dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>State Name</dt>
+                                                <dd>@Model.State.Code</dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>Total Schools</dt>
+                                                <dd>@Model.Schools.Count()</dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+
+
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-9">
+
+
+                            <div class="clearfix">
+
+                                <div class="float-right">
+
+                                    @*<a asp-area="" asp-controller="SchoolCategories" asp-action="Audit" asp-route-id="@Model.Id" class="btn btn-light">
+                                            <i class="fas fa-binoculars"></i>
+                                            Audit Trail
+                                        </a>*@
+                                    <a asp-area="" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">
+                                        <i class="fas fa-edit"></i>
+                                        Update
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <h4 style="font-weight: 100;">Schools Under @ViewData["Title"] Local Government:</h4>
+                            <table id="datatable-1" class="table table-bordered table-striped table-responsive-lg table-responsive-md table-responsive-xl" role="grid" aria-describedby="example1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <td>School Name</td>
+                                        <td>School Address</td>
+                                        <td>Action</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Schools.OrderBy(c => c.Name))
+                                    {
+                                        <tr role="row">
+                                            <td>@item.Name</td>
+                                            <td>@item.Address</td>
+                                            <td class="text-center p-1">
+                                                <a asp-action="Update" asp-controller="States" asp-route-id="@item.Id" class="btn btn-success btn-sm " data-toggle="link" data-placement="top" title="Update">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                @*<a asp-action="Delete" asp-controller="States" asp-route-id="@item.Id" class="btn btn-danger btn-sm " data-toggle="link" data-placement="right" title="Delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>*@
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+
+
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->

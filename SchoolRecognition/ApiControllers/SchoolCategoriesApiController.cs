@@ -37,7 +37,7 @@ namespace SchoolRecognition.ApiControllers
         {
 
 
-            var result = _schoolCategories.GetAllCategory().Result;
+            var result = _schoolCategories.List().Result;
 
             return Ok(result);
 
@@ -62,7 +62,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _schoolCategories.GetCategoryById(categoryId).Result;
+            var result = _schoolCategories.ListById(categoryId).Result;
             if (result == null)
             {
                 return NotFound();
@@ -74,7 +74,7 @@ namespace SchoolRecognition.ApiControllers
 
         // POST: api/SchoolCategories
         [HttpPost]
-        public ActionResult<SchoolCategoryDto>  Post(CreateSchoolCategoryDto school)
+        public ActionResult<CreateSchoolCategoryDto>  Post(CreateSchoolCategoryDto school)
         {
 
             var result = _schoolCategories.Create(school).Result;
@@ -116,7 +116,7 @@ namespace SchoolRecognition.ApiControllers
                 return NotFound();
             }
 
-            var result = _schoolCategories.DeleteSchoolCategory(id);
+            var result = _schoolCategories.Delete(id);
             if(result == null)
             {
                 return NotFound();

@@ -19,6 +19,8 @@ namespace SchoolRecognition.Entities
             SchoolFacilities = new HashSet<SchoolFacilities>();
             SchoolPayments = new HashSet<SchoolPayments>();
             SchoolStaffDegrees = new HashSet<SchoolStaffDegrees>();
+            SchoolSubjectsCreatedByNavigation = new HashSet<SchoolSubjects>();
+            SchoolSubjectsModifiedByNavigation = new HashSet<SchoolSubjects>();
         }
 
         public Guid Id { get; set; }
@@ -48,5 +50,7 @@ namespace SchoolRecognition.Entities
         public virtual ICollection<SchoolFacilities> SchoolFacilities { get; set; }
         public virtual ICollection<SchoolPayments> SchoolPayments { get; set; }
         public virtual ICollection<SchoolStaffDegrees> SchoolStaffDegrees { get; set; }
+        public virtual ICollection<SchoolSubjects> SchoolSubjectsCreatedByNavigation { get; set; }
+        public virtual ICollection<SchoolSubjects> SchoolSubjectsModifiedByNavigation { get; set; }
     }
 }

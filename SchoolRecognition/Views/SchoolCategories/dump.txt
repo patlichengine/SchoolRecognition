@@ -1,0 +1,131 @@
+﻿@model IEnumerable<SchoolRecognition.Models.SchoolCategoryDto>
+
+@{
+    ViewData["Title"] = "School Category Home Page";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+
+<section class="content-header">
+
+    <div class="card">
+        <div class="card-header text-primary breadcrumb-item active">
+
+
+            @ViewData["Title"]
+
+            <a type="button" class="btn btn-primary float-sm-right" asp-action="Create" asp-controller="SchoolCategories">
+                <span><i class="fa fa-plus"></i>  Add School Category</span>
+            </a>
+        </div>
+        <div class="card-body">
+
+
+
+        </div>
+    </div>
+
+</section>
+
+
+<div class="container">
+    <br />
+    <div style="width:90%; margin:0 auto;">
+        <table id="schoolCat" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>School Category Name</th>
+                    <th>School Category Code</th>
+                     <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts {
+    <script>
+        var dataTable;
+
+$(document).ready(function () {
+    loadDataTable();
+});
+
+function loadDataTable() {
+            dataTable =  $("schoolCat").DataTable({
+                                                    "processing": true,
+                                                    "serverSide": true,
+                                                    "filter": true,
+                                                    "orderMulti": false,
+                                                    "ajax": {
+                                                        "url": "/SchoolCategory/Index",
+                                                        "type": "POST",
+                                                        "datatype": "json"
+                                                    },
+                                                    "columnDefs":
+                                                        [{
+                                                            "targets": [0],
+                                                            "visible": false,
+                                                            "searchable": false
+                                                        }],
+                                                    "columns": [
+                                                                    //{ "data": "id", "name": "ID", "autoWidth": true },
+                                                                    { "data": "NAME", "name": "name", "autoWidth": true },
+                                                                    { "data": "CODE", "name": "code", "autoWidth": true },
+                                                                        {
+                                                                        "data": "id",
+                                                                            "render":function (data)  
+                                                                            { return `
+                                                                                    <div class="text-center">
+                                                                                        <a href="/SchoolCategories/Edit/${data}" class="btn btn-success" style="cursor:pointer">
+                                                                                            <i class="fas fa-edit"></i>
+                                                                                        </a>
+                                                                                        <a  onclick=Delete("/SchoolCategories/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+                                                                                            <i class="fas fa-trash-alt text-white"></i>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                `;
+                                                                            },  "width": "40%"
+                                                                         }
+
+                                                               ]
+
+                                                 });
+                        }
+
+        function Delete(url) {
+    swal({
+        title: "Are you sure you want to Delete?",
+        text: "You will not be able to restore the data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: "Delete",
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        dataTable.ajax.reload();
+                    }
+                    else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
+}
+
+    </script>
+
+}

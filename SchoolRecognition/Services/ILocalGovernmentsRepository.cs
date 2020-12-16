@@ -10,5 +10,9 @@ namespace SchoolRecognition.Services
     {
         Task<IEnumerable<LocalGovernmentsViewDto>> List();
         Task<IEnumerable<LocalGovernmentsViewDto>> ListByStateId(Guid stateId);
+
+        Task<LocalGovernmentsViewDto> GetByStateIdAndLgaCode(Guid stateId, string code);
+
+        Task<LocalGovernmentsViewDto> GetByStateCodeAndLgaCode(string stateCode, string lgaCode);
     }
 }

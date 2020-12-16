@@ -1,0 +1,85 @@
+﻿@model SchoolRecognition.Models.LocationDto
+
+@{
+    ViewData["Title"] = "Update Location Details";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<section class="content-header">
+
+    <div class="card">
+        <div class="card-header bg-gradient-navy  breadcrumb-item active">
+
+
+            <span class="text-yellow"><i class="fa fa-graduation-cap"></i> @ViewData["Title"] </span>
+
+            <a type="button" class="btn btn-yellow float-sm-right" asp-action="Index" asp-controller="LocationTypes">
+                <span><i class="fa fa-eye"></i>  Home</span>
+            </a>
+        </div>
+        <div class="card-body">
+
+
+
+        </div>
+    </div>
+
+</section>
+
+
+
+<section class="form-simple">
+    @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+    <!--Form with header-->
+    <div class="container">
+        <div class="card">
+
+            <!--Header-->
+            <div class="header pt-3 bg-gradient-navy ">
+
+                <div class="row d-flex justify-content-start">
+                    <h3 class="deep-grey-text mt-3 mb-4 pb-1 mx-5"><span><i class="fa fa-pen text-yellow"> Update Information for <span class="text-success"> @Model.Name</span></i></span></h3>
+                </div>
+
+            </div>
+            <form asp-action="Edit" method="post" asp-controller="LocationTypes">
+                <div class="card-body mx-4 mt-4">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!--Body-->
+                    <div class="md-form">
+                        <input type="text" asp-for="Name" class="form-control">
+                        <label asp-for="Name"></label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="form-group pb-3">
+
+                        <label asp-for="Description"></label>
+                        <textarea class="form-control" asp-for="Description" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="md-form">
+                        <input type="submit" value="Save" class="btn btn-yellow" />
+                    </div>
+
+                    <div class="card-footer text-muted bg-gradient-navy ">
+                        <a asp-action="Index" class="btn btn-yellow float-right">View All</a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--/Form with header-->
+
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

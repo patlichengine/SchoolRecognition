@@ -6,10 +6,7 @@
     ViewData["Title"] = state.StateName;
 }
 
-@section styles{
-    <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
-
-}
+<link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -113,7 +110,7 @@
                                     <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
                                         <li class="nav-item">
                                             <a class="nav-link active" id="tab-lgas" data-toggle="pill" href="#tab-lgas-content" role="tab" aria-controls="custom-content-below-home" aria-selected="true">
-                                                Local Governments  
+                                                Local Governments
                                                 <span class="badge badge-primary">@state.LocalGovernmentsCount.ToString("#,##0")</span>
                                             </a>
                                         </li>
@@ -128,7 +125,7 @@
                                     <div class="tab-content" id="tab-content">
 
                                         <div class="tab-pane fade show active" id="tab-lgas-content" role="tabpanel" aria-labelledby="tab-lgas">
-                                            
+
 
                                             <div class="container-fluid pt-2">
 
@@ -154,7 +151,7 @@
 
                                                             <div class="input-group">
                                                                 <input type="text" min-length="2" name="searchQuery" class="form-control" value="@ViewData["SearchQuery"]" placeholder="Enter Search words..." aria-label="Username" aria-describedby="material-addon1">
-                                                <div class="input-group-prepend">
+                                                                <div class="input-group-prepend">
                                                                     <button class="btn btn-md btn-light" type="submit">
                                                                         <i class="fas fa-search"></i>
                                                                         Search
@@ -247,61 +244,13 @@
                                                         </div>
                                                         <div class="col-8">
 
-                                                            <ul class="pagination">
-                                                                <li class="page-item @prevDisabled">
-                                                                    <a asp-controller="States" asp-action="Details"
-                                                                       asp-route-id="@state.Id"
-                                                                       asp-route-orderBy="@ViewData["OrderBy"]"
-                                                                       asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                                       asp-route-pageNumber=""
-                                                                       class="page-link">
-                                                                        <i class="fas fa-angle-double-left"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li class="page-item @prevDisabled">
-                                                                    <a asp-controller="States" asp-action="Details"
-                                                                       asp-route-id="@state.Id"
-                                                                       asp-route-orderBy="@ViewData["OrderBy"]"
-                                                                       asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                                       asp-route-pageNumber="@(Model.CurrentPage - 1)"
-                                                                       class="page-link">
-                                                                        <i class="fas fa-angle-left"></i>
-                                                                    </a>
-                                                                </li>
-                                                                @foreach (var item in pages)
-                                                                {
-                                                                    <li class="@(item == Model.CurrentPage ? "page-item active" : "page-item")">
-                                                                        <a asp-controller="States" asp-action="Details"
-                                                                           asp-route-id="@state.Id"
-                                                                           asp-route-orderBy="@ViewData["OrderBy"]"
-                                                                           asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                                           asp-route-pageNumber="@item"
-                                                                           class="page-link">
-                                                                            @item
-                                                                        </a>
-                                                                    </li>
-                                                                }
-                                                                <li class="page-item @nextDisabled">
-                                                                    <a asp-controller="States" asp-action="Details"
-                                                                       asp-route-id="@state.Id"
-                                                                       asp-route-orderBy="@ViewData["OrderBy"]"
-                                                                       asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                                       asp-route-pageNumber="@(Model.CurrentPage + 1)"
-                                                                       class="page-link">
-                                                                        <i class="fas fa-angle-right"></i>
-                                                                    </a>
-                                                                </li>
-                                                                <li class="page-item @nextDisabled">
-                                                                    <a asp-controller="States" asp-action="Details"
-                                                                       asp-route-id="@state.Id"
-                                                                       asp-route-orderBy="@ViewData["OrderBy"]"
-                                                                       asp-route-searchQuery="@ViewData["SearchQuery"]"
-                                                                       asp-route-pageNumber="@Model.TotalPages"
-                                                                       class="page-link">
-                                                                        <i class="fas fa-angle-double-right"></i>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
+
+
+                                                            <partial name="_paginationLinks" model='new PaginationLinksDto {
+                                 Pages = pages, PageNumber = Model.CurrentPage, PrevDisabled = prevDisabled,
+                                 NextDisabled = nextDisabled, Controller = "States", Action="Details", Id=state.Id, CurrentPage = Model.CurrentPage,
+                                 TotalPages = Model.TotalPages }'>
+
                                                         </div>
                                                     </div>
                                                 }
@@ -385,17 +334,16 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    <script src="~/lib/datatables/datatables.min.js"></script>
-        <script>
-            $(document).ready( function () {
-                $('#datatable-1').DataTable({
-                    //"order": [[0, "desc"]],
-                    responsive: true,
-                    destroy: true
-                });
-            } );
-        </script>
-}
+<script src="~/lib/datatables/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#datatable-1').DataTable({
+            //"order": [[0, "desc"]],
+            responsive: true,
+            destroy: true
+        });
+    });
+</script>
 
-<script type="text/javascript" src="~/js/linkClick.js"></script>
+<script src="~/js/ajaxFormGET.js"></script>
+<script src="~/js/linkClick.js"></script>

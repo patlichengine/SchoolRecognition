@@ -11,7 +11,7 @@ namespace SchoolRecognition.Entities
         public Guid? ClassId { get; set; }
         public DateTime DateCreated { get; set; }
 
-        public virtual SchoolClasses Class { get; set; }
+        public virtual ClassSettings Class { get; set; }
         public virtual SchoolStaffProfiles Staff { get; set; }
         public virtual Subjects Subject { get; set; }
     }

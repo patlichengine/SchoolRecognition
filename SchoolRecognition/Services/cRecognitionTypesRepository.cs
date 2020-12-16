@@ -87,12 +87,12 @@ namespace SchoolRecognition.Services
                 .Include(x => x.Pins) as IQueryable<RecognitionTypes>;
 
                 //Get the mapped data
-                var mappingData = (_mapper.Map<IEnumerable<RecognitionTypesViewDto>>(dbResult)).AsQueryable();// as IQueryable<AccountsDto>;
+                var mappingData =  (_mapper.Map<IEnumerable<RecognitionTypesViewDto>>(dbResult)).AsQueryable();// as IQueryable<AccountsDto>;
 
 
-                returnValue = mappingData.ToList();
+                returnValue =  mappingData.ToList();
 
-                return returnValue;
+                return  returnValue;
             }
             catch (Exception ex)
             {

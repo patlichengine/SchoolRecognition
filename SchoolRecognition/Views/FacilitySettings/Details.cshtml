@@ -1,0 +1,238 @@
+﻿@model FacilitySettingsDto
+@{
+    ViewData["Title"] =  Model.FacilityType.Title;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+
+
+@section styles{
+
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="FacilitySettings" asp-action="Index" data-toggle="link">Manage Facility Settings</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active disabled" id="custom-tabs-three-home-tab" data-toggle="pill" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">
+                                <b>@ViewData["Title"]</b> Facility Settings Details
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-md-3 border">
+
+                            @*<h4 class="mt-2" style="font-weight: 100">Faciity Settings Details for : @Model.FacilityType.Title</h4>*@
+
+                            <table class="table table-striped table-borderless">
+
+                                <tbody>
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>Facility Type</dt>
+                                                <dd>
+                                                    @Model.FacilityType.Title<br />
+
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        @*<td class="p-0">
+                                            <dl>
+                                                <dt>Description</dt>
+                                                <dd>
+                                                    @Model.FacilityItemSetting.Description<br />
+
+                                                </dd>
+                                            </dl>
+                                        </td>*@
+                                    </tr>
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>Item No</dt>
+                                                <dd>@Model.ItemNo</dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>Required Specification of Item</dt>
+                                                <dd>@Model.Specification</dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>Quantity Required</dt>
+                                                <dd>@Model.Quantity</dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-9">
+
+
+                            <div class="clearfix">
+
+                                <div class="float-right">
+
+                                  
+                                    <a asp-area="" asp-controller="FacilitySettings" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">
+                                        <i class="fas fa-edit"></i>
+                                        Update Settings
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <h4 style="font-weight: 100;">Subject Information For @ViewData["Title"]:</h4>
+                            <table id="datatable-1" class="table table-bordered table-striped table-responsive-lg table-responsive-md table-responsive-xl" role="grid" aria-describedby="example1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <td>Subject Code</td>
+                                        <td>Subject Name</td>
+                                        <td>is Core Subject</td>
+                                        <td>is Trade Subject</td>
+                                    </tr>
+                                </thead>
+                               
+                                <tbody>
+                                   
+                                    <tr role="row">
+                                        <td>@Model.Subject.SubjectCode</td>
+                                        <td>@Model.Subject.LongName</td>
+                                      <td>  @if (Model.Subject.IsCoreSubject)
+                                        {
+                                            <i class="fa fa-check text-success"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-check text-danger"></i>
+
+                                        }
+                                        </td>
+                                        
+                                        <td>
+                                            @if (Model.Subject.IsTradeSubject)
+                                            {
+                                                <i class="fa fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-check text-danger"></i>
+
+                                            }
+                                        </td>
+
+
+
+                                    </tr>
+                                   
+
+                                </tbody>
+                            </table>
+
+
+                            <h4 style="font-weight: 100;">Facility Type  Information For @ViewData["Title"]:</h4>
+                            <table id="datatable-1" class="table table-bordered table-striped table-responsive-lg table-responsive-md table-responsive-xl" role="grid" aria-describedby="example1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <td>Facility Has Specification</td>
+                                        <td>Facility Has Quantity</td>
+                                       
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <tr role="row">
+                                        <td>
+                                            @if (Model.FacilityType.IsActive)
+                                            {
+                                                <i class="fa fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-check text-danger"></i>
+
+                                            }
+                                                                            </td>
+
+                                        <td>
+                                            @if (Model.FacilityType.IsGlobal)
+                                            {
+                                                <i class="fa fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-check text-danger"></i>
+
+                                            }
+
+                                           
+                                        </td>
+
+
+
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->

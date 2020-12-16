@@ -11,17 +11,26 @@ namespace SchoolRecognition.Profiles
         public SchoolCategoryProfile()
         {
             CreateMap<Entities.SchoolCategories, Models.SchoolCategoryDto>()
-               .ForMember(
-                    dest => dest.Name,
-                    opt => opt.MapFrom(src => $"{src.Name}"))
-                .ForMember(
-                    dest => dest.Code,
-                    opt => opt.MapFrom(src => $"{src.Code}"));
+            .ForMember(dest => dest.Centres,
+            opt =>
+            {
+                opt.PreCondition(src => src.Centres != null);
+                opt.MapFrom(src => src.Centres);
+            }
+            )
+             .ForMember(dest => dest.Schools,
+             opt =>
+             {
+                 opt.PreCondition(src => (src.Schools != null));
+                 opt.MapFrom(src => src.Schools);
+             }
+            );
 
-            CreateMap<Models.CreateSchoolCategoryDto, Entities.SchoolCategories>();
-            CreateMap<Models.UpdateSchoolCategoryDto, Entities.SchoolCategories>();
 
-          
+            CreateMap<Models.CreateSchoolCategoryDto, Entities.SchoolCategories>().ReverseMap();
+            CreateMap<Models.UpdateSchoolCategoryDto, Entities.SchoolCategories>().ReverseMap();
+
+
         }
     }
 }

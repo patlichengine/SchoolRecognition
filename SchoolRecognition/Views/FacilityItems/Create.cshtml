@@ -1,0 +1,161 @@
+﻿
+
+@model SchoolRecognition.Models.FacilityItemsCreateDto
+
+@{
+    ViewData["Title"] = "Add New Facility Item";
+    // Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="FacilityItems" asp-action="Index" data-toggle="link">Manage Items</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">New Item</h3>
+                </div>
+                <div class="card-body">
+
+                    <small class="text-muted mt-1 mb-2">All fields marked <b class="text-danger">*</b> are required!</small>
+
+                    <form asp-action="Create" method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <label asp-for="Description">*Name:</label>
+                                    <textarea minlength="2" maxlength="200" asp-for="Description" class="form-control" placeholder="Enter Item Description" required>
+                                    </textarea>
+                                </div>
+                                @*<div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" asp-for="IsActive" value="@Model.IsActive" id="@Model.ID">
+                                    <label class="form-check-label" asp-for="IsActive">Is Active</label>
+                                </div>*@
+                            </div>
+                            @*<div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                                    
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="IsSummary" value="Checked" /> @Html.DisplayNameFor(model => model.IsSummary)
+                                </label>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" asp-for="IsSummary">
+                                        <label class="form-check-label" asp-for="IsSummary">Is Summary</label>
+                                    </div>
+                                </div>
+
+                            </div>*@
+
+                        </div>
+
+
+
+
+
+
+                        <!-- /.col -->
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-spinner fa-spin" id="loading_icon" style="display:none"></i>
+                            Submit
+                        </button>
+                        <button type="reset" class="btn btn-secondary btn-lg"> Reset</button>
+
+                        <!-- /.col -->
+
+                    </form>
+
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+
+
+
+</section>
+<!-- /.content -->
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/loading_icon.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+    @*<script>
+            $(document).ready(function () {
+                $('select.form-control').select2({
+                    theme: "classic"
+                });
+                //$('.select2me').select2();
+            });
+        </script>*@
+    <script>
+        // add the rule here
+        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        //    return arg !== value;
+        //}, "Select a valid value!");
+        $("form").validate({
+            rules: {
+                TypeDescription: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 200
+                },
+            },
+            messages: {
+                TypeDescription: {
+                    required: "This field is required!",
+                    minlength: "This field must have at least 2 characters!",
+                    maxlength: "This field must have less than 200 characters!",
+                }
+            }
+        });
+    </script>
+
+}
+
+<script type="text/javascript" src="~/js/linkClick.js"></script>

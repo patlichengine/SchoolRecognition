@@ -1,0 +1,92 @@
+﻿@model SchoolRecognition.Models.RanksDto
+
+@{
+    ViewData["Title"] = "View Details";
+   // Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <ol class="breadcrumb active text-success">
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+
+                </ol>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-action="Index" data-toggle="link">Home</a></li>
+                    <li class="breadcrumb-item active">Details</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- Content Wrapper. Contains page content -->
+<section class="form-simple">
+
+
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+
+
+                    <!-- About Me Box -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Detail Information of @Model.Name</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <strong><i class="fas fa-info mr-1"></i> Rank Classification Information: </strong>
+
+
+
+                            <hr>
+
+                            <strong><i class="fas fa-comment mr-1"></i> Rank Name: </strong>
+
+                            <p class="text-muted text-capitalize">@Model.Name</p>
+
+                            <hr>
+
+                            <hr>
+
+                            <strong><i class="fas fa-book-open mr-1"></i> Assigned Rank Code: </strong>
+
+                            <p class="text-muted text-capitalize">@Model.Code</p>
+
+                            <hr>
+
+
+
+
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    <!-- /.content-wrapper -->
+</section>
+
+<section class="">
+
+    <div>
+        <a class="btn btn-success btn-rounded btn-sm my-0" asp-route-id="@Model.Id" asp-action="Edit"><i class="fa fa-pen"></i> Edit</a>
+        <a class="btn btn-primary btn-rounded btn-sm my-0" asp-action="Index" asp-controller="Ranks"><i class="fa fa-home"></i> Go Home</a>
+
+    </div>
+</section>
+
+<script src="~/js/linkClick.js"></script>

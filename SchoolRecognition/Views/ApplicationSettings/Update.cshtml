@@ -1,14 +1,7 @@
 ﻿@model ApplicationSettingsCreateDto
 @{
     ViewData["Title"] = "Change Settings";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-}
-@section styles{
-
-    @*<link href="~/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
-        <link href="~/lib/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" />*@
-    @*<link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet" />*@
-
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 
@@ -21,8 +14,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="ApplicationSettings" asp-action="Index">Manage Pins</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="ApplicationSettings" asp-action="Index" data-toggle="link">Manage Pins</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -67,21 +60,21 @@
                                 <input min="5" max="200" asp-for="MaximumNoOfPinsToGenerate" class="form-control w-50" placeholder="Enter Value" required>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row mb-3">
                             <label asp-for="MinimumSchoolSubjects">*Minimum Number of School Subjects:</label>
                             <div class="col-md">
                                 <input min="2" max="30" asp-for="MinimumSchoolSubjects" class="form-control w-50" placeholder="Enter Value" required>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row mb-3">
                             <label asp-for="MaximumCoreSubjects">*Maximum Number of Core Subjects:</label>
                             <div class="col-md">
                                 <input min="1" max="10" asp-for="MaximumCoreSubjects" class="form-control w-50" placeholder="Enter Value" required>
                             </div>
                         </div>
-                        
+
                         <div class="form-group row mb-5">
                             <label asp-for="MinimumTradeSubjects">*Minimum Number Of Trade Subjects:</label>
                             <div class="col-md">
@@ -116,70 +109,69 @@
 </section>
 <!-- /.content -->
 
-@section scripts{
-    <script src="~/js/loading_icon.js"></script>
-    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
-    @*<script src="~/lib/select2/dist/js/select2.min.js"></script>*@
-    @*<script src="~/lib/select2/dist/js/select2.full.min.js"></script>*@
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
-    @*<script>
-            $(document).ready(function () {
-                $('select.form-control').select2({
-                    theme: "classic"
-                });
-                //$('.select2me').select2();
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script src="~/js/loading_icon.js"></script>
+<script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
+@*<script>
+        $(document).ready(function () {
+            $('select.form-control').select2({
+                theme: "classic"
             });
-        </script>*@
-    <script>
-        // add the rule here
-        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
-        //    return arg !== value;
-        //}, "Select a valid value!");
-        $("form").validate({
-            rules: {
-                MinimumNoOfRecogYears: {
-                    required: true,
-                    min: 1,
-                    max: 20
-                },
-                MaximumNoOfPinsToGenerate: {
-                    required: true,
-                    min: 5,
-                    max: 200
-                },
-                MinimumSchoolSubjects: {
-                    required: true,
-                    min: 2,
-                    max: 30
-                },
-                MaximumCoreSubjects: {
-                    required: true,
-                    min: 1,
-                    max: 10
-                },
-                MinimumTradeSubjects: {
-                    required: true,
-                    min: 1,
-                    max: 10
-                },
-
-            },
-            messages: {
-                ApplicationSettingName: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 5 characters!",
-                    maxlength: "This field must have less than 60 characters!",
-                },
-                ApplicationSettingCode: {
-                    required: "This field is required!",
-                    minlength: "This field must have at least 1 characters!",
-                    maxlength: "This field must have less than 2 characters!",
-                }
-            }
+            //$('.select2me').select2();
         });
-    </script>
+    </script>*@
+<script>
+    // add the rule here
+    //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+    //    return arg !== value;
+    //}, "Select a valid value!");
+    $("form").validate({
+        rules: {
+            MinimumNoOfRecogYears: {
+                required: true,
+                min: 1,
+                max: 20
+            },
+            MaximumNoOfPinsToGenerate: {
+                required: true,
+                min: 5,
+                max: 200
+            },
+            MinimumSchoolSubjects: {
+                required: true,
+                min: 2,
+                max: 30
+            },
+            MaximumCoreSubjects: {
+                required: true,
+                min: 1,
+                max: 10
+            },
+            MinimumTradeSubjects: {
+                required: true,
+                min: 1,
+                max: 10
+            },
 
-}
+        },
+        messages: {
+            ApplicationSettingName: {
+                required: "This field is required!",
+                minlength: "This field must have at least 5 characters!",
+                maxlength: "This field must have less than 60 characters!",
+            },
+            ApplicationSettingCode: {
+                required: "This field is required!",
+                minlength: "This field must have at least 1 characters!",
+                maxlength: "This field must have less than 2 characters!",
+            }
+        }
+    });
+</script>
 
 
+
+<script src="~/js/ajaxFormSubmit.js"></script>
+<script src="~/js/linkClick.js"></script>

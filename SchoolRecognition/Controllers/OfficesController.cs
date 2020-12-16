@@ -18,6 +18,7 @@ using Vereyon.Web;
 
 namespace SchoolRecognition.Controllers
 {
+
     [Route("manage_offices/council_offices")]
     public class OfficesController : Controller
     {
@@ -114,7 +115,7 @@ namespace SchoolRecognition.Controllers
                 ViewData["SearchQuery"] = searchQuery;
 
 
-                return View(offices);
+                return PartialView(offices);
             }
             catch (Exception)
             {
@@ -127,7 +128,150 @@ namespace SchoolRecognition.Controllers
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
         [HttpCacheValidation(MustRevalidate = false)]
         // GET: Offices/Details/5
-        public async Task<IActionResult> Details(Guid id, string orderBy, string searchQuery, int? pageNumber)
+        public async Task<IActionResult> Details(Guid id)
+        {
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+                var result = await _officesRepository.Get(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return PartialView(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [Route("states_controlled/{id:guid}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        // GET: Offices/Details/5
+        public async Task<IActionResult> ViewOfficeStates(Guid id)
+        {
+            IEnumerable<OfficeStatesViewDto> officeStates = new List<OfficeStatesViewDto>();
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+                var result = await _officesRepository.GetIncludingListOfOfficeStates(id);
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+                officeStates = result.OfficeStateStates;
+
+                return PartialView(officeStates);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [Route("local_governments_controlled/{id:guid}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        // GET: Offices/Details/5
+        public async Task<IActionResult> ViewOfficeLocalGovernments(Guid id, string orderBy, string searchQuery, int? pageNumber)
+        {
+            try
+            {
+
+                if (id == Guid.Empty)
+                {
+                    return BadRequest();
+                }
+
+
+
+                IEnumerable<int> pages = new List<int>();
+
+                var resourceParams = new OfficeLocalGovernmentsResourceParams()
+                {
+                    PageNumber = pageNumber != null ? pageNumber.Value : 1,
+                    SearchQuery = !String.IsNullOrWhiteSpace(searchQuery) ? searchQuery : null,
+                    OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "Name",
+                };
+                //Instantiate PagedList
+                PagedList<OfficeLocalGovernmentsViewDto> pagedList = PagedList<OfficeLocalGovernmentsViewDto>
+                         .Create(Enumerable.Empty<OfficeLocalGovernmentsViewDto>().AsQueryable(),
+                             resourceParams.PageNumber,
+                             resourceParams.PageSize);
+                switch (orderBy)
+                {
+                    case "id_desc":
+                        resourceParams.OrderBy = "IdDesc";
+                        break;
+                    case "id":
+                        resourceParams.OrderBy = "Id";
+                        break;
+                    default:
+                        resourceParams.OrderBy = "Id";
+                        break;
+                }
+
+                var result = await _officesRepository.GetIncludingPagedListOfOfficeLocalGovernments(id, resourceParams);
+
+                if (result != null)
+                {
+                    var totalPages = result.OfficeLgas.TotalPages;
+
+                    pages = Enumerable.Range(1, totalPages);
+
+                    if (totalPages > 5)
+                    {
+
+                        if ((resourceParams.PageNumber + 2) >= totalPages)
+                        {
+                            pages = pages.Skip(totalPages - 5).Take(5).ToList();
+                        }
+                        else if ((resourceParams.PageNumber - 2) <= 1)
+                        {
+                            pages = pages.Take(5).ToList();
+                        }
+                        else
+                        {
+                            pages = pages.Skip(resourceParams.PageNumber - 2).Take(5).ToList();
+                        }
+                    }
+                }
+                ViewBag.Pages = pages;
+                ViewBag.Office = result;
+                ViewBag.OrderBy = orderBy;
+                ViewBag.SearchQuery = searchQuery;
+
+                pagedList = result.OfficeLgas;
+
+                return PartialView(pagedList);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        [Route("schools_controlled/{id:guid}")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 100)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        // GET: Offices/Details/5
+        public async Task<IActionResult> ViewSchools(Guid id, string orderBy, string searchQuery, int? pageNumber)
         {
             try
             {
@@ -148,7 +292,7 @@ namespace SchoolRecognition.Controllers
                     OrderBy = !String.IsNullOrWhiteSpace(orderBy) ? searchQuery : "Name",
                 };
                 //Instantiate PagedList
-                PagedList<SchoolsViewDto> pins = PagedList<SchoolsViewDto>
+                PagedList<SchoolsViewDto> pagedList = PagedList<SchoolsViewDto>
                          .Create(Enumerable.Empty<SchoolsViewDto>().AsQueryable(),
                              resourceParams.PageNumber,
                              resourceParams.PageSize);
@@ -197,20 +341,22 @@ namespace SchoolRecognition.Controllers
                     }
                 }
 
-                ViewData["Pages"] = pages;
-                ViewData["Office"] = result;
-                ViewData["OrderBy"] = orderBy;
-                ViewData["SearchQuery"] = searchQuery;
+                ViewBag.Pages = pages;
+                ViewBag.Office = result;
+                ViewBag.OrderBy = orderBy;
+                ViewBag.SearchQuery = searchQuery;
 
-                pins = result.OfficeSchools;
+                pagedList = result.OfficeSchools;
 
-                return View(pins);
+                return PartialView(pagedList);
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+
 
         // GET: Offices/Create
         [Route("new_office")]
@@ -241,7 +387,7 @@ namespace SchoolRecognition.Controllers
                  }).ToList();
 
 
-                return View();
+                return PartialView();
             }
             catch (Exception)
             {
@@ -275,6 +421,8 @@ namespace SchoolRecognition.Controllers
                      Value = x.Id.ToString(),
                  }).ToList();
 
+                var url = Url.Action("Create");
+
                 if (ModelState.IsValid)
                 {
 
@@ -283,8 +431,8 @@ namespace SchoolRecognition.Controllers
                     if (await _officesRepository.Exists(model.OfficeName))
                     {
 
-                        _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
-                        return View(model);
+                        _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system..."); 
+                        return Json(url);
                     }
 
                     var result = await _officesRepository.Create(model);
@@ -292,16 +440,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "New Office Added Successfully!");
-                        return RedirectToAction("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId }); 
+                        return Json(url);
                     }
                     else
                     {
-                        _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly..."); 
+                        return Json(url);
                     }
                 }
-                _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return View(model);
+                _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly..."); 
+                return Json(url);
             }
             catch (Exception)
             {
@@ -367,7 +516,7 @@ namespace SchoolRecognition.Controllers
                      Selected = x.Id == model.StateId
                  }).ToList();
 
-                return View(model);
+                return PartialView(model);
             }
             catch (Exception)
             {
@@ -404,6 +553,8 @@ namespace SchoolRecognition.Controllers
                  }).ToList();
 
 
+                var url = Url.Action("Update", new { id = model.Id });
+
                 if (ModelState.IsValid)
                 {
 
@@ -412,7 +563,7 @@ namespace SchoolRecognition.Controllers
                     {
 
                         _flashMessage.Danger("Duplicate Data Entry!", "An Office with the same Name already exists in the system...");
-                        return View(model);
+                        return Json(url);
                     }
 
                     //Set Pins as active 
@@ -421,16 +572,17 @@ namespace SchoolRecognition.Controllers
                     if (result != null)
                     {
                         _flashMessage.Confirmation("Operation Completed", "Office Updated Successfully!");
-                        return RedirectToAction("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        url = Url.Action("ViewOffices", "OfficeTypes", new { id = model.OfficeTypeId });
+                        return Json(url);
                     }
                     else
                     {
                         _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                        return View(model);
+                        return Json(url);
                     }
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Form filled incorrectly...");
-                return View(model);
+                return Json(url);
             }
             catch (Exception)
             {
@@ -462,7 +614,7 @@ namespace SchoolRecognition.Controllers
 
 
 
-                return View(office);
+                return PartialView(office);
             }
             catch (Exception)
             {
@@ -478,15 +630,17 @@ namespace SchoolRecognition.Controllers
         {
             try
             {
+                var url = Url.Action("Delete", new { id = model.Id });
                 if (ModelState.IsValid)
                 {
                     await _officesRepository.Delete(model.Id);
 
                     _flashMessage.Info("Delete Successful", "Office removed from system!");
-                    return RedirectToAction("Index", "Offices");
+                    url = Url.Action("Index", "Offices");
+                    return Json(url);
                 }
                 _flashMessage.Danger("Oops...Something went wrong!", "Invalid operation parameters!");
-                return View(model);
+                return Json(url);
             }
             catch (Exception)
             {

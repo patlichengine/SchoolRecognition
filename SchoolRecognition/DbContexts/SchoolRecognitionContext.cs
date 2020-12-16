@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using SchoolRecognition.Entities;
+using SchoolRecognition.Models;
 
 namespace SchoolRecognition.DbContexts
 {
@@ -15,19 +16,21 @@ namespace SchoolRecognition.DbContexts
             : base(options)
         {
         }
-
         public virtual DbSet<ApplicationRoles> ApplicationRoles { get; set; }
         public virtual DbSet<ApplicationSettings> ApplicationSettings { get; set; }
         public virtual DbSet<ApplicationUserStates> ApplicationUserStates { get; set; }
         public virtual DbSet<ApplicationUsers> ApplicationUsers { get; set; }
         public virtual DbSet<ApprovedCourses> ApprovedCourses { get; set; }
+        public virtual DbSet<AssessmentKeys> AssessmentKeys { get; set; }
         public virtual DbSet<AuditTrail> AuditTrail { get; set; }
         public virtual DbSet<CentreSanctions> CentreSanctions { get; set; }
         public virtual DbSet<CentreSubjectSanctions> CentreSubjectSanctions { get; set; }
         public virtual DbSet<Centres> Centres { get; set; }
+        public virtual DbSet<ClassSettings> ClassSettings { get; set; }
         public virtual DbSet<Dblogger> Dblogger { get; set; }
         public virtual DbSet<DegreeTypes> DegreeTypes { get; set; }
         public virtual DbSet<Degrees> Degrees { get; set; }
+        public virtual DbSet<FacilityItems> FacilityItems { get; set; }
         public virtual DbSet<FacilitySettings> FacilitySettings { get; set; }
         public virtual DbSet<FacilityTypes> FacilityTypes { get; set; }
         public virtual DbSet<LocalGovernments> LocalGovernments { get; set; }
@@ -42,7 +45,6 @@ namespace SchoolRecognition.DbContexts
         public virtual DbSet<RecognitionTypes> RecognitionTypes { get; set; }
         public virtual DbSet<SanctionSettings> SanctionSettings { get; set; }
         public virtual DbSet<SchoolCategories> SchoolCategories { get; set; }
-        public virtual DbSet<SchoolClassAllocations> SchoolClassAllocations { get; set; }
         public virtual DbSet<SchoolClasses> SchoolClasses { get; set; }
         public virtual DbSet<SchoolDeficiencies> SchoolDeficiencies { get; set; }
         public virtual DbSet<SchoolFacilities> SchoolFacilities { get; set; }
@@ -51,18 +53,22 @@ namespace SchoolRecognition.DbContexts
         public virtual DbSet<SchoolStaffDegrees> SchoolStaffDegrees { get; set; }
         public virtual DbSet<SchoolStaffProfiles> SchoolStaffProfiles { get; set; }
         public virtual DbSet<SchoolStaffSubjects> SchoolStaffSubjects { get; set; }
+        public virtual DbSet<SchoolSubjects> SchoolSubjects { get; set; }
         public virtual DbSet<Schools> Schools { get; set; }
+        public virtual DbSet<SchoolsAssessment> SchoolsAssessment { get; set; }
         public virtual DbSet<SecurityConfig> SecurityConfig { get; set; }
         public virtual DbSet<States> States { get; set; }
         public virtual DbSet<Subjects> Subjects { get; set; }
         public virtual DbSet<Titles> Titles { get; set; }
-
+       
+       
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=NORMAL-PC\\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI");
+                optionsBuilder.UseSqlServer("Server=NORMAL-PC\\SQLEXPRESS;Database=SchoolRecognition;Integrated Security=SSPI;");
             }
         }
 
@@ -164,6 +170,22 @@ namespace SchoolRecognition.DbContexts
                     .HasDefaultValueSql("((1))");
             });
 
+            modelBuilder.Entity<AssessmentKeys>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Grade)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+            });
+
             modelBuilder.Entity<AuditTrail>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -256,7 +278,9 @@ namespace SchoolRecognition.DbContexts
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CategoryCode).HasMaxLength(5);
 
                 entity.Property(e => e.CentreName)
                     .IsRequired()
@@ -266,25 +290,34 @@ namespace SchoolRecognition.DbContexts
                     .IsRequired()
                     .HasMaxLength(7);
 
-                entity.Property(e => e.DateCreated)
-                    .HasColumnType("date")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.DateCreated).HasColumnType("date");
 
-                entity.Property(e => e.IsActive)
-                    .IsRequired()
-                    .HasDefaultValueSql("((1))");
+                entity.Property(e => e.LocationDetails)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SchoolCategoryId).HasColumnName("SchoolCategoryID");
 
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.Centres)
                     .HasForeignKey(d => d.CreatedBy)
-                    .HasConstraintName("FK_Centres_Users");
+                    .HasConstraintName("FK_Centres_ApplicationUsers");
 
                 entity.HasOne(d => d.SchoolCategory)
                     .WithMany(p => p.Centres)
                     .HasForeignKey(d => d.SchoolCategoryId)
                     .HasConstraintName("FK_Centres_SchoolCategories");
+            });
+
+            modelBuilder.Entity<ClassSettings>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(20);
             });
 
             modelBuilder.Entity<Dblogger>(entity =>
@@ -324,19 +357,30 @@ namespace SchoolRecognition.DbContexts
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<FacilityItems>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Description)
+                    //.IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.IsActive)
+                    //.IsRequired()
+                    .HasDefaultValueSql("((1))");
+            });
+
             modelBuilder.Entity<FacilitySettings>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
+                    .ValueGeneratedNever();
 
-                entity.Property(e => e.DateCreated)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
+                entity.Property(e => e.DateCreated).HasColumnType("datetime");
 
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(256);
+                entity.Property(e => e.FacilityItemId).HasColumnName("FacilityItemID");
 
                 entity.Property(e => e.FacilityTypeId).HasColumnName("FacilityTypeID");
 
@@ -347,7 +391,12 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.FacilitySettings)
                     .HasForeignKey(d => d.CreatedBy)
-                    .HasConstraintName("FK_FacilitySettings_Users");
+                    .HasConstraintName("FK_FacilitySettings_ApplicationUsers");
+
+                entity.HasOne(d => d.FacilityItem)
+                    .WithMany(p => p.FacilitySettings)
+                    .HasForeignKey(d => d.FacilityItemId)
+                    .HasConstraintName("FK_FacilitySettings_FacilityItems");
 
                 entity.HasOne(d => d.FacilityType)
                     .WithMany(p => p.FacilitySettings)
@@ -358,7 +407,7 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.FacilitySettings)
                     .HasForeignKey(d => d.SubjectId)
-                    .HasConstraintName("FK_FacilitySettings_Subjects");
+                    .HasConstraintName("FK_FacilitySettings_SchoolSubjects");
             });
 
             modelBuilder.Entity<FacilityTypes>(entity =>
@@ -589,7 +638,7 @@ namespace SchoolRecognition.DbContexts
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
 
-            modelBuilder.Entity<SchoolClassAllocations>(entity =>
+            modelBuilder.Entity<SchoolClasses>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -600,27 +649,16 @@ namespace SchoolRecognition.DbContexts
                 entity.Property(e => e.SchoolId).HasColumnName("SchoolID");
 
                 entity.HasOne(d => d.Class)
-                    .WithMany(p => p.SchoolClassAllocations)
+                    .WithMany(p => p.SchoolClasses)
                     .HasForeignKey(d => d.ClassId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SchoolClassAllocations_SchoolClasses");
 
                 entity.HasOne(d => d.School)
-                    .WithMany(p => p.SchoolClassAllocations)
+                    .WithMany(p => p.SchoolClasses)
                     .HasForeignKey(d => d.SchoolId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SchoolClassAllocations_Schools");
-            });
-
-            modelBuilder.Entity<SchoolClasses>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(20);
             });
 
             modelBuilder.Entity<SchoolDeficiencies>(entity =>
@@ -660,7 +698,7 @@ namespace SchoolRecognition.DbContexts
 
                 entity.Property(e => e.SchoolId).HasColumnName("SchoolID");
 
-                entity.Property(e => e.ValueAupplied).HasMaxLength(50);
+                entity.Property(e => e.ValueApplied).HasMaxLength(50);
 
                 entity.HasOne(d => d.CreatedByNavigation)
                     .WithMany(p => p.SchoolFacilities)
@@ -670,7 +708,7 @@ namespace SchoolRecognition.DbContexts
                 entity.HasOne(d => d.FacilitySetting)
                     .WithMany(p => p.SchoolFacilities)
                     .HasForeignKey(d => d.FacilitySettingId)
-                    .HasConstraintName("FK_FacilityInformation_FacilitySettings");
+                    .HasConstraintName("FK_SchoolFacilities_FacilitySettings");
 
                 entity.HasOne(d => d.School)
                     .WithMany(p => p.SchoolFacilities)
@@ -739,8 +777,6 @@ namespace SchoolRecognition.DbContexts
 
                 entity.Property(e => e.DegreeId).HasColumnName("DegreeID");
 
-                entity.Property(e => e.DegreeTypeId).HasColumnName("DegreeTypeID");
-
                 entity.Property(e => e.StaffId).HasColumnName("StaffID");
 
                 entity.HasOne(d => d.Course)
@@ -757,11 +793,6 @@ namespace SchoolRecognition.DbContexts
                     .WithMany(p => p.SchoolStaffDegrees)
                     .HasForeignKey(d => d.DegreeId)
                     .HasConstraintName("FK_SchoolStaffDegrees_Degrees");
-
-                entity.HasOne(d => d.DegreeType)
-                    .WithMany(p => p.SchoolStaffDegrees)
-                    .HasForeignKey(d => d.DegreeTypeId)
-                    .HasConstraintName("FK_SchoolStaffDegrees_DegreeTypes");
 
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.SchoolStaffDegrees)
@@ -849,6 +880,43 @@ namespace SchoolRecognition.DbContexts
                     .HasConstraintName("FK_SchoolStaffSubjects_Subjects");
             });
 
+            modelBuilder.Entity<SchoolSubjects>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.DateCreated).HasColumnType("datetime");
+
+                entity.Property(e => e.DateModified).HasColumnType("datetime");
+
+                entity.Property(e => e.SchoolId).HasColumnName("SchoolID");
+
+                entity.Property(e => e.SubjectId).HasColumnName("SubjectID");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.SchoolSubjectsCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .HasConstraintName("FK_SchoolSubjects_ApplicationUsers");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.SchoolSubjectsModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .HasConstraintName("FK_SchoolSubjects_ApplicationUsers1");
+
+                entity.HasOne(d => d.School)
+                    .WithMany(p => p.SchoolSubjects)
+                    .HasForeignKey(d => d.SchoolId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SchoolSubjects_Schools");
+
+                entity.HasOne(d => d.Subject)
+                    .WithMany(p => p.SchoolSubjects)
+                    .HasForeignKey(d => d.SubjectId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SchoolSubjects_Subjects");
+            });
+
             modelBuilder.Entity<Schools>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -858,6 +926,8 @@ namespace SchoolRecognition.DbContexts
                 entity.Property(e => e.Address).HasMaxLength(50);
 
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.CentreId).HasColumnName("CentreID");
 
                 entity.Property(e => e.EmailAddress).HasMaxLength(50);
 
@@ -874,6 +944,11 @@ namespace SchoolRecognition.DbContexts
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_School_SchoolCategory");
 
+                entity.HasOne(d => d.Centre)
+                    .WithMany(p => p.Schools)
+                    .HasForeignKey(d => d.CentreId)
+                    .HasConstraintName("FK_Schools_Centres");
+
                 entity.HasOne(d => d.Lg)
                     .WithMany(p => p.Schools)
                     .HasForeignKey(d => d.LgId)
@@ -883,6 +958,34 @@ namespace SchoolRecognition.DbContexts
                     .WithMany(p => p.Schools)
                     .HasForeignKey(d => d.OfficeId)
                     .HasConstraintName("FK_School_Office");
+            });
+
+            modelBuilder.Entity<SchoolsAssessment>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.FacilityItemId).HasColumnName("FacilityItemID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.SchoolId).HasColumnName("SchoolID");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => d.CreatedBy)
+                    .HasConstraintName("FK_SchoolsAssessment_ApplicationUsers");
+
+                entity.HasOne(d => d.FacilityItem)
+                    .WithMany()
+                    .HasForeignKey(d => d.FacilityItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SchoolsAssessment_FacilityItems");
+
+                entity.HasOne(d => d.School)
+                    .WithMany()
+                    .HasForeignKey(d => d.SchoolId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SchoolsAssessment_Schools");
             });
 
             modelBuilder.Entity<SecurityConfig>(entity =>
@@ -956,5 +1059,9 @@ namespace SchoolRecognition.DbContexts
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        //public DbSet<SchoolRecognition.Models.FacilityItemsCreateDto> FacilityItemsCreateDto { get; set; }
+
+        //public DbSet<SchoolRecognition.Models.FacilityItemsDto> FacilityItemsDto { get; set; }
     }
 }

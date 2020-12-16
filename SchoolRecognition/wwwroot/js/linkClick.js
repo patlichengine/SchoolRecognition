@@ -1,7 +1,9 @@
 ﻿$("a").on("click", function (event) {
     
     var link = $(this).attr('href');
-    console.log(link);
+
+    localStorage.setItem('lastLink', link);
+
     if (link) {
         if (link == '#') {
 
@@ -12,4 +14,8 @@
         }
     }
     //return false;
+});
+//Tooltip
+$(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
 });

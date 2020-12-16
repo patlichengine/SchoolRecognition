@@ -225,6 +225,58 @@ namespace SchoolRecognition.Services
             }
         }
 
+        public async Task<IEnumerable<PinsViewDto>> ListActivePinsNOTInUseByRecognitionTypeId(Guid recognitionTypeId)
+        {
+
+            //Instantiate Return Value
+            IEnumerable<PinsViewDto> returnValue = new List<PinsViewDto>();
+            try
+            {
+                if (recognitionTypeId != Guid.Empty)
+                {
+                    var dbResult = _context.Pins.Include(x => x.RecognitionType)
+                        .Include(x => x.CreatedByNavigation)
+                        .Include(x => x.SchoolPayments)
+                        .ThenInclude(y => y.School)
+                        .ThenInclude(z => z.Category)
+                        .Where(x => x.RecognitionTypeId == recognitionTypeId && x.IsActive == true && x.IsInUse == false)
+                        as IQueryable<Pins>;
+
+                    returnValue = await dbResult.Select(x => new PinsViewDto()
+                    {
+                        Id = x.Id,
+                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                        SerialNumber = x.SerialPin,
+                        IsActive = x.IsActive,
+                        IsInUse = x.IsInUse,
+                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                        DateCreated = x.DateCreated,
+                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                        {
+                            Id = x.Id,
+                            AmountPaid = x.Amount,
+                            PaymentReceiptNo = x.ReceiptNo,
+                            DateCreated = x.DateCreated,
+                            PaymentReceiptImage = x.ReceiptImage,
+                            //CreatedByNavigation
+                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                            SchoolName = x.School != null ? x.School.Name : null,
+                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
+
+                        })
+                    }).ToListAsync();
+                }
+
+                return returnValue;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
 
         public async Task<PagedList<PinsViewDto>> PagedList(PinsResourceParams resourceParams)
         {
@@ -267,36 +319,46 @@ namespace SchoolRecognition.Services
                             pinPropertyMappingDictionary);
                     }
 
-                    var mappedResult = dbResult.Select(x => new PinsViewDto()
-                    {
-                        Id = x.Id,
-                        RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
-                        SerialNumber = x.SerialPin,
-                        IsActive = x.IsActive,
-                        IsInUse = x.IsInUse,
-                        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                        DateCreated = x.DateCreated,
-                        Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
-                        {
-                            Id = x.Id,
-                            AmountPaid = x.Amount,
-                            PaymentReceiptNo = x.ReceiptNo,
-                            DateCreated = x.DateCreated,
-                            PaymentReceiptImage = x.ReceiptImage,
-                            //CreatedByNavigation
-                            CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
-                            SchoolName = x.School != null ? x.School.Name : null,
-                            SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
-                            PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
+                    //var mappedResult = dbResult.Select(x => new PinsViewDto()
+                    //{
+                    //    Id = x.Id,
+                    //    RecognitionTypeName = x.RecognitionType != null ? x.RecognitionType.Name : null,
+                    //    SerialNumber = x.SerialPin,
+                    //    IsActive = x.IsActive,
+                    //    IsInUse = x.IsInUse,
+                    //    CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                    //    DateCreated = x.DateCreated,
+                    //    Payments = x.SchoolPayments.Select(x => new SchoolPaymentsViewDto()
+                    //    {
+                    //        Id = x.Id,
+                    //        AmountPaid = x.Amount,
+                    //        PaymentReceiptNo = x.ReceiptNo,
+                    //        DateCreated = x.DateCreated,
+                    //        PaymentReceiptImage = x.ReceiptImage,
+                    //        //CreatedByNavigation
+                    //        CreatedByUser = x.CreatedByNavigation != null ? $"{x.CreatedByNavigation.Surname}, {x.CreatedByNavigation.Othernames}" : null,
+                    //        SchoolName = x.School != null ? x.School.Name : null,
+                    //        SchoolCategoryName = x.School != null && x.School.Category != null ? x.School.Name : null,
+                    //        PinSerialNumber = x.Pin != null ? x.Pin.SerialPin : null
 
-                        })
-                    });
+                    //    })
+                    //});
 
-                    returnValue = await PagedList<PinsViewDto>.CreateAsync(mappedResult,
-                        resourceParams.PageNumber,
-                        resourceParams.PageSize);
+                    //returnValue = await PagedList<PinsViewDto>.CreateAsync(mappedResult,
+                    //    resourceParams.PageNumber,
+                    //    resourceParams.PageSize);
+
+                    var mappedValue = await PagedList<Pins>.CreateAsync(dbResult,
+                       resourceParams.PageNumber,
+                       resourceParams.PageSize);
+
+                    List<PinsViewDto> mappedViewDto = _mapper.Map<List<PinsViewDto>>(mappedValue.ToList());
+
+                    returnValue = new PagedList<PinsViewDto>(mappedViewDto, mappedValue.TotalCount, resourceParams.PageNumber, resourceParams.PageSize);
 
                     return returnValue;
+
+
                 }
                 else
                 {
@@ -771,14 +833,18 @@ namespace SchoolRecognition.Services
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<int> CheckTotalActivePinsNOTInUse()
+        public async Task<int> CheckTotalActivePinsNOTInUse(Guid recognitionTypeId)
         {
             //Instantiate Return Value
             int returnValue = 0;
             try
             {
-                var dbResult = await _context.Pins.Where(x => x.IsActive == true && x.IsInUse == false).CountAsync();
+                if (recognitionTypeId != Guid.Empty)
+                {
+                    var dbResult = await _context.Pins.Where(x => x.RecognitionTypeId == recognitionTypeId && x.IsActive == true && x.IsInUse == false).CountAsync();
 
+                    returnValue = dbResult;
+                }
 
                 return returnValue;
             }

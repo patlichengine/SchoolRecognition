@@ -1,0 +1,156 @@
+﻿@model SchoolRecognition.Models.ClassSettingsDto
+
+@{
+    ViewData["Title"] = "Class Settings Details";
+}
+
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>@ViewData["Title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Admin" asp-action="Dashboard" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="ClassSettings" asp-action="Index" data-toggle="link">Manage Settings</a></li>
+                    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+
+    <div class="row">
+        <div class="col-12">
+            <!-- /.card -->
+            @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html)
+
+            <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active disabled" id="custom-tabs-three-home-tab" data-toggle="pill" role="tab" aria-controls="custom-tabs-three-home" aria-selected="true">
+                                <b>@ViewData["Title"]</b>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <!-- accepted payments column -->
+                        <div class="col-md-3 border">
+
+                            <h4 class="mt-2 text-info">Settings Details:</h4>
+
+                            <table class="table table-striped table-borderless">
+
+                                <tbody>
+                                    <tr>
+                                        <td class="p-0">
+                                            <dl>
+                                                <dt>Name </dt>
+                                                <dd>
+                                                    @Model.Name <br />
+
+                                                </dd>
+                                            </dl>
+                                        </td>
+                                    </tr>
+                                   
+
+
+
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-9">
+
+
+                            <div class="clearfix">
+
+                                <div class="float-right">
+
+                                    <a asp-area="" asp-controller="ClassSettings" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                        <i class="fas fa-pen"></i>
+                                        Update
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            @*<h4 class="text-bold">Centre Information</h4>
+                            <table id="datatable-1" class="table table-bordered table-striped table-responsive-lg table-responsive-md table-responsive-xl" role="grid" aria-describedby="example1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <td>Name</td>
+                                        <td>Number</td>
+                                        <td>Sanctions</td>
+                                        <td>Date Created</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Centres)
+                                    {
+                                        <tr role="row">
+                                            <td>@item.CentreName</td>
+                                            <td>@item.CentreNo</td>
+                                            <td>@item.CentreSanctions</td>
+                                            <td>@item.DateCreated</td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>*@
+
+
+                            @*<h4 class="text-bold">School  Information</h4>
+                            <table id="datatable-1" class="table table-bordered table-striped table-responsive-lg table-responsive-md table-responsive-xl" role="grid" aria-describedby="example1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <td>Name</td>
+                                        <td>Phone Number</td>
+                                        <td>Year Established</td>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Schools)
+                                    {
+                                        <tr role="row">
+                                            <td>@item.Name</td>
+                                            <td>@item.PhoneNo</td>
+                                            <td>@item.YearEstablished</td>
+
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>*@
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+</section>
+<!-- /.content -->

@@ -8,8 +8,8 @@ namespace SchoolRecognition.Entities
         public Subjects()
         {
             CentreSubjectSanctions = new HashSet<CentreSubjectSanctions>();
-            FacilitySettings = new HashSet<FacilitySettings>();
             SchoolStaffSubjects = new HashSet<SchoolStaffSubjects>();
+            SchoolSubjects = new HashSet<SchoolSubjects>();
         }
 
         public Guid Id { get; set; }
@@ -21,7 +21,7 @@ namespace SchoolRecognition.Entities
         public bool IsCoreSubject { get; set; }
 
         public virtual ICollection<CentreSubjectSanctions> CentreSubjectSanctions { get; set; }
-        public virtual ICollection<FacilitySettings> FacilitySettings { get; set; }
         public virtual ICollection<SchoolStaffSubjects> SchoolStaffSubjects { get; set; }
+        public virtual ICollection<SchoolSubjects> SchoolSubjects { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model OfficeStatesViewDto
 @{
     ViewData["Title"] = "Remove State Controlled";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <!-- Content Header (Page header) -->
@@ -13,9 +13,9 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index">Manage Offices</a></li>
-                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Office" asp-action="Details" asp-route-id="@Model.Id">@Model.OfficeName</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index" data-toggle="link">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="OfficeTypes" asp-action="Index" data-toggle="link">Manage Offices</a></li>
+                    <li class="breadcrumb-item"><a asp-area="" asp-controller="Office" asp-action="Details" asp-route-id="@Model.Id" data-toggle="link">@Model.OfficeName</a></li>
                     <li class="breadcrumb-item active">@ViewData["Title"]</li>
                 </ol>
             </div>
@@ -85,7 +85,7 @@
                             <i class="fa fa-spinner fa-spin" id="loading_icon" style="display:none"></i>
                             Delete
                         </button>
-                        <a asp-area="" asp-controller="OfficeStates" asp-action="ViewOffices" asp-route-id="@Model.Id" class="btn btn-secondary btn-lg"> Cancel</a>
+                        <a asp-area="" asp-controller="OfficeStates" asp-action="ViewOffices" asp-route-id="@Model.Id" data-toggle="link" class="btn btn-secondary btn-lg"> Cancel</a>
 
                         <!-- /.col -->
 
@@ -104,3 +104,6 @@
 
 </section>
 <!-- /.content -->
+
+<script src="~/js/ajaxFormSubmit.js"></script>
+<script src="~/js/linkClick.js"></script>
