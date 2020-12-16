@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qaqMl2qRiBZ434AgKbSpSNeD45HukUykItMN1+CWLvbxI2XIe06icWMJCrs32YnDZ/iE1HYC/NdP9GuwBjVaZw==",
+  "dgSpecHash": "qfvTl9MfxUxvQmPDNlaoJK19zoAk2k+grU3wd5thCljLrHsi7cfP7OQLG+3pKn2mYzzcrVrgx0d8LJFt8rS9Mw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\15N\\Desktop\\henry\\WAEC Program\\SchoolRecognition Files\\SchoolRecognition Itina\\SchoolRecognition\\SchoolRecognition.csproj",
+  "projectFilePath": "C:\\Users\\15N\\Desktop\\henry\\WAEC Program\\SchoolRecognition Files\\SR New\\remote\\SchoolRecognition\\SchoolRecognition.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\15N\\.nuget\\packages\\automapper\\9.0.0\\automapper.9.0.0.nupkg.sha512",
     "C:\\Users\\15N\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\7.0.0\\automapper.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512",
