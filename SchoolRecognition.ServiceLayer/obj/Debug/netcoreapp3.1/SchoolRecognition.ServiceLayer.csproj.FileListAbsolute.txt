@@ -1,0 +1,4 @@
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.ServiceLayer\obj\Debug\netcoreapp3.1\SchoolRecognition.ServiceLayer.csproj.AssemblyReference.cache
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.ServiceLayer\obj\Debug\netcoreapp3.1\SchoolRecognition.ServiceLayer.AssemblyInfoInputs.cache
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.ServiceLayer\obj\Debug\netcoreapp3.1\SchoolRecognition.ServiceLayer.AssemblyInfo.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.ServiceLayer\obj\Debug\netcoreapp3.1\SchoolRecognition.ServiceLayer.csproj.CoreCompileInputs.cache

@@ -1,0 +1,21 @@
+﻿
+        private readonly ConnectionString _connectionString;
+
+        public WSchoolRecognitionContext()
+        {
+        }
+
+        public WSchoolRecognitionContext(DbContextOptions<WSchoolRecognitionContext> options, ConnectionString connectionString)
+            : base(options)
+        {
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer(_connectionString.Value);
+            }
+        }

@@ -1,0 +1,13 @@
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\bin\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.deps.json
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\bin\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.runtimeconfig.json
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\bin\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.runtimeconfig.dev.json
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\bin\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.dll
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\bin\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.pdb
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\obj\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.csproj.AssemblyReference.cache
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\obj\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.AssemblyInfoInputs.cache
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\obj\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.AssemblyInfo.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\obj\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.csproj.CoreCompileInputs.cache
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\obj\Debug\netcoreapp3.1\EFCorePluralizer.cs
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\obj\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.dll
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\obj\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.pdb
+C:\csharp_projects\SchoolRecognition\SchoolRecognition.DBInfrastructure\obj\Debug\netcoreapp3.1\SchoolRecognition.DBInfrastructure.genruntimeconfig.cache
